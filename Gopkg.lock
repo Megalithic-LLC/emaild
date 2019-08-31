@@ -2,15 +2,21 @@
 
 
 [[projects]]
-  digest = "1:cbc5ec016cfe33fc04c91886a6f69f769951f2fa39ee330c3ff1449621e35831"
+  branch = "master"
+  digest = "1:82ecea56beacd16e900b4b94a041a3f030ea4b4ae36763389f075848ced02c16"
   name = "github.com/asdine/genji"
   packages = [
+    ".",
     "engine",
     "engine/bolt",
+    "field",
+    "index",
+    "query",
+    "record",
+    "table",
   ]
   pruneopts = "UT"
-  revision = "7ec93c552d0c1ae8b811fcc2eb66534b372fe316"
-  version = "v0.1.0"
+  revision = "afbb55a2afed51f19af7db213cbf8dae59d7070c"
 
 [[projects]]
   digest = "1:e4399338acb360cfac1ddcebf3576c54be9908519a24cacdf764792f1dfeab2d"
@@ -29,12 +35,52 @@
   version = "v1.3.3"
 
 [[projects]]
+  digest = "1:0bfbe13936953a98ae3cfe8ed6670d396ad81edf069a806d2f6515d7bb6950df"
+  name = "github.com/google/btree"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "4030bb1f1f0c35b30ca7009e9ebd06849dd45306"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   digest = "1:3d01ffc972d0bf484022abbc79f469da223261c4107eb5f5a02d63de3c0cdd72"
   name = "github.com/karlkfi/inject"
   packages = ["."]
   pruneopts = "UT"
   revision = "86d2a962209df14e41b6eae3e447ee7adceff87e"
+
+[[projects]]
+  digest = "1:860c25446f565f998eb698ddc033e9e43b2546eb950b20aca28f30ba73deb86d"
+  name = "github.com/oklog/ulid"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "be3bccf06dda9a40aa6800c4736ac77f2fef987f"
+  version = "v2.0.2"
+
+[[projects]]
+  branch = "master"
+  digest = "1:89da0f0574bc94cfd0ac8b59af67bf76cdd110d503df2721006b9f0492394333"
+  name = "github.com/petar/GoLLRB"
+  packages = ["llrb"]
+  pruneopts = "UT"
+  revision = "33fb24c13b99c46c93183c291836c573ac382536"
+
+[[projects]]
+  digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
+
+[[projects]]
+  digest = "1:2e76a73cb51f42d63a2a1a85b3dc5731fd4faf6821b434bd0ef2c099186031d6"
+  name = "github.com/rs/xid"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "15d26544def341f036c5f8dca987a4cbe575032c"
+  version = "v1.2.1"
 
 [[projects]]
   branch = "master"
@@ -48,10 +94,16 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/asdine/genji",
     "github.com/asdine/genji/engine",
     "github.com/asdine/genji/engine/bolt",
+    "github.com/asdine/genji/field",
+    "github.com/asdine/genji/index",
+    "github.com/asdine/genji/query",
+    "github.com/asdine/genji/record",
     "github.com/docktermj/go-logger/logger",
     "github.com/karlkfi/inject",
+    "github.com/rs/xid",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
