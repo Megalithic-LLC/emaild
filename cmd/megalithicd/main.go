@@ -1,31 +1,22 @@
 package main
 
 import (
+	"context"
 	"os"
-	"path"
+	"os/signal"
+	"time"
 
-	"github.com/asdine/genji"
-	"github.com/asdine/genji/engine"
-	"github.com/asdine/genji/engine/bolt"
 	"github.com/docktermj/go-logger/logger"
-	"github.com/drauschenbach/megalithicd/model"
-	"github.com/karlkfi/inject"
 )
 
-var (
-	graph       inject.Graph
-	genjiEngine *engine.Engine
-	db          *genji.DB
-)
+var ()
 
 func init() {
-	logger.SetLevel(logger.LevelDebug)
+	logger.SetLevel(logger.LevelTrace)
 }
 
 func main() {
-	graph = inject.NewGraph()
-	graph.Define(&db, inject.NewAutoProvider(newDB))
-	graph.Define(&genjiEngine, inject.NewAutoProvider(newEngine))
+	DefineDependencies()
 	graph.ResolveAll()
 
 	// If a unique id does not yet exist, create it now
@@ -34,45 +25,23 @@ func main() {
 		logger.Fatalf("Failed assigning node id: %v", err)
 	}
 
-	logger.Info("Megalithic Unified Messaging started")
+	logger.Info("Megalithic Unified Messaging")
 	logger.Infof("Node id is %s", nodeid)
-}
 
-func newDB(engine *engine.Engine) *genji.DB {
-	db, err := genji.New(*engine)
-	if err != nil {
-		logger.Fatalf("Failed creating database engine: %v", err)
-		return nil
-	}
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
 
-	// Initialize tables, creating indexes when needed
-	logger.Debugf("Ensuring indexes")
-	if err := db.Update(func(tx *genji.Tx) error {
-		if _, err := tx.InitTable("properties", new(model.Property)); err != nil {
-			return err
-		}
-		return nil
-	}); err != nil {
-		logger.Fatalf("Failed initializing indexes: %v", err)
-		return nil
+	// Wait for shutdown
+	<-c
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(5)*time.Second)
+	defer cancel()
+	_ = ctx
+	//	imapEndpoint.Shutdown(ctx)
+	logger.Infof("Shutting down")
+	if db != nil {
+		db.Close()
+		logger.Infof("Closed database")
 	}
+	os.Exit(0)
 
-	return db
-}
-
-func newEngine() *engine.Engine {
-	dir, err := os.Getwd()
-	if err != nil {
-		logger.Fatalf("Failed creating current dir: %v", err)
-		return nil
-	}
-	var eng engine.Engine
-	filepath := path.Join(dir, "megalithicd.db")
-	eng, err = bolt.NewEngine(filepath, 0600, nil)
-	if err != nil {
-		logger.Fatalf("Failed creating DB engine: %v", err)
-		return nil
-	}
-	logger.Infof("Opened database %s", filepath)
-	return &eng
 }
