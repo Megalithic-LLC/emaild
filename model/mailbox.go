@@ -8,4 +8,5 @@ type Mailbox struct {
 	Unseen      uint32
 	UidNext     uint32
 	UidValidity uint32
+	Subscribed  bool
 }
