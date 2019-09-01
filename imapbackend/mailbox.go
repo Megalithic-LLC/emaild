@@ -1,6 +1,7 @@
 package imapbackend
 
 import (
+	"github.com/drauschenbach/megalithicd/model"
 	"github.com/emersion/go-imap"
 )
 
@@ -10,6 +11,7 @@ const (
 
 type Mailbox struct {
 	backend *ImapBackend
+	model   *model.Mailbox
 	name    string
 	user    *User
 }
