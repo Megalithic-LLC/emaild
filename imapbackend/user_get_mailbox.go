@@ -1,6 +1,8 @@
 package imapbackend
 
 import (
+	"errors"
+
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
@@ -14,7 +16,7 @@ func (self *User) GetMailbox(name string) (backend.Mailbox, error) {
 
 	var mailbox *model.Mailbox
 	err := self.backend.db.View(func(tx *genji.Tx) error {
-		table, err := tx.GetTable("mailboxes")
+		table, err := tx.GetTable(model.MailboxTable)
 		if err != nil {
 			return err
 		}
@@ -39,11 +41,15 @@ func (self *User) GetMailbox(name string) (backend.Mailbox, error) {
 	}
 
 	// Create an INBOX when one does not yet exist
-	if mailbox == nil {
+	if mailbox == nil && name == "INBOX" {
 		if err := self.CreateMailbox(name); err != nil {
 			logger.Errorf("Failed creating inbox: %v", err)
 			return nil, err
 		}
+	}
+
+	if mailbox == nil {
+		return nil, errors.New("No such mailbox")
 	}
 
 	// Return a mailbox backend adapter

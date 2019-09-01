@@ -13,7 +13,7 @@ func (self *User) ListMailboxes(subscribed bool) ([]backend.Mailbox, error) {
 	logger.Tracef("User:ListMailboxes()")
 	mailboxBackends := []backend.Mailbox{}
 	err := self.backend.db.View(func(tx *genji.Tx) error {
-		table, err := tx.GetTable("mailboxes")
+		table, err := tx.GetTable(model.MailboxTable)
 		if err != nil {
 			return err
 		}
@@ -39,6 +39,5 @@ func (self *User) ListMailboxes(subscribed bool) ([]backend.Mailbox, error) {
 				return nil
 			})
 	})
-	logger.Debugf("* returning: %+v", mailboxBackends)
 	return mailboxBackends, err
 }

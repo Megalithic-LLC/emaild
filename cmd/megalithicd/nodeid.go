@@ -14,7 +14,7 @@ func getOrGenerateNodeID() (string, error) {
 	// If a unique id does not yet exist, create it now
 	var nodeid string
 	if err := db.Update(func(tx *genji.Tx) error {
-		table, err := tx.GetTable("properties")
+		table, err := tx.GetTable(model.PropertyTable)
 		if err != nil {
 			return err
 		}

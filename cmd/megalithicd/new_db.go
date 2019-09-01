@@ -17,14 +17,11 @@ func newDB(engine *engine.Engine) *genji.DB {
 	// Initialize tables, creating indexes when needed
 	logger.Debugf("Ensuring indexes")
 	if err := db.Update(func(tx *genji.Tx) error {
-
-		if _, err := tx.InitTable("mailboxes", new(model.Mailbox)); err != nil {
-			return err
+		for tableName, tableModel := range model.Tables {
+			if _, err := tx.InitTable(tableName, tableModel); err != nil {
+				return err
+			}
 		}
-		if _, err := tx.InitTable("properties", new(model.Property)); err != nil {
-			return err
-		}
-
 		return nil
 	}); err != nil {
 		logger.Fatalf("Failed initializing indexes: %v", err)
