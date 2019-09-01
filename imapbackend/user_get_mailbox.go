@@ -7,7 +7,6 @@ import (
 	"github.com/docktermj/go-logger/logger"
 	"github.com/drauschenbach/megalithicd/model"
 	"github.com/emersion/go-imap/backend"
-	"github.com/rs/xid"
 )
 
 func (self *User) GetMailbox(name string) (backend.Mailbox, error) {
@@ -41,18 +40,7 @@ func (self *User) GetMailbox(name string) (backend.Mailbox, error) {
 
 	// Create an INBOX when one does not yet exist
 	if mailbox == nil {
-		if err := self.backend.db.Update(func(tx *genji.Tx) error {
-			table, err := tx.GetTable("mailboxes")
-			if err != nil {
-				return err
-			}
-			mailbox = &model.Mailbox{
-				ID:   xid.New().String(),
-				Name: name,
-			}
-			_, err = table.Insert(mailbox)
-			return err
-		}); err != nil {
+		if err := self.CreateMailbox(name); err != nil {
 			logger.Errorf("Failed creating inbox: %v", err)
 			return nil, err
 		}
