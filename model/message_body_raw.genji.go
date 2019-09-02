@@ -15,7 +15,7 @@ import (
 func (m *MessageBodyRaw) GetField(name string) (field.Field, error) {
 	switch name {
 	case "ID":
-		return field.NewUint64("ID", m.ID), nil
+		return field.NewUint32("ID", m.ID), nil
 	case "Body":
 		return field.NewBytes("Body", m.Body), nil
 	}
@@ -28,7 +28,7 @@ func (m *MessageBodyRaw) GetField(name string) (field.Field, error) {
 func (m *MessageBodyRaw) Iterate(fn func(field.Field) error) error {
 	var err error
 
-	err = fn(field.NewUint64("ID", m.ID))
+	err = fn(field.NewUint32("ID", m.ID))
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (m *MessageBodyRaw) ScanRecord(rec record.Record) error {
 
 		switch f.Name {
 		case "ID":
-			m.ID, err = field.DecodeUint64(f.Data)
+			m.ID, err = field.DecodeUint32(f.Data)
 		case "Body":
 			m.Body, err = field.DecodeBytes(f.Data)
 		}
@@ -59,20 +59,20 @@ func (m *MessageBodyRaw) ScanRecord(rec record.Record) error {
 
 // PrimaryKey returns the primary key. It implements the table.PrimaryKeyer interface.
 func (m *MessageBodyRaw) PrimaryKey() ([]byte, error) {
-	return field.EncodeUint64(m.ID), nil
+	return field.EncodeUint32(m.ID), nil
 }
 
 // MessageBodyRawFields describes the fields of the MessageBodyRaw record.
 // It can be used to select fields during queries.
 type MessageBodyRawFields struct {
-	ID   query.Uint64FieldSelector
+	ID   query.Uint32FieldSelector
 	Body query.BytesFieldSelector
 }
 
 // NewMessageBodyRawFields creates a MessageBodyRawFields.
 func NewMessageBodyRawFields() *MessageBodyRawFields {
 	return &MessageBodyRawFields{
-		ID:   query.Uint64Field("ID"),
+		ID:   query.Uint32Field("ID"),
 		Body: query.BytesField("Body"),
 	}
 }

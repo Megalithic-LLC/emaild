@@ -43,7 +43,6 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 			return err
 		}
 
-		// TODO body
 		messageBodyRawTable, err := tx.GetTable(model.MessageBodyRawTable)
 		if err != nil {
 			logger.Errorf("Failure: %v", err)
