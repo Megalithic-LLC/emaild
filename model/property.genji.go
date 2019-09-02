@@ -7,7 +7,6 @@ import (
 	"errors"
 
 	"github.com/asdine/genji/field"
-	"github.com/asdine/genji/index"
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
 )
@@ -15,10 +14,8 @@ import (
 // GetField implements the field method of the record.Record interface.
 func (p *Property) GetField(name string) (field.Field, error) {
 	switch name {
-	case "ID":
-		return field.NewString("ID", p.ID), nil
-	case "Name":
-		return field.NewString("Name", p.Name), nil
+	case "Key":
+		return field.NewString("Key", p.Key), nil
 	case "Value":
 		return field.NewString("Value", p.Value), nil
 	}
@@ -31,12 +28,7 @@ func (p *Property) GetField(name string) (field.Field, error) {
 func (p *Property) Iterate(fn func(field.Field) error) error {
 	var err error
 
-	err = fn(field.NewString("ID", p.ID))
-	if err != nil {
-		return err
-	}
-
-	err = fn(field.NewString("Name", p.Name))
+	err = fn(field.NewString("Key", p.Key))
 	if err != nil {
 		return err
 	}
@@ -56,10 +48,8 @@ func (p *Property) ScanRecord(rec record.Record) error {
 		var err error
 
 		switch f.Name {
-		case "ID":
-			p.ID, err = field.DecodeString(f.Data)
-		case "Name":
-			p.Name, err = field.DecodeString(f.Data)
+		case "Key":
+			p.Key, err = field.DecodeString(f.Data)
 		case "Value":
 			p.Value, err = field.DecodeString(f.Data)
 		}
@@ -69,29 +59,20 @@ func (p *Property) ScanRecord(rec record.Record) error {
 
 // PrimaryKey returns the primary key. It implements the table.PrimaryKeyer interface.
 func (p *Property) PrimaryKey() ([]byte, error) {
-	return field.EncodeString(p.ID), nil
-}
-
-// Indexes creates a map containing the configuration for each index of the table.
-func (p *Property) Indexes() map[string]index.Options {
-	return map[string]index.Options{
-		"Name": index.Options{Unique: true},
-	}
+	return field.EncodeString(p.Key), nil
 }
 
 // PropertyFields describes the fields of the Property record.
 // It can be used to select fields during queries.
 type PropertyFields struct {
-	ID    query.StringFieldSelector
-	Name  query.StringFieldSelector
+	Key   query.StringFieldSelector
 	Value query.StringFieldSelector
 }
 
 // NewPropertyFields creates a PropertyFields.
 func NewPropertyFields() *PropertyFields {
 	return &PropertyFields{
-		ID:    query.StringField("ID"),
-		Name:  query.StringField("Name"),
+		Key:   query.StringField("Key"),
 		Value: query.StringField("Value"),
 	}
 }

@@ -1,7 +1,6 @@
 package model
 
 type Property struct {
-	ID    string `genji:"pk"`
-	Name  string `genji:"index(unique)"`
+	Key   string `genji:"pk"`
 	Value string
 }
