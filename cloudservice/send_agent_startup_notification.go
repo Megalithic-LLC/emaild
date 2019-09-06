@@ -1,14 +1,20 @@
 package cloudservice
 
 import (
-	"bytes"
 	"encoding/json"
-	"net/http"
 
 	"github.com/docktermj/go-logger/logger"
+	"github.com/drauschenbach/megalithicd/propertykey"
+	"github.com/gorilla/websocket"
 )
 
-func (self CloudService) SendStartupNotification(nodeID string) error {
+func (self CloudService) SendStartupNotification() error {
+
+	nodeID, err := self.propertiesDAO.Get(propertykey.NodeID)
+	if err != nil {
+		logger.Fatalf("Failed looking up node id: %v", err)
+		return nil
+	}
 
 	message := map[string]string{
 		"nodeid": nodeID,
@@ -19,12 +25,11 @@ func (self CloudService) SendStartupNotification(nodeID string) error {
 		return err
 	}
 
-	_, err = http.Post(self.cloudServiceURL+"/v1/agent-startup", "application/json", bytes.NewBuffer(body))
-	if err != nil {
+	if err := self.conn.WriteMessage(websocket.TextMessage, body); err != nil {
 		logger.Errorf("Failed contacting cloud service: %v", err)
 		return err
 	}
 
-	logger.Infof("Contacted cloud service at %s", self.cloudServiceURL)
+	logger.Infof("Contacted cloud service")
 	return nil
 }

@@ -27,13 +27,11 @@
   version = "1.0.4"
 
 [[projects]]
-  digest = "1:e74e82427461e9408afc9a42d2ce80c37a91087f2c92ef5e11cd5f5f5caad2ca"
+  digest = "1:16aabf3610693f98347e7d7b35ab0b7205d29391ce639c79fc975be1a2d1a5d4"
   name = "github.com/emersion/go-imap"
   packages = [
     ".",
     "backend",
-    "backend/backendutil",
-    "backend/memory",
     "commands",
     "responses",
     "server",
@@ -44,32 +42,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:78efb39e4f4fa79759879d76eb6520ae4322678a6ee4c8058c75f02c93946c85"
-  name = "github.com/emersion/go-message"
-  packages = [
-    ".",
-    "mail",
-    "textproto",
-  ]
-  pruneopts = "UT"
-  revision = "a1016d933e861fbc163d10c463c0e21ea8b6779c"
-  version = "v0.10.7"
-
-[[projects]]
   branch = "master"
   digest = "1:0b59b9c2b7cc89cc3957fb0635483acad6a8cdd6563581f6023021e3160995a1"
   name = "github.com/emersion/go-sasl"
   packages = ["."]
   pruneopts = "UT"
   revision = "240c8404624e076f633766c16adbe96c7ac516b7"
-
-[[projects]]
-  branch = "master"
-  digest = "1:47fffd6812689e229e8072737578af99cad0b17707cc07c36344c63bb6b797f1"
-  name = "github.com/emersion/go-textwrapper"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "d0e65e56babe3f687ff94c1d764ca0e6aa7723ee"
 
 [[projects]]
   digest = "1:f2ac2c724fc8214bb7b9dd6d4f5b7a983152051f5133320f228557182263cb94"
@@ -88,20 +66,20 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:e62657cca9badaa308d86e7716083e4c5933bb78e30a17743fc67f50be26f6f4"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c3e18be99d19e6b3e8f1559eea2c161a665c4b6b"
+  version = "v1.4.1"
+
+[[projects]]
   branch = "master"
   digest = "1:3d01ffc972d0bf484022abbc79f469da223261c4107eb5f5a02d63de3c0cdd72"
   name = "github.com/karlkfi/inject"
   packages = ["."]
   pruneopts = "UT"
   revision = "86d2a962209df14e41b6eae3e447ee7adceff87e"
-
-[[projects]]
-  digest = "1:46a3bc40e9de7fc623b5bc904abbb36ca8718fc5f644786458c46fd43f6a8e25"
-  name = "github.com/martinlindhe/base36"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "7c6542dfbb41505111dde1f321eb5d5002f5fb88"
-  version = "v1.0.0"
 
 [[projects]]
   digest = "1:860c25446f565f998eb698ddc033e9e43b2546eb950b20aca28f30ba73deb86d"
@@ -169,9 +147,10 @@
     "github.com/asdine/genji/query",
     "github.com/asdine/genji/record",
     "github.com/docktermj/go-logger/logger",
+    "github.com/emersion/go-imap",
     "github.com/emersion/go-imap/backend",
-    "github.com/emersion/go-imap/backend/memory",
     "github.com/emersion/go-imap/server",
+    "github.com/gorilla/websocket",
     "github.com/karlkfi/inject",
     "github.com/rs/xid",
   ]

@@ -1,37 +1,62 @@
 package cloudservice
 
 import (
+	"net/url"
 	"os"
+	"time"
 
 	"github.com/docktermj/go-logger/logger"
 	"github.com/drauschenbach/megalithicd/dao"
-	"github.com/drauschenbach/megalithicd/propertykey"
+	"github.com/gorilla/websocket"
 )
 
+const CLOUDSERVICE_URL = "CLOUDSERVICE_URL"
+
 type CloudService struct {
-	cloudServiceURL string
+	cloudServiceURL url.URL
+	conn            *websocket.Conn
+	propertiesDAO   dao.PropertiesDAO
 }
 
 func New(propertiesDAO dao.PropertiesDAO) *CloudService {
-	cloudServiceURL := os.Getenv("CLOUDSERVICE_URL")
+	cloudServiceURL := os.Getenv(CLOUDSERVICE_URL)
 	if cloudServiceURL == "" {
 		cloudServiceURL = "http://localhost:3000"
 	}
-
-	nodeID, err := propertiesDAO.Get(propertykey.NodeID)
+	parsedURL, err := url.Parse(cloudServiceURL)
 	if err != nil {
-		logger.Fatalf("Failed looking up node id: %v", err)
+		logger.Fatalf("Malformed %s", CLOUDSERVICE_URL)
 		return nil
 	}
 
 	self := CloudService{
-		cloudServiceURL: cloudServiceURL,
+		cloudServiceURL: url.URL{Scheme: "ws", Host: parsedURL.Host, Path: "/v1/agentstream"},
+		propertiesDAO:   propertiesDAO,
 	}
 
-	if err := self.SendStartupNotification(nodeID); err != nil {
-		logger.Fatalf("Failed contacting cloud service: %v", err)
-		return nil
-	}
+	go self.dialer()
 
 	return &self
+}
+
+func (self *CloudService) dialer() {
+	for {
+		if self.conn != nil {
+			time.Sleep(1 * time.Second)
+			continue
+		}
+		logger.Debugf("Connecting to %s", self.cloudServiceURL.String())
+		conn, _, err := websocket.DefaultDialer.Dial(self.cloudServiceURL.String(), nil)
+		if err != nil {
+			self.conn = nil
+			time.Sleep(15 * time.Second)
+			continue
+		}
+		logger.Debugf("Connected to %s", self.cloudServiceURL.String())
+		self.conn = conn
+
+		if err := self.SendStartupNotification(); err != nil {
+			logger.Warnf("Failed contacting cloud service: %v", err)
+		}
+	}
 }
