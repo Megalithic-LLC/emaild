@@ -13,3 +13,5 @@ generate:
 	genji -f model/message.go          -s Message
 	genji -f model/message_body_raw.go -s MessageBodyRaw
 	genji -f model/property.go         -s Property
+	go generate github.com/drauschenbach/megalithicd/cloudservice/...
+	

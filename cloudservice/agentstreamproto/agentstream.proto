@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package agentstreamproto;
+
+message ClientMessage {
+    uint64 id = 1;
+    oneof message_type {
+        AckResponse    ack_response    = 2;
+        NoopRequest    noop_request    = 3;
+        StartupRequest startup_request = 4;
+    }
+}
+
+message ServerMessage {
+    uint64 id = 1;
+    oneof message_type {
+        AckResponse    ack_response    = 2;
+        NoopRequest    noop_request    = 3;
+    }
+}
+
+message AckResponse {
+}
+
+message NoopRequest {
+}
+
+message StartupRequest {
+    string node_id = 1;
+}

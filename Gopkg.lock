@@ -58,6 +58,14 @@
   version = "v1.3.3"
 
 [[projects]]
+  digest = "1:573ca21d3669500ff845bdebee890eb7fc7f0f50c59f2132f2a0c6b03d85086a"
+  name = "github.com/golang/protobuf"
+  packages = ["proto"]
+  pruneopts = "UT"
+  revision = "6c65a5562fc06764971b7c5d05c76c75e84bdbf7"
+  version = "v1.3.2"
+
+[[projects]]
   digest = "1:0bfbe13936953a98ae3cfe8ed6670d396ad81edf069a806d2f6515d7bb6950df"
   name = "github.com/google/btree"
   packages = ["."]
@@ -150,6 +158,7 @@
     "github.com/emersion/go-imap",
     "github.com/emersion/go-imap/backend",
     "github.com/emersion/go-imap/server",
+    "github.com/golang/protobuf/proto",
     "github.com/gorilla/websocket",
     "github.com/karlkfi/inject",
     "github.com/rs/xid",
