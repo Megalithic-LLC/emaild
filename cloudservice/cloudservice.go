@@ -45,7 +45,7 @@ func New(propertiesDAO dao.PropertiesDAO) *CloudService {
 	}
 
 	self := CloudService{
-		cloudServiceURL: url.URL{Scheme: "ws", Host: parsedURL.Host, Path: "/v1/agentstream"},
+		cloudServiceURL: url.URL{Scheme: "ws", Host: parsedURL.Host, Path: "/v1/agentStream"},
 		pending:         map[uint64]*Call{},
 		propertiesDAO:   propertiesDAO,
 		nextID:          1,

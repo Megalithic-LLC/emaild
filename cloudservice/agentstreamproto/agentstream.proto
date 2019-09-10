@@ -8,18 +8,25 @@ message ClientMessage {
         AckResponse    ack_response    = 2;
         NoopRequest    noop_request    = 3;
         StartupRequest startup_request = 4;
+        ErrorResponse  error_response  = 5;
     }
 }
 
 message ServerMessage {
     uint64 id = 1;
     oneof message_type {
-        AckResponse    ack_response    = 2;
-        NoopRequest    noop_request    = 3;
+        AckResponse        ack_response   = 2;
+        NoopRequest        noop_request   = 3;
+        ErrorResponse      error_response = 4;
     }
 }
 
 message AckResponse {
+}
+
+
+message ErrorResponse {
+    string error = 1;
 }
 
 message NoopRequest {
