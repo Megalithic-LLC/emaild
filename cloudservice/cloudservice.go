@@ -3,6 +3,7 @@ package cloudservice
 
 import (
 	"errors"
+	"net/http"
 	"net/url"
 	"os"
 	"sync"
@@ -11,20 +12,15 @@ import (
 	"github.com/docktermj/go-logger/logger"
 	"github.com/drauschenbach/megalithicd/cloudservice/agentstreamproto"
 	"github.com/drauschenbach/megalithicd/dao"
+	"github.com/drauschenbach/megalithicd/propertykey"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
 )
 
 const CLOUDSERVICE_URL = "CLOUDSERVICE_URL"
 
-type Call struct {
-	Done  chan bool
-	Error error
-	Req   agentstreamproto.ClientMessage
-	Res   *agentstreamproto.ServerMessage
-}
-
 type CloudService struct {
+	agentID         string
 	cloudServiceURL url.URL
 	conn            *websocket.Conn
 	mutex           sync.Mutex
@@ -44,7 +40,14 @@ func New(propertiesDAO dao.PropertiesDAO) *CloudService {
 		return nil
 	}
 
+	agentID, err := propertiesDAO.Get(propertykey.NodeID)
+	if err != nil {
+		logger.Fatalf("Failed looking up agent id: %v", err)
+		return nil
+
+	}
 	self := CloudService{
+		agentID:         agentID,
 		cloudServiceURL: url.URL{Scheme: "ws", Host: parsedURL.Host, Path: "/v1/agentStream"},
 		pending:         map[uint64]*Call{},
 		propertiesDAO:   propertiesDAO,
@@ -71,7 +74,10 @@ func (self *CloudService) dialer() {
 			continue
 		}
 		logger.Debugf("Connecting to %s", self.cloudServiceURL.String())
-		conn, _, err := websocket.DefaultDialer.Dial(self.cloudServiceURL.String(), nil)
+		header := http.Header{
+			"X-AgentID": []string{self.agentID},
+		}
+		conn, _, err := websocket.DefaultDialer.Dial(self.cloudServiceURL.String(), header)
 		if err != nil {
 			self.conn = nil
 			time.Sleep(5 * time.Second)

@@ -18,12 +18,16 @@ message ServerMessage {
         AckResponse        ack_response   = 2;
         NoopRequest        noop_request   = 3;
         ErrorResponse      error_response = 4;
+        ClaimRequest       claim_request  = 5;
     }
 }
 
 message AckResponse {
 }
 
+message ClaimRequest {
+    string token = 1;
+}
 
 message ErrorResponse {
     string error = 1;
@@ -33,5 +37,4 @@ message NoopRequest {
 }
 
 message StartupRequest {
-    string node_id = 1;
 }
