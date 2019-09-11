@@ -1,8 +1,6 @@
 package dao
 
 import (
-	"errors"
-
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
@@ -41,7 +39,14 @@ func (self PropertiesDAO) Get(key string) (string, error) {
 }
 
 func (self PropertiesDAO) Set(key, value string) error {
-	return errors.New("NIY")
+	return self.db.Update(func(tx *genji.Tx) error {
+		if table, err := tx.GetTable(model.PropertyTable); err != nil {
+			return err
+		} else {
+			_, err := table.Insert(&model.Property{Key: key, Value: value})
+			return err
+		}
+	})
 }
 
 func (self PropertiesDAO) SetIfKeyNotExists(key, value string) (string, error) {

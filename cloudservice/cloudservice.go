@@ -86,7 +86,7 @@ func (self *CloudService) dialer() {
 		logger.Debugf("Connected to %s", self.cloudServiceURL.String())
 		self.conn = conn
 
-		if err := self.SendStartupNotification(); err != nil {
+		if _, err := self.SendStartupRequest(); err != nil {
 			logger.Warnf("Failed contacting cloud service: %v", err)
 		}
 	}
@@ -127,10 +127,9 @@ func (self *CloudService) reader() {
 			self.mutex.Unlock()
 			call.Res = &message
 			call.Done <- true
-		}
-
-		if !isResponse {
-			logger.Warnf("TODO handle request")
+		} else {
+			self.mutex.Unlock()
+			self.route(message)
 		}
 	}
 
@@ -175,7 +174,7 @@ func (self *CloudService) SendRequest(req agentstreamproto.ClientMessage) (*agen
 	return call.Res, call.Error
 }
 
-func (self *CloudService) SendResponse(res agentstreamproto.ServerMessage) error {
+func (self *CloudService) SendResponse(res agentstreamproto.ClientMessage) error {
 	logger.Tracef("CloudService:SendResponse()")
 
 	// Encode response

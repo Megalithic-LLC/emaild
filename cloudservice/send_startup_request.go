@@ -4,12 +4,11 @@ import (
 	"github.com/drauschenbach/megalithicd/cloudservice/agentstreamproto"
 )
 
-func (self *CloudService) SendStartupNotification() error {
+func (self *CloudService) SendStartupRequest() (*agentstreamproto.ServerMessage, error) {
 	req := agentstreamproto.ClientMessage{
 		MessageType: &agentstreamproto.ClientMessage_StartupRequest{
 			StartupRequest: &agentstreamproto.StartupRequest{},
 		},
 	}
-	_, err := self.SendRequest(req)
-	return err
+	return self.SendRequest(req)
 }
