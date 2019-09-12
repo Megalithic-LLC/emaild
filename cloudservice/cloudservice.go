@@ -69,14 +69,27 @@ func NewCall(req agentstreamproto.ClientMessage) *Call {
 
 func (self *CloudService) dialer() {
 	for {
+		// Already connected?
 		if self.conn != nil {
 			time.Sleep(1 * time.Second)
 			continue
+		}
+
+		// Configure connect request
+		token, err := self.propertiesDAO.Get(propertykey.Token)
+		if err != nil {
+			logger.Fatalf("Failed looking up token: %v", err)
+			return
 		}
 		logger.Debugf("Connecting to %s", self.cloudServiceURL.String())
 		header := http.Header{
 			"X-AgentID": []string{self.agentID},
 		}
+		if token != "" {
+			header["Authorization"] = []string{"Bearer " + token}
+		}
+
+		// Connect
 		conn, _, err := websocket.DefaultDialer.Dial(self.cloudServiceURL.String(), header)
 		if err != nil {
 			self.conn = nil
@@ -86,9 +99,21 @@ func (self *CloudService) dialer() {
 		logger.Debugf("Connected to %s", self.cloudServiceURL.String())
 		self.conn = conn
 
+		// Initial handshake
 		if _, err := self.SendStartupRequest(); err != nil {
 			logger.Warnf("Failed contacting cloud service: %v", err)
 		}
+	}
+}
+
+func (self *CloudService) Disconnect() {
+	logger.Tracef("CloudService:Disconnect()")
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	if self.conn != nil {
+		self.conn.Close()
+		self.conn = nil
+		self.pending = map[uint64]*Call{}
 	}
 }
 

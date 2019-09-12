@@ -18,4 +18,7 @@ func (self *CloudService) handleClaimRequest(requestId uint64, claimReq agentstr
 	if err := self.SendAckResponse(requestId); err != nil {
 		logger.Errorf("Failed sending ack response: %v", err)
 	}
+
+	// Disconnect, so that dialer will use the token on reconnect
+	self.Disconnect()
 }
