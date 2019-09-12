@@ -15,10 +15,11 @@ message ClientMessage {
 message ServerMessage {
     uint64 id = 1;
     oneof message_type {
-        AckResponse        ack_response   = 2;
-        NoopRequest        noop_request   = 3;
-        ErrorResponse      error_response = 4;
-        ClaimRequest       claim_request  = 5;
+        AckResponse          ack_response   = 2;
+        NoopRequest          noop_request   = 3;
+        ErrorResponse        error_response = 4;
+        ClaimRequest         claim_request  = 5;
+        ConfigChangedRequest config_changed_request = 6;
     }
 }
 
@@ -27,6 +28,10 @@ message AckResponse {
 
 message ClaimRequest {
     string token = 1;
+}
+
+message ConfigChangedRequest {
+    map<string,bytes> hashes_by_table = 1;
 }
 
 message ErrorResponse {
