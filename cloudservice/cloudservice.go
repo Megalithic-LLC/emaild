@@ -150,7 +150,12 @@ func (self *CloudService) reader() {
 		if isResponse {
 			delete(self.pending, message.Id)
 			self.mutex.Unlock()
-			call.Res = &message
+			switch message.MessageType.(type) {
+			case *agentstreamproto.ServerMessage_ErrorResponse:
+				call.Error = errors.New(message.GetErrorResponse().Error)
+			default:
+				call.Res = &message
+			}
 			call.Done <- true
 		} else {
 			self.mutex.Unlock()
