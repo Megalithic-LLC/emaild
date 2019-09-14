@@ -160,6 +160,7 @@
     "github.com/emersion/go-imap/backend",
     "github.com/emersion/go-imap/client",
     "github.com/emersion/go-imap/server",
+    "github.com/emersion/go-sasl",
     "github.com/golang/protobuf/proto",
     "github.com/gorilla/websocket",
     "github.com/karlkfi/inject",

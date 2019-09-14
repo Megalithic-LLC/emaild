@@ -7,6 +7,7 @@ import (
 	"github.com/docktermj/go-logger/logger"
 	"github.com/drauschenbach/megalithicd/cloudservice/agentstreamproto"
 	"github.com/emersion/go-imap/client"
+	"github.com/emersion/go-sasl"
 )
 
 func (self *CloudService) handleTestAccountCredentialsRequest(requestId uint64, req agentstreamproto.EmailcdnTestAccountCredentialsRequest) {
@@ -37,17 +38,27 @@ func (self *CloudService) handleTestAccountCredentialsRequest(requestId uint64, 
 		}
 		defer c.Logout()
 
-		// TODO Verify credentials
-		//		if err := c.Login(req.Account.ImapUsername, req.Account.ImapPassword); err != nil {
-		//			msg := fmt.Sprintf("Login failed: %v", err)
-		//			logger.Debugf(msg)
-		//			self.SendErrorResponse(requestId, errors.New(msg))
-		//			return
-		//		}
-		//		logger.Debugf("Login succeeded")
+		//c.SetDebug(imap.NewDebugWriter(os.Stderr, os.Stderr))
 
-		self.SendAckResponse(requestId)
+		// Verify credentials with AUTH=PLAIN
+		if ok, err := c.Support("AUTH=PLAIN"); err != nil {
+			logger.Debugf("Failed detecting capabilities: %v", err)
+			self.SendErrorResponse(requestId, err)
+			return
+		} else if ok {
+			saslClient := sasl.NewPlainClient("", req.Account.ImapUsername, req.Account.ImapPassword)
+			if err := c.Authenticate(saslClient); err != nil {
+				msg := fmt.Sprintf("Authentication failed: %v", err)
+				logger.Debugf(msg)
+				self.SendErrorResponse(requestId, errors.New(msg))
+				return
+			}
+			logger.Debugf("Authenticate succeeded")
+			self.SendAckResponse(requestId)
+		}
+
+		self.SendErrorResponse(requestId, errors.New("Unsupported auth mechanism"))
 	}
 
-	self.SendErrorResponse(requestId, errors.New("Unsupported provider2"))
+	self.SendErrorResponse(requestId, errors.New("Unsupported provider: "+req.Account.Provider))
 }
