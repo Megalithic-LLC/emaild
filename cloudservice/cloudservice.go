@@ -198,17 +198,3 @@ func (self *CloudService) SendRequest(req agentstreamproto.ClientMessage) (*agen
 
 	return call.Res, call.Error
 }
-
-func (self *CloudService) SendResponse(res agentstreamproto.ClientMessage) error {
-	logger.Tracef("CloudService:SendResponse()")
-
-	// Encode response
-	rawMessage, err := proto.Marshal(&res)
-	if err != nil {
-		logger.Errorf("Failed encoding response: %v", err)
-		return err
-	}
-
-	// Send response
-	return self.conn.WriteMessage(websocket.BinaryMessage, rawMessage)
-}

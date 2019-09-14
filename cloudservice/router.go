@@ -13,8 +13,14 @@ func (self *CloudService) route(message agentstreamproto.ServerMessage) {
 	case *agentstreamproto.ServerMessage_ClaimRequest:
 		claimRequest := message.GetClaimRequest()
 		self.handleClaimRequest(message.Id, *claimRequest)
+
 	case *agentstreamproto.ServerMessage_ConfigChangedRequest:
 		configChangedRequest := message.GetConfigChangedRequest()
 		self.handleConfigChangedRequest(message.Id, *configChangedRequest)
+
+	case *agentstreamproto.ServerMessage_EmailcdnTestAccountCredentialsRequest:
+		testAccountCredentialsRequest := message.GetEmailcdnTestAccountCredentialsRequest()
+		self.handleTestAccountCredentialsRequest(message.Id, *testAccountCredentialsRequest)
+
 	}
 }
