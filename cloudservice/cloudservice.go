@@ -150,7 +150,12 @@ func (self *CloudService) reader() {
 		if isResponse {
 			delete(self.pending, message.Id)
 			self.mutex.Unlock()
-			call.Res = &message
+			switch message.MessageType.(type) {
+			case *agentstreamproto.ServerMessage_ErrorResponse:
+				call.Error = errors.New(message.GetErrorResponse().Error)
+			default:
+				call.Res = &message
+			}
 			call.Done <- true
 		} else {
 			self.mutex.Unlock()
@@ -197,18 +202,4 @@ func (self *CloudService) SendRequest(req agentstreamproto.ClientMessage) (*agen
 	}
 
 	return call.Res, call.Error
-}
-
-func (self *CloudService) SendResponse(res agentstreamproto.ClientMessage) error {
-	logger.Tracef("CloudService:SendResponse()")
-
-	// Encode response
-	rawMessage, err := proto.Marshal(&res)
-	if err != nil {
-		logger.Errorf("Failed encoding response: %v", err)
-		return err
-	}
-
-	// Send response
-	return self.conn.WriteMessage(websocket.BinaryMessage, rawMessage)
 }

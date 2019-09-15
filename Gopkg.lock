@@ -27,11 +27,12 @@
   version = "1.0.4"
 
 [[projects]]
-  digest = "1:16aabf3610693f98347e7d7b35ab0b7205d29391ce639c79fc975be1a2d1a5d4"
+  digest = "1:a380d27c41c511e97215723eb277f909c0f390b171e03334f2929850c875327b"
   name = "github.com/emersion/go-imap"
   packages = [
     ".",
     "backend",
+    "client",
     "commands",
     "responses",
     "server",
@@ -157,7 +158,9 @@
     "github.com/docktermj/go-logger/logger",
     "github.com/emersion/go-imap",
     "github.com/emersion/go-imap/backend",
+    "github.com/emersion/go-imap/client",
     "github.com/emersion/go-imap/server",
+    "github.com/emersion/go-sasl",
     "github.com/golang/protobuf/proto",
     "github.com/gorilla/websocket",
     "github.com/karlkfi/inject",
