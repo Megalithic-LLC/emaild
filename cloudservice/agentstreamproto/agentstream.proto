@@ -5,10 +5,11 @@ package agentstreamproto;
 message ClientMessage {
     uint64 id = 1;
     oneof message_type {
-        AckResponse    ack_response    = 2;
-        NoopRequest    noop_request    = 3;
-        StartupRequest startup_request = 4;
-        ErrorResponse  error_response  = 5;
+        AckResponse                ack_response    = 2;
+        NoopRequest                noop_request    = 3;
+        StartupRequest             startup_request = 4;
+        ErrorResponse              error_response  = 5;
+        EmailcdnGetAccountsRequest emailcdn_get_accounts_request = 6;
     }
 }
 
@@ -19,8 +20,9 @@ message ServerMessage {
         NoopRequest                           noop_request   = 3;
         ErrorResponse                         error_response = 4;
         ClaimRequest                          claim_request  = 5;
-        ConfigChangedRequest                  config_changed_request = 6;
+        ConfigChangedResponse                 config_changed_response = 6;
         EmailcdnTestAccountCredentialsRequest emailcdn_test_account_credentials_request = 7;
+        EmailcdnGetAccountsResponse           emailcdn_get_accounts_response = 8;
     }
 }
 
@@ -31,23 +33,31 @@ message ClaimRequest {
     string token = 1;
 }
 
-message ConfigChangedRequest {
+message ConfigChangedResponse {
     map<string,bytes> hashes_by_table = 1;
 }
 
 message EmailcdnAccount {
     string id            = 1;
-    string provider      = 2;
-    string email         = 3;
-    string imap_host     = 4;
-    uint32 imap_port     = 5;
-    string imap_username = 6;
-    string imap_password = 7;
-    string smtp_host     = 8;
-    uint32 smtp_port     = 9;
-    string smtp_username = 10;
-    string smtp_password = 11;
-    bool ssl_required    = 12;
+    string name          = 2;
+    string provider      = 3;
+    string email         = 4;
+    string imap_host     = 5;
+    uint32 imap_port     = 6;
+    string imap_username = 7;
+    string imap_password = 8;
+    string smtp_host     = 9;
+    uint32 smtp_port     = 10;
+    string smtp_username = 11;
+    string smtp_password = 12;
+    bool ssl_required    = 13;
+}
+
+message EmailcdnGetAccountsRequest {
+}
+
+message EmailcdnGetAccountsResponse {
+    repeated EmailcdnAccount accounts = 1;
 }
 
 message EmailcdnTestAccountCredentialsRequest {

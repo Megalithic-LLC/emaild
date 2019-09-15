@@ -9,6 +9,8 @@ import (
 )
 
 func (self *CloudService) SendResponse(res agentstreamproto.ClientMessage) error {
+	logger.Tracef("CloudService:SendResponse(%d)", res.Id)
+
 	// Encode response
 	rawMessage, err := proto.Marshal(&res)
 	if err != nil {

@@ -14,9 +14,9 @@ func (self *CloudService) route(message agentstreamproto.ServerMessage) {
 		claimRequest := message.GetClaimRequest()
 		self.handleClaimRequest(message.Id, *claimRequest)
 
-	case *agentstreamproto.ServerMessage_ConfigChangedRequest:
-		configChangedRequest := message.GetConfigChangedRequest()
-		self.handleConfigChangedRequest(message.Id, *configChangedRequest)
+	case *agentstreamproto.ServerMessage_ConfigChangedResponse:
+		configChangedResponse := message.GetConfigChangedResponse()
+		self.handleConfigChangedResponse(message.Id, *configChangedResponse)
 
 	case *agentstreamproto.ServerMessage_EmailcdnTestAccountCredentialsRequest:
 		testAccountCredentialsRequest := message.GetEmailcdnTestAccountCredentialsRequest()

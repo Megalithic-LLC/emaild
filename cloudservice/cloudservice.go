@@ -20,6 +20,7 @@ import (
 const CLOUDSERVICE_URL = "CLOUDSERVICE_URL"
 
 type CloudService struct {
+	accountsDAO     dao.AccountsDAO
 	agentID         string
 	cloudServiceURL url.URL
 	conn            *websocket.Conn
@@ -29,7 +30,10 @@ type CloudService struct {
 	propertiesDAO   dao.PropertiesDAO
 }
 
-func New(propertiesDAO dao.PropertiesDAO) *CloudService {
+func New(
+	accountsDAO dao.AccountsDAO,
+	propertiesDAO dao.PropertiesDAO,
+) *CloudService {
 	cloudServiceURL := os.Getenv(CLOUDSERVICE_URL)
 	if cloudServiceURL == "" {
 		cloudServiceURL = "http://localhost:3000"
@@ -47,6 +51,7 @@ func New(propertiesDAO dao.PropertiesDAO) *CloudService {
 
 	}
 	self := CloudService{
+		accountsDAO:     accountsDAO,
 		agentID:         agentID,
 		cloudServiceURL: url.URL{Scheme: "ws", Host: parsedURL.Host, Path: "/v1/agentStream"},
 		pending:         map[uint64]*Call{},
@@ -60,7 +65,7 @@ func New(propertiesDAO dao.PropertiesDAO) *CloudService {
 	return &self
 }
 
-func NewCall(req agentstreamproto.ClientMessage) *Call {
+func NewCall(req *agentstreamproto.ClientMessage) *Call {
 	return &Call{
 		Req:  req,
 		Done: make(chan bool),
@@ -159,7 +164,9 @@ func (self *CloudService) reader() {
 			call.Done <- true
 		} else {
 			self.mutex.Unlock()
-			self.route(message)
+			go func() {
+				self.route(message)
+			}()
 		}
 	}
 
@@ -172,14 +179,16 @@ func (self *CloudService) reader() {
 	self.mutex.Unlock()
 }
 
-func (self *CloudService) SendRequest(req agentstreamproto.ClientMessage) (*agentstreamproto.ServerMessage, error) {
+func (self *CloudService) SendRequest(req *agentstreamproto.ClientMessage) (*agentstreamproto.ServerMessage, error) {
+
+	// Track request
 	self.mutex.Lock()
 	req.Id = self.getNextID()
 	call := NewCall(req)
 	self.pending[req.Id] = call
 
 	// Encode request
-	rawMessage, err := proto.Marshal(&req)
+	rawMessage, err := proto.Marshal(req)
 	if err != nil {
 		logger.Errorf("Failed encoding request: %v", err)
 		defer self.mutex.Unlock()
@@ -189,15 +198,16 @@ func (self *CloudService) SendRequest(req agentstreamproto.ClientMessage) (*agen
 	// Send request
 	if err := self.conn.WriteMessage(websocket.BinaryMessage, rawMessage); err != nil {
 		delete(self.pending, req.Id)
-		defer self.mutex.Unlock()
+		self.mutex.Unlock()
 		return nil, err
 	}
-
 	self.mutex.Unlock()
 
 	select {
 	case <-call.Done:
 	case <-time.After(2 * time.Second):
+		logger.Debugf("[%d] done", req.Id)
+		logger.Debugf("[%d] timeout", req.Id)
 		call.Error = errors.New("request timeout")
 	}
 

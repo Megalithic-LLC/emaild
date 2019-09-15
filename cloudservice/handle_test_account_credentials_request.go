@@ -70,9 +70,11 @@ func (self *CloudService) handleTestAccountCredentialsRequest(requestId uint64, 
 			}
 			logger.Debugf("Authenticate succeeded")
 			self.SendAckResponse(requestId)
+			return
 		}
 
 		self.SendErrorResponse(requestId, errors.New("Unsupported auth mechanism"))
+		return
 	}
 
 	self.SendErrorResponse(requestId, errors.New("Unsupported provider: "+req.Account.Provider))

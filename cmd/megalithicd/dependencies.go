@@ -22,6 +22,7 @@ var (
 	imapServer   *imap_server.Server
 	syncService  *syncservice.SyncService
 
+	accountsDAO   dao.AccountsDAO
 	propertiesDAO dao.PropertiesDAO
 )
 
@@ -35,5 +36,6 @@ func DefineDependencies() {
 	graph.Define(&imapServer, inject.NewAutoProvider(newImapServer))
 	graph.Define(&syncService, inject.NewAutoProvider(syncservice.New))
 
+	graph.Define(&accountsDAO, inject.NewAutoProvider(dao.NewAccountsDAO))
 	graph.Define(&propertiesDAO, inject.NewAutoProvider(dao.NewPropertiesDAO))
 }
