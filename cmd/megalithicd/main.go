@@ -36,12 +36,19 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(5)*time.Second)
 	defer cancel()
 	_ = ctx
-	//	imapEndpoint.Shutdown(ctx)
+
 	logger.Infof("Shutting down")
+
+	if syncService != nil {
+		syncService.Close()
+	}
+
+	//	imapEndpoint.Shutdown(ctx)
+
 	if db != nil {
 		db.Close()
 		logger.Infof("Closed database")
 	}
-	os.Exit(0)
 
+	os.Exit(0)
 }

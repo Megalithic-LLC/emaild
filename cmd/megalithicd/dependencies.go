@@ -6,6 +6,7 @@ import (
 	"github.com/drauschenbach/megalithicd/cloudservice"
 	"github.com/drauschenbach/megalithicd/dao"
 	"github.com/drauschenbach/megalithicd/imapbackend"
+	"github.com/drauschenbach/megalithicd/syncservice"
 	imap_backend "github.com/emersion/go-imap/backend"
 	imap_server "github.com/emersion/go-imap/server"
 	"github.com/karlkfi/inject"
@@ -19,6 +20,7 @@ var (
 	genjiEngine  *engine.Engine
 	imapBackend  imap_backend.Backend
 	imapServer   *imap_server.Server
+	syncService  *syncservice.SyncService
 
 	propertiesDAO dao.PropertiesDAO
 )
@@ -31,6 +33,7 @@ func DefineDependencies() {
 	graph.Define(&genjiEngine, inject.NewAutoProvider(newGenjiEngine))
 	graph.Define(&imapBackend, inject.NewAutoProvider(imapbackend.New))
 	graph.Define(&imapServer, inject.NewAutoProvider(newImapServer))
+	graph.Define(&syncService, inject.NewAutoProvider(syncservice.New))
 
 	graph.Define(&propertiesDAO, inject.NewAutoProvider(dao.NewPropertiesDAO))
 }

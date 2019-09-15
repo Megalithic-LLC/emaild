@@ -6,9 +6,19 @@ import (
 
 	"github.com/docktermj/go-logger/logger"
 	"github.com/drauschenbach/megalithicd/cloudservice/agentstreamproto"
+	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/client"
 	"github.com/emersion/go-sasl"
 )
+
+type writer struct {
+	prefix string
+}
+
+func (self writer) Write(p []byte) (int, error) {
+	logger.Debugf("(%s) %s", self.prefix, string(p))
+	return len(p), nil
+}
 
 func (self *CloudService) handleTestAccountCredentialsRequest(requestId uint64, req agentstreamproto.EmailcdnTestAccountCredentialsRequest) {
 	logger.Tracef("CloudService:handleTestAccountCredentialsRequest(%d, %+v)", requestId, req)
@@ -19,6 +29,7 @@ func (self *CloudService) handleTestAccountCredentialsRequest(requestId uint64, 
 		addr := fmt.Sprintf("%s:%d", req.Account.ImapHost, req.Account.ImapPort)
 		var c *client.Client
 		if req.Account.SslRequired {
+			logger.Debugf("Connecting to %s via TLS", addr)
 			var err error
 			c, err = client.DialTLS(addr, nil)
 			if err != nil {
@@ -26,19 +37,23 @@ func (self *CloudService) handleTestAccountCredentialsRequest(requestId uint64, 
 				self.SendErrorResponse(requestId, err)
 				return
 			}
-			logger.Debugf("Connected to %s:%d via TLS", req.Account.ImapHost, req.Account.ImapPort)
+			logger.Infof("Connected to %s via TLS", addr)
 		} else {
+			logger.Debugf("Connecting to %s", addr)
 			var err error
 			c, err = client.Dial(addr)
 			if err != nil {
-				logger.Debugf("Dail failed: %v", err)
+				logger.Infof("Dail failed: %v", err)
 				self.SendErrorResponse(requestId, err)
 				return
 			}
+			logger.Infof("Connected to %s", addr)
 		}
 		defer c.Logout()
 
-		//c.SetDebug(imap.NewDebugWriter(os.Stderr, os.Stderr))
+		recvWriter := writer{prefix: "recv"}
+		sendWriter := writer{prefix: "send"}
+		c.SetDebug(imap.NewDebugWriter(sendWriter, recvWriter))
 
 		// Verify credentials with AUTH=PLAIN
 		if ok, err := c.Support("AUTH=PLAIN"); err != nil {
