@@ -51,7 +51,7 @@ $ ./on-prem-emaild
 2019/09/22 02:05:25 INFO Node id is bm3jict5jj84bcnaud40
 ```
 
-Finally, clone and run the [On-Prem Admin Portal UI](git@github.com:Megalithic-LLC/on-prem-admin-ui.git), and login with the default credentials of `admin` and `password`:
+Finally, clone and run the [On-Prem Admin Portal UI](git@github.com:Megalithic-LLC/on-prem-admin-ui.git), and login:
 
 ```sh
 $ git clone git@github.com:Megalithic-LLC/on-prem-admin-ui.git
@@ -63,7 +63,19 @@ Proxying to http://localhost:3000
 Build successful (8113ms) – Serving on http://localhost:4200/
 ```
 
-![Admin Portal Login](./login.png)
+![Admin Portal :: Login](./login.png)
+
+After logging in with the default credentials of `admin` and `password`, you'll be prompted to the effect that you haven't registered any agents yet. 
+
+![Admin Portal :: No Agents](./no-agents.png)
+
+Claim the running emaild agent by finding its node id in its startup log, and entering it into the admin ui:
+
+![Admin Portal :: Claim Agent](./claim.png)
+
+Finally, once the agent is selected, go to the marketplace, find the email service offering, select the free plan, and select it to create a service instance and site configuration for your agent.
+
+![Admin Poral :: Launch Service Instance](./launch-service-instance.png)
 
 ## Design
 
