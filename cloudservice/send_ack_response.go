@@ -1,7 +1,7 @@
 package cloudservice
 
 import (
-	"github.com/drauschenbach/megalithicd/cloudservice/agentstreamproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/agentstreamproto"
 )
 
 func (self *CloudService) SendAckResponse(requestId uint64) error {

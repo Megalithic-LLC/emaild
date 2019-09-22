@@ -1,6 +1,6 @@
 .PHONY: compile
 compile:
-	go install github.com/drauschenbach/megalithicd/cmd/megalithicd
+	go install github.com/Megalithic-LLC/on-prem-emaild/cmd/on-prem-emaild
 
 dependencies:
 	go get -u github.com/golang/dep/cmd/dep
@@ -13,5 +13,5 @@ generate:
 	genji -f model/message.go          -s Message
 	genji -f model/message_body_raw.go -s MessageBodyRaw
 	genji -f model/property.go         -s Property
-	go generate github.com/drauschenbach/megalithicd/cloudservice/...
+	go generate github.com/Megalithic-LLC/on-prem-emaild/cloudservice/...
 	

@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/docktermj/go-logger/logger"
-	"github.com/drauschenbach/megalithicd/cloudservice/agentstreamproto"
-	"github.com/drauschenbach/megalithicd/dao"
-	"github.com/drauschenbach/megalithicd/propertykey"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/agentstreamproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/dao"
+	"github.com/Megalithic-LLC/on-prem-emaild/propertykey"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
 )

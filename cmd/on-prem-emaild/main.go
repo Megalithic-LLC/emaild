@@ -25,7 +25,7 @@ func main() {
 		logger.Fatalf("Failed assigning node id: %v", err)
 	}
 
-	logger.Info("Megalithic Unified Messaging")
+	logger.Info("On-Prem Email Server started")
 	logger.Infof("Node id is %s", nodeid)
 
 	c := make(chan os.Signal, 1)

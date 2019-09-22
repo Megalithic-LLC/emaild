@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/docktermj/go-logger/logger"
-	"github.com/drauschenbach/megalithicd/cloudservice/agentstreamproto"
-	"github.com/drauschenbach/megalithicd/propertykey"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/agentstreamproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/propertykey"
 )
 
 func (self *CloudService) handleConfigChangedRequest(requestId uint64, configChangedReq agentstreamproto.ConfigChangedRequest) {

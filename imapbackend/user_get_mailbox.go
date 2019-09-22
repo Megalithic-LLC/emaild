@@ -7,7 +7,7 @@ import (
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
 	"github.com/docktermj/go-logger/logger"
-	"github.com/drauschenbach/megalithicd/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/emersion/go-imap/backend"
 )
 

@@ -1,7 +1,7 @@
 package imapbackend
 
 import (
-	"github.com/drauschenbach/megalithicd/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/emersion/go-imap"
 )
 

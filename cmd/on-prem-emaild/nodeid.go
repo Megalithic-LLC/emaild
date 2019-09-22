@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/drauschenbach/megalithicd/propertykey"
+	"github.com/Megalithic-LLC/on-prem-emaild/propertykey"
 	"github.com/rs/xid"
 )
 

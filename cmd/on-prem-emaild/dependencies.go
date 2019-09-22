@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
-	"github.com/drauschenbach/megalithicd/cloudservice"
-	"github.com/drauschenbach/megalithicd/dao"
-	"github.com/drauschenbach/megalithicd/imapbackend"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice"
+	"github.com/Megalithic-LLC/on-prem-emaild/dao"
+	"github.com/Megalithic-LLC/on-prem-emaild/imapbackend"
 	imap_backend "github.com/emersion/go-imap/backend"
 	imap_server "github.com/emersion/go-imap/server"
 	"github.com/karlkfi/inject"

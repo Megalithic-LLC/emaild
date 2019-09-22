@@ -3,7 +3,7 @@ package imapbackend
 import (
 	"github.com/asdine/genji"
 	"github.com/docktermj/go-logger/logger"
-	"github.com/drauschenbach/megalithicd/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/rs/xid"
 )
 

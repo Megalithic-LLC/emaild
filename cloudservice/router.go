@@ -2,7 +2,7 @@ package cloudservice
 
 import (
 	"github.com/docktermj/go-logger/logger"
-	"github.com/drauschenbach/megalithicd/cloudservice/agentstreamproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/agentstreamproto"
 )
 
 func (self *CloudService) route(message agentstreamproto.ServerMessage) {
