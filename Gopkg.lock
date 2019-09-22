@@ -2,8 +2,7 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:82ecea56beacd16e900b4b94a041a3f030ea4b4ae36763389f075848ced02c16"
+  digest = "1:143e4868bee7104a0788f9ce4e787d04a1adef1e1452692e5ce94e424ce95278"
   name = "github.com/asdine/genji"
   packages = [
     ".",
@@ -16,7 +15,8 @@
     "table",
   ]
   pruneopts = "UT"
-  revision = "afbb55a2afed51f19af7db213cbf8dae59d7070c"
+  revision = "ea5d95b23fa6b36d7bc6fabfb3f146b89eb7f89e"
+  version = "v0.1.1"
 
 [[projects]]
   digest = "1:e4399338acb360cfac1ddcebf3576c54be9908519a24cacdf764792f1dfeab2d"

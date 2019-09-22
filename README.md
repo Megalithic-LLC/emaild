@@ -64,3 +64,13 @@ Build successful (8113ms) – Serving on http://localhost:4200/
 ```
 
 ![Admin Portal Login](./login.png)
+
+## Design
+
+### Storage
+
+The [BoltDB](https://github.com/etcd-io/bbolt) and [BadgerDB](https://github.com/dgraph-io/badger) storage engines are supported, with BoltDB currently being the hard-coded default. [Genji](https://github.com/asdine/genji) is used as a layer above the storage engines to manage secondary indexes, and provides a data access interface.
+
+### Configuration and connection to Admin Portal
+
+The email server is configuration-free (no local config files, no local operator interface), and obtains its configuration updates from the Administration Portal API Server. A Websocket connection is maintained, and protobuf messages are exchanged using a request-response handshake involving request id's.
