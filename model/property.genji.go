@@ -7,7 +7,6 @@ import (
 	"errors"
 
 	"github.com/asdine/genji/field"
-	"github.com/asdine/genji/index"
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
 )
@@ -19,8 +18,6 @@ func (p *Property) GetField(name string) (field.Field, error) {
 		return field.NewString("Key", p.Key), nil
 	case "Value":
 		return field.NewString("Value", p.Value), nil
-	case "Unused":
-		return field.NewUint32("Unused", p.Unused), nil
 	}
 
 	return field.Field{}, errors.New("unknown field")
@@ -41,11 +38,6 @@ func (p *Property) Iterate(fn func(field.Field) error) error {
 		return err
 	}
 
-	err = fn(field.NewUint32("Unused", p.Unused))
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -60,8 +52,6 @@ func (p *Property) ScanRecord(rec record.Record) error {
 			p.Key, err = field.DecodeString(f.Data)
 		case "Value":
 			p.Value, err = field.DecodeString(f.Data)
-		case "Unused":
-			p.Unused, err = field.DecodeUint32(f.Data)
 		}
 		return err
 	})
@@ -72,26 +62,17 @@ func (p *Property) PrimaryKey() ([]byte, error) {
 	return field.EncodeString(p.Key), nil
 }
 
-// Indexes creates a map containing the configuration for each index of the table.
-func (p *Property) Indexes() map[string]index.Options {
-	return map[string]index.Options{
-		"Unused": index.Options{Unique: false},
-	}
-}
-
 // PropertyFields describes the fields of the Property record.
 // It can be used to select fields during queries.
 type PropertyFields struct {
-	Key    query.StringFieldSelector
-	Value  query.StringFieldSelector
-	Unused query.Uint32FieldSelector
+	Key   query.StringFieldSelector
+	Value query.StringFieldSelector
 }
 
 // NewPropertyFields creates a PropertyFields.
 func NewPropertyFields() *PropertyFields {
 	return &PropertyFields{
-		Key:    query.StringField("Key"),
-		Value:  query.StringField("Value"),
-		Unused: query.Uint32Field("Unused"),
+		Key:   query.StringField("Key"),
+		Value: query.StringField("Value"),
 	}
 }

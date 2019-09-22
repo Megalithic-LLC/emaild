@@ -73,7 +73,7 @@ Claim the running emaild agent by finding its node id in its startup log, and en
 
 ![Admin Portal :: Claim Agent](./claim.png)
 
-Finally, once the agent is selected, go to the marketplace, find the email service offering, select the free plan, and select it to create a service instance and site configuration for your agent.
+Finally, once the agent is selected, go to the marketplace, find the email service offering, select the free plan, and launch it to create a service instance and site configuration for your agent.
 
 ![Admin Poral :: Launch Service Instance](./launch-service-instance.png)
 
