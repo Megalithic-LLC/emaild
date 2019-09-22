@@ -22,7 +22,7 @@ $ make
 
 ## Running
 
-Begin by cloning, downloading, and building the [On-Prem Admin Portal API Server](git@github.com:Megalithic-LLC/on-prem-admin-api.git):
+Begin by cloning and building the [On-Prem Admin Portal API Server](git@github.com:Megalithic-LLC/on-prem-admin-api.git):
 
 ```sh
 $ make
@@ -48,3 +48,15 @@ $ ./on-prem-emaild
 2019/09/22 02:05:25 INFO On-Prem Email Server started
 2019/09/22 02:05:25 INFO Node id is bm3jict5jj84bcnaud40
 ```
+
+Finally, clone and run the [On-Prem Admin Portal UI](git@github.com:Megalithic-LLC/on-prem-admin-ui.git), and login with the default credentials of `admin` and `password`:
+
+```sh
+$ npm install
+$ ember serve --proxy=http://localhost:3000
+Proxying to http://localhost:3000
+
+Build successful (8113ms) – Serving on http://localhost:4200/
+```
+
+![Admin Portal Login](./login.png)
