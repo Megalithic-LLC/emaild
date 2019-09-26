@@ -5,6 +5,7 @@ import (
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
+	"github.com/asdine/genji/table"
 )
 
 type AccountsDAO struct {
@@ -51,6 +52,9 @@ func (self AccountsDAO) FindOneByUsername(username string) (*model.Account, erro
 				return err
 			})
 	})
+	if retval == nil {
+		return nil, table.ErrRecordNotFound
+	}
 	return retval, err
 }
 
