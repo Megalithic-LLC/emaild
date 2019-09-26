@@ -11,7 +11,18 @@ import (
 	"github.com/asdine/genji/engine"
 	"github.com/asdine/genji/engine/bolt"
 	"github.com/docktermj/go-logger/logger"
+	. "github.com/onsi/gomega"
 )
+
+func closeAndDestroyGenjiEngine(engine *engine.Engine) {
+	engine_ := *engine
+	boltEngine, ok := engine_.(*bolt.Engine)
+	Expect(ok).To(Equal(true))
+	boltDB := boltEngine.DB
+	dbPath := boltDB.Path()
+	Expect(boltDB.Close()).Should(Succeed())
+	Expect(os.Remove(dbPath)).Should(Succeed())
+}
 
 func newDB(engine *engine.Engine) *genji.DB {
 	db, err := genji.New(*engine)

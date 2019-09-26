@@ -1,10 +1,14 @@
 package imapbackend
 
+import (
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
+)
+
 type User struct {
-	backend  *ImapBackend
-	username string
+	account *model.Account
+	backend *ImapBackend
 }
 
 func (self *User) Username() string {
-	return self.username
+	return self.account.Username
 }
