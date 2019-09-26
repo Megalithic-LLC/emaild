@@ -63,19 +63,19 @@ Proxying to http://localhost:3000
 Build successful (8113ms) – Serving on http://localhost:4200/
 ```
 
-![Admin Portal :: Login](./login.png)
+![Admin Portal :: Login](./docs/login.png)
 
 After logging in with the default credentials of `admin` and `password`, you'll be prompted to the effect that you haven't registered any agents yet. 
 
-![Admin Portal :: No Agents](./no-agents.png)
+![Admin Portal :: No Agents](./docs/no-agents.png)
 
 Claim the running emaild agent by finding its node id in its startup log, and entering it into the admin ui:
 
-![Admin Portal :: Claim Agent](./claim.png)
+![Admin Portal :: Claim Agent](./docs/claim.png)
 
 Finally, once the agent is selected, go to the marketplace, find the email service offering, select the free plan, and launch it to create a service instance and site configuration for your agent.
 
-![Admin Poral :: Launch Service Instance](./launch-service-instance.png)
+![Admin Poral :: Launch Service Instance](./docs/launch-service-instance.png)
 
 ## Design
 
