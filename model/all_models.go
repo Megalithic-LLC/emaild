@@ -5,6 +5,7 @@ import (
 )
 
 const (
+	AccountTable        = "a"
 	MailboxTable        = "mbx"
 	MailboxMessageTable = "mbx_msg"
 	MessageTable        = "msg"
@@ -14,6 +15,7 @@ const (
 
 var (
 	Tables = map[string]record.Record{
+		AccountTable:        new(Account),
 		MailboxTable:        new(Mailbox),
 		MailboxMessageTable: new(MailboxMessage),
 		MessageTable:        new(Message),

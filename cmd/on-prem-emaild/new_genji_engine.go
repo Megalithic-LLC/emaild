@@ -12,7 +12,7 @@ import (
 func newGenjiEngine() *engine.Engine {
 	dir, err := os.Getwd()
 	if err != nil {
-		logger.Fatalf("Failed creating current dir: %v", err)
+		logger.Fatalf("Failed determining current dir: %v", err)
 		return nil
 	}
 	var eng engine.Engine

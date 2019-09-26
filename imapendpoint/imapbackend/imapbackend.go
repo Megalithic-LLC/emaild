@@ -1,16 +1,22 @@
 package imapbackend
 
 import (
+	"github.com/Megalithic-LLC/on-prem-emaild/dao"
 	"github.com/asdine/genji"
 )
 
 type ImapBackend struct {
-	db *genji.DB
+	accountsDAO dao.AccountsDAO
+	db          *genji.DB
 }
 
-func New(db *genji.DB) *ImapBackend {
+func New(
+	accountsDAO dao.AccountsDAO,
+	db *genji.DB,
+) *ImapBackend {
 	self := ImapBackend{
-		db: db,
+		accountsDAO: accountsDAO,
+		db:          db,
 	}
 	return &self
 }

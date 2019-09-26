@@ -20,6 +20,12 @@ A modern on-premise open source email server.
 $ make
 ```
 
+## Testing
+
+```sh
+$ make check
+```
+
 ## Running
 
 Begin by cloning, building, and running the [On-Prem Admin Portal API Server](git@github.com:Megalithic-LLC/on-prem-admin-api.git):
