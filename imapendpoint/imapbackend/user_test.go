@@ -13,7 +13,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestImapBackendLogin(t *testing.T) {
+func TestUser(t *testing.T) {
 	logger.SetLevel(logger.LevelDebug)
 
 	g := goblin.Goblin(t)
@@ -25,32 +25,40 @@ func TestImapBackendLogin(t *testing.T) {
 	var accountsDAO dao.AccountsDAO
 	var mailboxesDAO dao.MailboxesDAO
 
-	g.Describe("ImapBackend:Login()", func() {
-		g.Before(func() {
+	g.Describe("User operations", func() {
+		g.BeforeEach(func() {
 			genjiEngine = newGenjiEngine()
 			db = newDB(genjiEngine)
 			accountsDAO = dao.NewAccountsDAO(db)
 			mailboxesDAO = dao.NewMailboxesDAO(db)
 			imapBackend = newImapBackend(accountsDAO, db, mailboxesDAO)
 		})
-		g.After(func() {
+		g.AfterEach(func() {
 			closeAndDestroyGenjiEngine(genjiEngine)
 		})
 
-		g.It("Should refuse access to an unknown account", func() {
-			_, err := imapBackend.Login(nil, "nobody", "password")
+		g.It("Should refuse access to a non-existent mailbox", func() {
+			// setup precondition
+			account := &model.Account{Username: "test"}
+			Expect(accountsDAO.Create(account)).Should(Succeed())
+
+			// Perform test
+			user, err := imapBackend.Login(nil, "test", "password")
+			Expect(err).ToNot(HaveOccurred())
+			_, err = user.GetMailbox("nonexistent")
 			Expect(err).Should(HaveOccurred())
 		})
 
-		g.It("Should allow access to a known account", func() {
+		g.It("Should allow access to a known mailbox", func() {
 			// setup precondition
-			account := &model.Account{
-				Username: "test",
-			}
+			account := &model.Account{Username: "test"}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
+			user, err := imapBackend.Login(nil, "test", "password")
+			Expect(err).ToNot(HaveOccurred())
+			Expect(user.CreateMailbox("foo")).ToNot(HaveOccurred())
 
-			// perform test
-			_, err := imapBackend.Login(nil, "test", "password")
+			// Perform test
+			_, err = user.GetMailbox("foo")
 			Expect(err).ToNot(HaveOccurred())
 		})
 	})

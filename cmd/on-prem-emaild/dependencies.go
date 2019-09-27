@@ -21,6 +21,7 @@ var (
 	imapEndpoint *imapendpoint.ImapEndpoint
 
 	accountsDAO   dao.AccountsDAO
+	mailboxesDAO  dao.MailboxesDAO
 	propertiesDAO dao.PropertiesDAO
 )
 
@@ -34,5 +35,6 @@ func DefineDependencies() {
 	graph.Define(&imapEndpoint, inject.NewAutoProvider(imapendpoint.New))
 
 	graph.Define(&accountsDAO, inject.NewAutoProvider(dao.NewAccountsDAO))
+	graph.Define(&mailboxesDAO, inject.NewAutoProvider(dao.NewMailboxesDAO))
 	graph.Define(&propertiesDAO, inject.NewAutoProvider(dao.NewPropertiesDAO))
 }

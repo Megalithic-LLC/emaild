@@ -69,6 +69,7 @@ func newGenjiEngine() *engine.Engine {
 func newImapBackend(
 	accountsDAO dao.AccountsDAO,
 	db *genji.DB,
+	mailboxesDAO dao.MailboxesDAO,
 ) *imapbackend.ImapBackend {
-	return imapbackend.New(accountsDAO, db)
+	return imapbackend.New(accountsDAO, db, mailboxesDAO)
 }

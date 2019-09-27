@@ -6,6 +6,7 @@ import (
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
 	"github.com/asdine/genji/table"
+	"github.com/rs/xid"
 )
 
 type AccountsDAO struct {
@@ -25,6 +26,9 @@ func (self AccountsDAO) Create(account *model.Account) error {
 		if table, err := tx.GetTable(model.AccountTable); err != nil {
 			return err
 		} else {
+			if account.ID == "" {
+				account.ID = xid.New().String()
+			}
 			_, err := table.Insert(account)
 			return err
 		}
@@ -58,7 +62,7 @@ func (self AccountsDAO) FindOneByUsername(username string) (*model.Account, erro
 	return retval, err
 }
 
-func (self AccountsDAO) FindByID(id uint32) (*model.Account, error) {
+func (self AccountsDAO) FindByID(id string) (*model.Account, error) {
 	var retval *model.Account
 	err := self.db.View(func(tx *genji.Tx) error {
 		accountTable, err := tx.GetTable(model.AccountTable)

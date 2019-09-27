@@ -17,6 +17,8 @@ func (m *Mailbox) GetField(name string) (field.Field, error) {
 	switch name {
 	case "ID":
 		return field.NewString("ID", m.ID), nil
+	case "AccountID":
+		return field.NewString("AccountID", m.AccountID), nil
 	case "Name":
 		return field.NewString("Name", m.Name), nil
 	case "Messages":
@@ -42,6 +44,11 @@ func (m *Mailbox) Iterate(fn func(field.Field) error) error {
 	var err error
 
 	err = fn(field.NewString("ID", m.ID))
+	if err != nil {
+		return err
+	}
+
+	err = fn(field.NewString("AccountID", m.AccountID))
 	if err != nil {
 		return err
 	}
@@ -93,6 +100,8 @@ func (m *Mailbox) ScanRecord(rec record.Record) error {
 		switch f.Name {
 		case "ID":
 			m.ID, err = field.DecodeString(f.Data)
+		case "AccountID":
+			m.AccountID, err = field.DecodeString(f.Data)
 		case "Name":
 			m.Name, err = field.DecodeString(f.Data)
 		case "Messages":
@@ -120,7 +129,8 @@ func (m *Mailbox) PrimaryKey() ([]byte, error) {
 // Indexes creates a map containing the configuration for each index of the table.
 func (m *Mailbox) Indexes() map[string]index.Options {
 	return map[string]index.Options{
-		"Name": index.Options{Unique: false},
+		"AccountID": index.Options{Unique: false},
+		"Name":      index.Options{Unique: false},
 	}
 }
 
@@ -128,6 +138,7 @@ func (m *Mailbox) Indexes() map[string]index.Options {
 // It can be used to select fields during queries.
 type MailboxFields struct {
 	ID          query.StringFieldSelector
+	AccountID   query.StringFieldSelector
 	Name        query.StringFieldSelector
 	Messages    query.Uint32FieldSelector
 	Recent      query.Uint32FieldSelector
@@ -141,6 +152,7 @@ type MailboxFields struct {
 func NewMailboxFields() *MailboxFields {
 	return &MailboxFields{
 		ID:          query.StringField("ID"),
+		AccountID:   query.StringField("AccountID"),
 		Name:        query.StringField("Name"),
 		Messages:    query.Uint32Field("Messages"),
 		Recent:      query.Uint32Field("Recent"),

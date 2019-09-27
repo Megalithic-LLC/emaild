@@ -6,17 +6,20 @@ import (
 )
 
 type ImapBackend struct {
-	accountsDAO dao.AccountsDAO
-	db          *genji.DB
+	accountsDAO  dao.AccountsDAO
+	db           *genji.DB
+	mailboxesDAO dao.MailboxesDAO
 }
 
 func New(
 	accountsDAO dao.AccountsDAO,
 	db *genji.DB,
+	mailboxesDAO dao.MailboxesDAO,
 ) *ImapBackend {
 	self := ImapBackend{
-		accountsDAO: accountsDAO,
-		db:          db,
+		accountsDAO:  accountsDAO,
+		db:           db,
+		mailboxesDAO: mailboxesDAO,
 	}
 	return &self
 }

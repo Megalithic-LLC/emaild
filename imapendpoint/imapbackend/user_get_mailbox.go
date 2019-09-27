@@ -3,39 +3,14 @@ package imapbackend
 import (
 	"errors"
 
-	"github.com/asdine/genji"
-	"github.com/asdine/genji/query"
-	"github.com/asdine/genji/record"
 	"github.com/docktermj/go-logger/logger"
-	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/emersion/go-imap/backend"
 )
 
 func (self *User) GetMailbox(name string) (backend.Mailbox, error) {
 	logger.Tracef("User:GetMailbox(%s)", name)
 
-	var mailbox *model.Mailbox
-	err := self.backend.db.View(func(tx *genji.Tx) error {
-		table, err := tx.GetTable(model.MailboxTable)
-		if err != nil {
-			return err
-		}
-		fields := model.NewMailboxFields()
-		return query.
-			Select().
-			From(table).
-			Where(fields.Name.Eq(name)).
-			Limit(1).
-			Run(tx).
-			Iterate(func(_ []byte, r record.Record) error {
-				var m model.Mailbox
-				if err := m.ScanRecord(r); err != nil {
-					return err
-				}
-				mailbox = &m
-				return nil
-			})
-	})
+	mailbox, err := self.backend.mailboxesDAO.FindOneByName(self.account.ID, name)
 	if err != nil {
 		return nil, err
 	}
