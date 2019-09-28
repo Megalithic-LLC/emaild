@@ -11,6 +11,7 @@ import (
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
 	"github.com/docktermj/go-logger/logger"
+	"github.com/emersion/go-imap"
 	"github.com/franela/goblin"
 	. "github.com/onsi/gomega"
 )
@@ -58,11 +59,23 @@ func TestMailboxCreateMessage(t *testing.T) {
 				Expect(mailbox).ToNot(BeNil())
 
 				// Perform test
-				flags := []string{}
-				var date time.Time
-				body := `Subject: hi\r\n\r\nbody`
-				Expect(mailbox.CreateMessage(flags, date, strings.NewReader(body))).ToNot(HaveOccurred())
-				//TODO ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.FetchItem, ch chan<- *imap.Message) error {
+				{
+					flags := []string{}
+					var date time.Time
+					body := "Subject: hi\r\n\r\nbody"
+					Expect(mailbox.CreateMessage(flags, date, strings.NewReader(body))).ToNot(HaveOccurred())
+				}
+				messages := make(chan *imap.Message, 1)
+				uid := false
+				seqSet := new(imap.SeqSet)
+				seqSet.AddRange(1, 1)
+				items := []imap.FetchItem{imap.FetchItem("BODY[]")}
+				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
+				message := <-messages
+				Expect(message.SeqNum).To(Equal(uint32(1)))
+				body := message.Items["BODY[]"]
+				Expect(body).ToNot(BeNil())
+				Expect(string(body.([]byte))).To(Equal("Subject: hi\r\n\r\nbody"))
 			})
 
 		})

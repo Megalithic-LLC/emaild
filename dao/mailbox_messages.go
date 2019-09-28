@@ -3,6 +3,8 @@ package dao
 import (
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
+	"github.com/asdine/genji/query"
+	"github.com/asdine/genji/record"
 )
 
 type MailboxMessagesDAO struct {
@@ -20,6 +22,12 @@ func NewMailboxMessagesDAO(db *genji.DB) MailboxMessagesDAO {
 func (self MailboxMessagesDAO) Create(mailboxMessage *model.MailboxMessage) error {
 	return self.db.Update(func(tx *genji.Tx) error {
 		return self.CreateTx(tx, mailboxMessage)
+	})
+}
+
+func (self MailboxMessagesDAO) Find(where query.Expr, limit int, iter func(recordID []byte, r record.Record) error) error {
+	return self.db.View(func(tx *genji.Tx) error {
+		return self.FindTx(tx, where, limit, iter)
 	})
 }
 
