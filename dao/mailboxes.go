@@ -3,11 +3,7 @@ package dao
 import (
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
-	"github.com/asdine/genji/query"
-	"github.com/asdine/genji/record"
-	"github.com/asdine/genji/table"
 	"github.com/docktermj/go-logger/logger"
-	"github.com/rs/xid"
 )
 
 type MailboxesDAO struct {
@@ -22,40 +18,28 @@ func NewMailboxesDAO(db *genji.DB) MailboxesDAO {
 	}
 }
 
+func (self MailboxesDAO) AllocateNextUid(mailbox *model.Mailbox) (uint32, error) {
+	var retval uint32
+	err := self.db.Update(func(tx *genji.Tx) error {
+		nextUid, err := self.AllocateNextUidTx(tx, mailbox)
+		retval = nextUid
+		return err
+	})
+	return retval, err
+}
+
 func (self MailboxesDAO) Create(mailbox *model.Mailbox) error {
 	return self.db.Update(func(tx *genji.Tx) error {
-		if table, err := tx.GetTable(model.MailboxTable); err != nil {
-			return err
-		} else {
-			if mailbox.ID == "" {
-				mailbox.ID = xid.New().String()
-			}
-			_, err := table.Insert(mailbox)
-			return err
-		}
+		return self.CreateTx(tx, mailbox)
 	})
 }
 
 func (self MailboxesDAO) FindByID(id string) (*model.Mailbox, error) {
 	var retval *model.Mailbox
 	err := self.db.View(func(tx *genji.Tx) error {
-		mailboxTable, err := tx.GetTable(model.MailboxTable)
-		if err != nil {
-			return err
-		}
-		searchFor := &model.Mailbox{ID: id}
-		mailboxID, err := searchFor.PrimaryKey()
-		if err != nil {
-			return err
-		}
-		r, err := mailboxTable.GetRecord(mailboxID)
-		if err != nil {
-			return err
-		}
-		var mailbox model.Mailbox
-		err = mailbox.ScanRecord(r)
+		mailbox, err := self.FindByIDTx(tx, id)
 		if err == nil {
-			retval = &mailbox
+			retval = mailbox
 		}
 		return err
 	})
@@ -66,31 +50,17 @@ func (self MailboxesDAO) FindOneByName(accountID string, name string) (*model.Ma
 	logger.Tracef("MailboxesDAO:FindOneByName(%s, %s)", accountID, name)
 	var retval *model.Mailbox
 	err := self.db.View(func(tx *genji.Tx) error {
-		mailboxTable, err := tx.GetTable(model.MailboxTable)
-		if err != nil {
-			return err
+		mailbox, err := self.FindOneByNameTx(tx, accountID, name)
+		if err == nil {
+			retval = mailbox
 		}
-		return query.
-			Select().
-			From(mailboxTable).
-			Where(
-				query.And(
-					self.fields.AccountID.Eq(accountID),
-					self.fields.Name.Eq(name),
-				),
-			).
-			Limit(1).
-			Run(tx).
-			Iterate(func(recordID []byte, r record.Record) error {
-				var mailbox model.Mailbox
-				if err := mailbox.ScanRecord(r); err == nil {
-					retval = &mailbox
-				}
-				return err
-			})
+		return err
 	})
-	if retval == nil {
-		return nil, table.ErrRecordNotFound
-	}
 	return retval, err
+}
+
+func (self MailboxesDAO) Replace(mailbox *model.Mailbox) error {
+	return self.db.Update(func(tx *genji.Tx) error {
+		return self.ReplaceTx(tx, mailbox)
+	})
 }

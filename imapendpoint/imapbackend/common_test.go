@@ -22,6 +22,7 @@ func closeAndDestroyGenjiEngine(engine *engine.Engine) {
 	dbPath := boltDB.Path()
 	Expect(boltDB.Close()).Should(Succeed())
 	Expect(os.Remove(dbPath)).Should(Succeed())
+	logger.Debugf("Removed database %s", dbPath)
 }
 
 func newDB(engine *engine.Engine) *genji.DB {
@@ -70,6 +71,16 @@ func newImapBackend(
 	accountsDAO dao.AccountsDAO,
 	db *genji.DB,
 	mailboxesDAO dao.MailboxesDAO,
+	mailboxMessagesDAO dao.MailboxMessagesDAO,
+	messageRawBodiesDAO dao.MessageRawBodiesDAO,
+	messagesDAO dao.MessagesDAO,
 ) *imapbackend.ImapBackend {
-	return imapbackend.New(accountsDAO, db, mailboxesDAO)
+	return imapbackend.New(
+		accountsDAO,
+		db,
+		mailboxesDAO,
+		mailboxMessagesDAO,
+		messageRawBodiesDAO,
+		messagesDAO,
+	)
 }

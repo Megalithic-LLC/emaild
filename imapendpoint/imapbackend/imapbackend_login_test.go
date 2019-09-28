@@ -24,6 +24,9 @@ func TestImapBackendLogin(t *testing.T) {
 	var imapBackend *imapbackend.ImapBackend
 	var accountsDAO dao.AccountsDAO
 	var mailboxesDAO dao.MailboxesDAO
+	var mailboxMessagesDAO dao.MailboxMessagesDAO
+	var messageRawBodiesDAO dao.MessageRawBodiesDAO
+	var messagesDAO dao.MessagesDAO
 
 	g.Describe("ImapBackend:Login()", func() {
 		g.Before(func() {
@@ -31,7 +34,10 @@ func TestImapBackendLogin(t *testing.T) {
 			db = newDB(genjiEngine)
 			accountsDAO = dao.NewAccountsDAO(db)
 			mailboxesDAO = dao.NewMailboxesDAO(db)
-			imapBackend = newImapBackend(accountsDAO, db, mailboxesDAO)
+			mailboxMessagesDAO = dao.NewMailboxMessagesDAO(db)
+			messageRawBodiesDAO = dao.NewMessageRawBodiesDAO(db)
+			messagesDAO = dao.NewMessagesDAO(db)
+			imapBackend = newImapBackend(accountsDAO, db, mailboxesDAO, mailboxMessagesDAO, messageRawBodiesDAO, messagesDAO)
 		})
 		g.After(func() {
 			closeAndDestroyGenjiEngine(genjiEngine)

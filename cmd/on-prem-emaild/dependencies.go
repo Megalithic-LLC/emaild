@@ -20,9 +20,12 @@ var (
 	imapBackend  imap_backend.Backend
 	imapEndpoint *imapendpoint.ImapEndpoint
 
-	accountsDAO   dao.AccountsDAO
-	mailboxesDAO  dao.MailboxesDAO
-	propertiesDAO dao.PropertiesDAO
+	accountsDAO         dao.AccountsDAO
+	mailboxesDAO        dao.MailboxesDAO
+	mailboxMessagesDAO  dao.MailboxMessagesDAO
+	messageRawBodiesDAO dao.MessageRawBodiesDAO
+	messagesDAO         dao.MessagesDAO
+	propertiesDAO       dao.PropertiesDAO
 )
 
 func DefineDependencies() {
@@ -36,5 +39,8 @@ func DefineDependencies() {
 
 	graph.Define(&accountsDAO, inject.NewAutoProvider(dao.NewAccountsDAO))
 	graph.Define(&mailboxesDAO, inject.NewAutoProvider(dao.NewMailboxesDAO))
+	graph.Define(&mailboxMessagesDAO, inject.NewAutoProvider(dao.NewMailboxMessagesDAO))
+	graph.Define(&messageRawBodiesDAO, inject.NewAutoProvider(dao.NewMessageRawBodiesDAO))
+	graph.Define(&messagesDAO, inject.NewAutoProvider(dao.NewMessagesDAO))
 	graph.Define(&propertiesDAO, inject.NewAutoProvider(dao.NewPropertiesDAO))
 }

@@ -11,12 +11,19 @@ A modern on-premise open source email server.
 ## Docs
 
 * [Project goals](./docs/Goals.md) (elaborated)
-* [SpamAssassin](./docs/SpamAssassin.md)
-* [Roundcube](./docs/Roundcube.md)
+* What about [SpamAssassin?](./docs/SpamAssassin.md)
+* What about [Roundcube?](./docs/Roundcube.md)
 
 ## Building
 
 ```sh
+$ make
+```
+
+### After changing a model or proto file
+
+```sh
+$ make generate
 $ make
 ```
 

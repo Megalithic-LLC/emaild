@@ -1,7 +1,9 @@
 package imapbackend_test
 
 import (
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/Megalithic-LLC/on-prem-emaild/dao"
 	"github.com/Megalithic-LLC/on-prem-emaild/imapendpoint/imapbackend"
@@ -13,7 +15,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestUser(t *testing.T) {
+func TestMailboxCreateMessage(t *testing.T) {
 	logger.SetLevel(logger.LevelDebug)
 
 	g := goblin.Goblin(t)
@@ -28,7 +30,7 @@ func TestUser(t *testing.T) {
 	var messageRawBodiesDAO dao.MessageRawBodiesDAO
 	var messagesDAO dao.MessagesDAO
 
-	g.Describe("User operations", func() {
+	g.Describe("Mailbox operations", func() {
 		g.BeforeEach(func() {
 			genjiEngine = newGenjiEngine()
 			db = newDB(genjiEngine)
@@ -43,29 +45,26 @@ func TestUser(t *testing.T) {
 			closeAndDestroyGenjiEngine(genjiEngine)
 		})
 
-		g.It("Should refuse access to a non-existent mailbox", func() {
-			// setup precondition
-			account := &model.Account{Username: "test"}
-			Expect(accountsDAO.Create(account)).Should(Succeed())
+		g.Describe("CreateMessage()", func() {
 
-			// Perform test
-			user, err := imapBackend.Login(nil, "test", "password")
-			Expect(err).ToNot(HaveOccurred())
-			_, err = user.GetMailbox("nonexistent")
-			Expect(err).Should(HaveOccurred())
-		})
+			g.It("Should correctly store a simple text/plain message", func() {
+				// setup precondition
+				account := &model.Account{Username: "test"}
+				Expect(accountsDAO.Create(account)).Should(Succeed())
+				user, err := imapBackend.Login(nil, "test", "password")
+				Expect(err).ToNot(HaveOccurred())
+				mailbox, err := user.GetMailbox("INBOX")
+				Expect(err).ToNot(HaveOccurred())
+				Expect(mailbox).ToNot(BeNil())
 
-		g.It("Should allow access to a known mailbox", func() {
-			// setup precondition
-			account := &model.Account{Username: "test"}
-			Expect(accountsDAO.Create(account)).Should(Succeed())
-			user, err := imapBackend.Login(nil, "test", "password")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(user.CreateMailbox("foo")).ToNot(HaveOccurred())
+				// Perform test
+				flags := []string{}
+				var date time.Time
+				body := `Subject: hi\r\n\r\nbody`
+				Expect(mailbox.CreateMessage(flags, date, strings.NewReader(body))).ToNot(HaveOccurred())
+				//TODO ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.FetchItem, ch chan<- *imap.Message) error {
+			})
 
-			// Perform test
-			_, err = user.GetMailbox("foo")
-			Expect(err).ToNot(HaveOccurred())
 		})
 	})
 }

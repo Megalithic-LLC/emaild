@@ -21,6 +21,10 @@ func (self *User) GetMailbox(name string) (backend.Mailbox, error) {
 			logger.Errorf("Failed creating inbox: %v", err)
 			return nil, err
 		}
+		mailbox, err = self.backend.mailboxesDAO.FindOneByName(self.account.ID, name)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if mailbox == nil {

@@ -8,8 +8,8 @@ const (
 	AccountTable        = "a"
 	MailboxTable        = "mbx"
 	MailboxMessageTable = "mbx_msg"
+	MessageRawBodyTable = "msg_braw"
 	MessageTable        = "msg"
-	MessageBodyRawTable = "msg_braw"
 	PropertyTable       = "prop"
 )
 
@@ -18,8 +18,8 @@ var (
 		AccountTable:        new(Account),
 		MailboxTable:        new(Mailbox),
 		MailboxMessageTable: new(MailboxMessage),
+		MessageRawBodyTable: new(MessageRawBody),
 		MessageTable:        new(Message),
-		MessageBodyRawTable: new(MessageBodyRaw),
 		PropertyTable:       new(Property),
 	}
 )

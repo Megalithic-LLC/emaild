@@ -18,7 +18,9 @@ func (m *MailboxMessage) GetField(name string) (field.Field, error) {
 	case "MailboxID":
 		return field.NewString("MailboxID", m.MailboxID), nil
 	case "MessageID":
-		return field.NewUint32("MessageID", m.MessageID), nil
+		return field.NewString("MessageID", m.MessageID), nil
+	case "UID":
+		return field.NewUint32("UID", m.UID), nil
 	}
 
 	return field.Field{}, errors.New("unknown field")
@@ -34,7 +36,12 @@ func (m *MailboxMessage) Iterate(fn func(field.Field) error) error {
 		return err
 	}
 
-	err = fn(field.NewUint32("MessageID", m.MessageID))
+	err = fn(field.NewString("MessageID", m.MessageID))
+	if err != nil {
+		return err
+	}
+
+	err = fn(field.NewUint32("UID", m.UID))
 	if err != nil {
 		return err
 	}
@@ -52,7 +59,9 @@ func (m *MailboxMessage) ScanRecord(rec record.Record) error {
 		case "MailboxID":
 			m.MailboxID, err = field.DecodeString(f.Data)
 		case "MessageID":
-			m.MessageID, err = field.DecodeUint32(f.Data)
+			m.MessageID, err = field.DecodeString(f.Data)
+		case "UID":
+			m.UID, err = field.DecodeUint32(f.Data)
 		}
 		return err
 	})
@@ -63,6 +72,7 @@ func (m *MailboxMessage) Indexes() map[string]index.Options {
 	return map[string]index.Options{
 		"MailboxID": index.Options{Unique: false},
 		"MessageID": index.Options{Unique: false},
+		"UID":       index.Options{Unique: false},
 	}
 }
 
@@ -70,13 +80,15 @@ func (m *MailboxMessage) Indexes() map[string]index.Options {
 // It can be used to select fields during queries.
 type MailboxMessageFields struct {
 	MailboxID query.StringFieldSelector
-	MessageID query.Uint32FieldSelector
+	MessageID query.StringFieldSelector
+	UID       query.Uint32FieldSelector
 }
 
 // NewMailboxMessageFields creates a MailboxMessageFields.
 func NewMailboxMessageFields() *MailboxMessageFields {
 	return &MailboxMessageFields{
 		MailboxID: query.StringField("MailboxID"),
-		MessageID: query.Uint32Field("MessageID"),
+		MessageID: query.StringField("MessageID"),
+		UID:       query.Uint32Field("UID"),
 	}
 }

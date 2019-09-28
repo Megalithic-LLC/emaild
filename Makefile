@@ -12,7 +12,7 @@ generate:
 	genji -f model/mailbox.go          -s Mailbox
 	genji -f model/mailbox_message.go  -s MailboxMessage
 	genji -f model/message.go          -s Message
-	genji -f model/message_body_raw.go -s MessageBodyRaw
+	genji -f model/message_raw_body.go -s MessageRawBody
 	genji -f model/property.go         -s Property
 	go generate github.com/Megalithic-LLC/on-prem-emaild/cloudservice/...
 

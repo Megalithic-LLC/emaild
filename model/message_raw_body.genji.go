@@ -12,10 +12,10 @@ import (
 )
 
 // GetField implements the field method of the record.Record interface.
-func (m *MessageBodyRaw) GetField(name string) (field.Field, error) {
+func (m *MessageRawBody) GetField(name string) (field.Field, error) {
 	switch name {
 	case "ID":
-		return field.NewUint32("ID", m.ID), nil
+		return field.NewString("ID", m.ID), nil
 	case "Body":
 		return field.NewBytes("Body", m.Body), nil
 	}
@@ -25,10 +25,10 @@ func (m *MessageBodyRaw) GetField(name string) (field.Field, error) {
 
 // Iterate through all the fields one by one and pass each of them to the given function.
 // It the given function returns an error, the iteration is interrupted.
-func (m *MessageBodyRaw) Iterate(fn func(field.Field) error) error {
+func (m *MessageRawBody) Iterate(fn func(field.Field) error) error {
 	var err error
 
-	err = fn(field.NewUint32("ID", m.ID))
+	err = fn(field.NewString("ID", m.ID))
 	if err != nil {
 		return err
 	}
@@ -43,13 +43,13 @@ func (m *MessageBodyRaw) Iterate(fn func(field.Field) error) error {
 
 // ScanRecord extracts fields from record and assigns them to the struct fields.
 // It implements the record.Scanner interface.
-func (m *MessageBodyRaw) ScanRecord(rec record.Record) error {
+func (m *MessageRawBody) ScanRecord(rec record.Record) error {
 	return rec.Iterate(func(f field.Field) error {
 		var err error
 
 		switch f.Name {
 		case "ID":
-			m.ID, err = field.DecodeUint32(f.Data)
+			m.ID, err = field.DecodeString(f.Data)
 		case "Body":
 			m.Body, err = field.DecodeBytes(f.Data)
 		}
@@ -58,21 +58,21 @@ func (m *MessageBodyRaw) ScanRecord(rec record.Record) error {
 }
 
 // PrimaryKey returns the primary key. It implements the table.PrimaryKeyer interface.
-func (m *MessageBodyRaw) PrimaryKey() ([]byte, error) {
-	return field.EncodeUint32(m.ID), nil
+func (m *MessageRawBody) PrimaryKey() ([]byte, error) {
+	return field.EncodeString(m.ID), nil
 }
 
-// MessageBodyRawFields describes the fields of the MessageBodyRaw record.
+// MessageRawBodyFields describes the fields of the MessageRawBody record.
 // It can be used to select fields during queries.
-type MessageBodyRawFields struct {
-	ID   query.Uint32FieldSelector
+type MessageRawBodyFields struct {
+	ID   query.StringFieldSelector
 	Body query.BytesFieldSelector
 }
 
-// NewMessageBodyRawFields creates a MessageBodyRawFields.
-func NewMessageBodyRawFields() *MessageBodyRawFields {
-	return &MessageBodyRawFields{
-		ID:   query.Uint32Field("ID"),
+// NewMessageRawBodyFields creates a MessageRawBodyFields.
+func NewMessageRawBodyFields() *MessageRawBodyFields {
+	return &MessageRawBodyFields{
+		ID:   query.StringField("ID"),
 		Body: query.BytesField("Body"),
 	}
 }
