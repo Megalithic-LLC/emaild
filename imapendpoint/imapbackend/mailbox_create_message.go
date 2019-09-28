@@ -15,8 +15,7 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 	logger.Tracef("Mailbox:CreateMessage()")
 	return self.backend.db.Update(func(tx *genji.Tx) error {
 		message := &model.Message{
-			DateUTC:  date.UTC().Unix(),
-			FlagsCSV: strings.Join(flags, ","),
+			DateUTC: date.UTC().Unix(),
 		}
 		if err := self.backend.messagesDAO.CreateTx(tx, message); err != nil {
 			logger.Errorf("Failed storing message: %v", err)
@@ -31,6 +30,7 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 			MailboxID: self.model.ID,
 			MessageID: message.ID,
 			UID:       uid,
+			FlagsCSV:  strings.Join(flags, ","),
 		}
 		if err := self.backend.mailboxMessagesDAO.CreateTx(tx, mailboxMessage); err != nil {
 			logger.Errorf("Failed storing message in mailbox: %v", err)

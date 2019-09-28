@@ -8,6 +8,7 @@ type MailboxMessage struct {
 	MailboxID string `genji:"index"`
 	MessageID string `genji:"index"`
 	UID       uint32 `genji:"index"`
+	FlagsCSV  string
 }
 
 // PrimaryKey returns the primary key. It implements the table.PrimaryKeyer interface.

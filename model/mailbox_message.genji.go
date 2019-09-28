@@ -21,6 +21,8 @@ func (m *MailboxMessage) GetField(name string) (field.Field, error) {
 		return field.NewString("MessageID", m.MessageID), nil
 	case "UID":
 		return field.NewUint32("UID", m.UID), nil
+	case "FlagsCSV":
+		return field.NewString("FlagsCSV", m.FlagsCSV), nil
 	}
 
 	return field.Field{}, errors.New("unknown field")
@@ -46,6 +48,11 @@ func (m *MailboxMessage) Iterate(fn func(field.Field) error) error {
 		return err
 	}
 
+	err = fn(field.NewString("FlagsCSV", m.FlagsCSV))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -62,6 +69,8 @@ func (m *MailboxMessage) ScanRecord(rec record.Record) error {
 			m.MessageID, err = field.DecodeString(f.Data)
 		case "UID":
 			m.UID, err = field.DecodeUint32(f.Data)
+		case "FlagsCSV":
+			m.FlagsCSV, err = field.DecodeString(f.Data)
 		}
 		return err
 	})
@@ -82,6 +91,7 @@ type MailboxMessageFields struct {
 	MailboxID query.StringFieldSelector
 	MessageID query.StringFieldSelector
 	UID       query.Uint32FieldSelector
+	FlagsCSV  query.StringFieldSelector
 }
 
 // NewMailboxMessageFields creates a MailboxMessageFields.
@@ -90,5 +100,6 @@ func NewMailboxMessageFields() *MailboxMessageFields {
 		MailboxID: query.StringField("MailboxID"),
 		MessageID: query.StringField("MessageID"),
 		UID:       query.Uint32Field("UID"),
+		FlagsCSV:  query.StringField("FlagsCSV"),
 	}
 }

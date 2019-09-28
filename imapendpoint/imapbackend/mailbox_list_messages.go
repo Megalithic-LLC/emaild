@@ -3,6 +3,7 @@ package imapbackend
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
@@ -51,6 +52,8 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 						logger.Warnf("Body expected but not found: message id %+v", mailboxMessage.MessageID)
 						imapMessage.Items[item] = []byte{}
 					}
+				case imap.FetchFlags:
+					imapMessage.Items[item] = strings.Split(mailboxMessage.FlagsCSV, ",")
 				default:
 					return errors.New(fmt.Sprintf("Not implemented yet: unsupported fetch item %s", item))
 				}

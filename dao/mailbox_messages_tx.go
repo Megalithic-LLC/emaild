@@ -51,3 +51,15 @@ func (self MailboxMessagesDAO) FindByIDsTx(tx *genji.Tx, mailboxID, messageID st
 	}
 	return &mailboxMessage, nil
 }
+
+func (self MailboxMessagesDAO) ReplaceTx(tx *genji.Tx, mailboxMessage *model.MailboxMessage) error {
+	mailboxMessageTable, err := tx.GetTable(model.MailboxMessageTable)
+	if err != nil {
+		return err
+	}
+	pk, err := mailboxMessage.PrimaryKey()
+	if err != nil {
+		return err
+	}
+	return mailboxMessageTable.Replace(pk, mailboxMessage)
+}

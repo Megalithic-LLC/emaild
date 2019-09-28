@@ -19,8 +19,6 @@ func (m *Message) GetField(name string) (field.Field, error) {
 		return field.NewString("ID", m.ID), nil
 	case "DateUTC":
 		return field.NewInt64("DateUTC", m.DateUTC), nil
-	case "FlagsCSV":
-		return field.NewString("FlagsCSV", m.FlagsCSV), nil
 	}
 
 	return field.Field{}, errors.New("unknown field")
@@ -41,11 +39,6 @@ func (m *Message) Iterate(fn func(field.Field) error) error {
 		return err
 	}
 
-	err = fn(field.NewString("FlagsCSV", m.FlagsCSV))
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -60,8 +53,6 @@ func (m *Message) ScanRecord(rec record.Record) error {
 			m.ID, err = field.DecodeString(f.Data)
 		case "DateUTC":
 			m.DateUTC, err = field.DecodeInt64(f.Data)
-		case "FlagsCSV":
-			m.FlagsCSV, err = field.DecodeString(f.Data)
 		}
 		return err
 	})
@@ -82,16 +73,14 @@ func (m *Message) Indexes() map[string]index.Options {
 // MessageFields describes the fields of the Message record.
 // It can be used to select fields during queries.
 type MessageFields struct {
-	ID       query.StringFieldSelector
-	DateUTC  query.Int64FieldSelector
-	FlagsCSV query.StringFieldSelector
+	ID      query.StringFieldSelector
+	DateUTC query.Int64FieldSelector
 }
 
 // NewMessageFields creates a MessageFields.
 func NewMessageFields() *MessageFields {
 	return &MessageFields{
-		ID:       query.StringField("ID"),
-		DateUTC:  query.Int64Field("DateUTC"),
-		FlagsCSV: query.StringField("FlagsCSV"),
+		ID:      query.StringField("ID"),
+		DateUTC: query.Int64Field("DateUTC"),
 	}
 }

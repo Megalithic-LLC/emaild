@@ -42,3 +42,9 @@ func (self MailboxMessagesDAO) FindByIDs(mailboxID, messageID string) (*model.Ma
 	})
 	return retval, err
 }
+
+func (self MailboxMessagesDAO) Replace(mailboxMessage *model.MailboxMessage) error {
+	return self.db.Update(func(tx *genji.Tx) error {
+		return self.ReplaceTx(tx, mailboxMessage)
+	})
+}
