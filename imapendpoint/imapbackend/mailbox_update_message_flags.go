@@ -58,6 +58,13 @@ func (self *Mailbox) UpdateMessagesFlags(uid bool, seqSet *imap.SeqSet, op imap.
 					return err
 				}
 
+			// Perform replacement of flags
+			case imap.SetFlags:
+				mailboxMessage.FlagsCSV = strings.Join(flags, ",")
+				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, &mailboxMessage); err != nil {
+					return err
+				}
+
 			default:
 				return errors.New("NIY")
 
