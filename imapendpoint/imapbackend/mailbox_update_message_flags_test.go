@@ -131,5 +131,48 @@ func TestMailboxUpdateMessageFlags(t *testing.T) {
 			Expect(flags).To(HaveLen(1))
 		})
 
+		g.It("Should correctly remove a flag", func() {
+			// setup precondition
+			account := &model.Account{Username: "test"}
+			Expect(accountsDAO.Create(account)).Should(Succeed())
+			user, err := imapBackend.Login(nil, "test", "password")
+			Expect(err).ToNot(HaveOccurred())
+			mailbox, err := user.GetMailbox("INBOX")
+			Expect(err).ToNot(HaveOccurred())
+			Expect(mailbox).ToNot(BeNil())
+			{
+				flags := []string{"\\Flagged", "\\Recent"}
+				var date time.Time
+				body := "Subject: hi\r\n\r\nbody"
+				Expect(mailbox.CreateMessage(flags, date, strings.NewReader(body))).ToNot(HaveOccurred())
+			}
+
+			// Sanity check
+			messages := make(chan *imap.Message, 1)
+			uid := false
+			seqSet := new(imap.SeqSet)
+			seqSet.AddRange(1, 1)
+			items := []imap.FetchItem{imap.FetchItem(imap.FetchFlags)}
+			Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
+			message := <-messages
+			Expect(message.SeqNum).To(Equal(uint32(1)))
+			flagsUntyped := message.Items[imap.FetchFlags]
+			Expect(flagsUntyped).ToNot(BeNil())
+			flags := flagsUntyped.([]string)
+			Expect(flags).To(ContainElement("\\Flagged"))
+			Expect(flags).To(ContainElement("\\Recent"))
+			Expect(flags).To(HaveLen(2))
+
+			// Perform test
+			Expect(mailbox.UpdateMessagesFlags(uid, seqSet, imap.RemoveFlags, []string{"\\Flagged", "nonexistent"})).ToNot(HaveOccurred())
+			Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
+			message = <-messages
+			flagsUntyped = message.Items[imap.FetchFlags]
+			Expect(flagsUntyped).ToNot(BeNil())
+			flags = flagsUntyped.([]string)
+			Expect(flags).To(ContainElement("\\Recent"))
+			Expect(flags).To(HaveLen(1))
+		})
+
 	})
 }

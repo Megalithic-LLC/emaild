@@ -1,7 +1,6 @@
 package imapbackend
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
@@ -58,15 +57,33 @@ func (self *Mailbox) UpdateMessagesFlags(uid bool, seqSet *imap.SeqSet, op imap.
 					return err
 				}
 
+			// Perform removal of flags
+			case imap.RemoveFlags:
+				existingFlags := strings.Split(mailboxMessage.FlagsCSV, ",")
+				flagsToKeep := []string{}
+				for _, existingFlag := range existingFlags {
+					found := false
+					for _, flag := range flags {
+						if existingFlag == flag {
+							found = true
+							break
+						}
+					}
+					if !found {
+						flagsToKeep = append(flagsToKeep, existingFlag)
+					}
+				}
+				mailboxMessage.FlagsCSV = strings.Join(flagsToKeep, ",")
+				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, &mailboxMessage); err != nil {
+					return err
+				}
+
 			// Perform replacement of flags
 			case imap.SetFlags:
 				mailboxMessage.FlagsCSV = strings.Join(flags, ",")
 				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, &mailboxMessage); err != nil {
 					return err
 				}
-
-			default:
-				return errors.New("NIY")
 
 			}
 
