@@ -64,11 +64,11 @@ func TestMailboxExpunge(t *testing.T) {
 				Expect(mailbox.CreateMessage([]string{imap.RecentFlag}, time3, strings.NewReader("Subject: C\r\n\r\nBody_C"))).ToNot(HaveOccurred())
 
 				// TODO Sanity check
-				//status, err := mailbox.Status([]imap.StatusItem{imap.StatusMessages, imap.StatusRecent, imap.StatusUnseen})
-				//Expect(err).ToNot(HaveOccurred())
-				//Expect(status.Messages).To(Equal(3))
-				//Expect(status.Recent).To(Equal(3))
-				//Expect(status.Unseen).To(Equal(3))
+				status, err := mailbox.Status([]imap.StatusItem{imap.StatusMessages, imap.StatusRecent, imap.StatusUnseen})
+				Expect(err).ToNot(HaveOccurred())
+				Expect(status.Messages).To(Equal(uint32(3)))
+				Expect(status.Recent).To(Equal(uint32(3)))
+				Expect(status.Unseen).To(Equal(uint32(3)))
 
 				// Perform test
 				seqSet := new(imap.SeqSet)
@@ -87,11 +87,11 @@ func TestMailboxExpunge(t *testing.T) {
 				Expect(message2.InternalDate.UTC()).To(Equal(time3.UTC()))
 
 				// TODO Verify status does not return expunged message
-				//status, err := mailbox.Status([]imap.StatusItem{imap.StatusMessages, imap.StatusRecent, imap.StatusUnseen})
-				//Expect(err).ToNot(HaveOccurred())
-				//Expect(status.Messages).To(Equal(2))
-				//Expect(status.Recent).To(Equal(2))
-				//Expect(status.Unseen).To(Equal(2))
+				status, err = mailbox.Status([]imap.StatusItem{imap.StatusMessages, imap.StatusRecent, imap.StatusUnseen})
+				Expect(err).ToNot(HaveOccurred())
+				Expect(status.Messages).To(Equal(uint32(2)))
+				Expect(status.Recent).To(Equal(uint32(2)))
+				Expect(status.Unseen).To(Equal(uint32(2)))
 			})
 
 		})

@@ -21,12 +21,6 @@ func (m *Mailbox) GetField(name string) (field.Field, error) {
 		return field.NewString("AccountId", m.AccountId), nil
 	case "Name":
 		return field.NewString("Name", m.Name), nil
-	case "Messages":
-		return field.NewUint32("Messages", m.Messages), nil
-	case "Recent":
-		return field.NewUint32("Recent", m.Recent), nil
-	case "Unseen":
-		return field.NewUint32("Unseen", m.Unseen), nil
 	case "UidNext":
 		return field.NewUint32("UidNext", m.UidNext), nil
 	case "UidValidity":
@@ -54,21 +48,6 @@ func (m *Mailbox) Iterate(fn func(field.Field) error) error {
 	}
 
 	err = fn(field.NewString("Name", m.Name))
-	if err != nil {
-		return err
-	}
-
-	err = fn(field.NewUint32("Messages", m.Messages))
-	if err != nil {
-		return err
-	}
-
-	err = fn(field.NewUint32("Recent", m.Recent))
-	if err != nil {
-		return err
-	}
-
-	err = fn(field.NewUint32("Unseen", m.Unseen))
 	if err != nil {
 		return err
 	}
@@ -104,12 +83,6 @@ func (m *Mailbox) ScanRecord(rec record.Record) error {
 			m.AccountId, err = field.DecodeString(f.Data)
 		case "Name":
 			m.Name, err = field.DecodeString(f.Data)
-		case "Messages":
-			m.Messages, err = field.DecodeUint32(f.Data)
-		case "Recent":
-			m.Recent, err = field.DecodeUint32(f.Data)
-		case "Unseen":
-			m.Unseen, err = field.DecodeUint32(f.Data)
 		case "UidNext":
 			m.UidNext, err = field.DecodeUint32(f.Data)
 		case "UidValidity":
@@ -140,9 +113,6 @@ type MailboxFields struct {
 	Id          query.StringFieldSelector
 	AccountId   query.StringFieldSelector
 	Name        query.StringFieldSelector
-	Messages    query.Uint32FieldSelector
-	Recent      query.Uint32FieldSelector
-	Unseen      query.Uint32FieldSelector
 	UidNext     query.Uint32FieldSelector
 	UidValidity query.Uint32FieldSelector
 	Subscribed  query.BoolFieldSelector
@@ -154,9 +124,6 @@ func NewMailboxFields() *MailboxFields {
 		Id:          query.StringField("Id"),
 		AccountId:   query.StringField("AccountId"),
 		Name:        query.StringField("Name"),
-		Messages:    query.Uint32Field("Messages"),
-		Recent:      query.Uint32Field("Recent"),
-		Unseen:      query.Uint32Field("Unseen"),
 		UidNext:     query.Uint32Field("UidNext"),
 		UidValidity: query.Uint32Field("UidValidity"),
 		Subscribed:  query.BoolField("Subscribed"),

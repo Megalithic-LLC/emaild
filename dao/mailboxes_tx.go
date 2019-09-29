@@ -19,13 +19,13 @@ func (self MailboxesDAO) AllocateNextUidTx(tx *genji.Tx, mailbox *model.Mailbox)
 }
 
 func (self MailboxesDAO) CreateTx(tx *genji.Tx, mailbox *model.Mailbox) error {
-	if table, err := tx.GetTable(model.MailboxTable); err != nil {
+	if mailboxTable, err := tx.GetTable(model.MailboxTable); err != nil {
 		return err
 	} else {
 		if mailbox.Id == "" {
 			mailbox.Id = xid.New().String()
 		}
-		_, err := table.Insert(mailbox)
+		_, err := mailboxTable.Insert(mailbox)
 		return err
 	}
 }

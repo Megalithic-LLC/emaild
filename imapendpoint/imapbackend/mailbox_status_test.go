@@ -15,7 +15,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestMailboxCreateMessage(t *testing.T) {
+func TestMailboxStatus(t *testing.T) {
 	g := goblin.Goblin(t)
 	RegisterFailHandler(func(m string, _ ...int) { g.Fail(m) })
 
@@ -43,9 +43,9 @@ func TestMailboxCreateMessage(t *testing.T) {
 			closeAndDestroyGenjiEngine(genjiEngine)
 		})
 
-		g.Describe("CreateMessage()", func() {
+		g.Describe("Status()", func() {
 
-			g.It("Should correctly store a simple text/plain message", func() {
+			g.It("Should work", func() {
 				// setup precondition
 				account := &model.Account{Username: "test"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
@@ -54,25 +54,16 @@ func TestMailboxCreateMessage(t *testing.T) {
 				mailbox, err := user.GetMailbox("INBOX")
 				Expect(err).ToNot(HaveOccurred())
 				Expect(mailbox).ToNot(BeNil())
+				Expect(mailbox.CreateMessage([]string{imap.SeenFlag}, time.Now(), strings.NewReader("Subject: A\r\n\r\nBody_A"))).ToNot(HaveOccurred())
+				Expect(mailbox.CreateMessage([]string{}, time.Now(), strings.NewReader("Subject: B\r\n\r\nBody_B"))).ToNot(HaveOccurred())
+				Expect(mailbox.CreateMessage([]string{imap.RecentFlag}, time.Now(), strings.NewReader("Subject: C\r\n\r\nBody_C"))).ToNot(HaveOccurred())
 
 				// Perform test
-				{
-					flags := []string{}
-					var date time.Time
-					body := "Subject: hi\r\n\r\nbody"
-					Expect(mailbox.CreateMessage(flags, date, strings.NewReader(body))).ToNot(HaveOccurred())
-				}
-				messages := make(chan *imap.Message, 1)
-				uid := false
-				seqSet := new(imap.SeqSet)
-				seqSet.AddRange(1, 1)
-				items := []imap.FetchItem{imap.FetchItem("BODY[]")}
-				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
-				message := <-messages
-				Expect(message.SeqNum).To(Equal(uint32(1)))
-				body := message.Items["BODY[]"]
-				Expect(body).ToNot(BeNil())
-				Expect(string(body.([]byte))).To(Equal("Subject: hi\r\n\r\nbody"))
+				status, err := mailbox.Status([]imap.StatusItem{imap.StatusMessages, imap.StatusRecent, imap.StatusUnseen})
+				Expect(err).ToNot(HaveOccurred())
+				Expect(status.Messages).To(Equal(uint32(3)))
+				Expect(status.Recent).To(Equal(uint32(1)))
+				Expect(status.Unseen).To(Equal(uint32(2)))
 			})
 
 		})

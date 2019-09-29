@@ -16,12 +16,19 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 
 	return self.backend.db.Update(func(tx *genji.Tx) error {
 
+		// Freshen model
+		mailbox, err := self.backend.mailboxesDAO.FindByIdTx(tx, self.model.Id)
+		if err != nil {
+			return err
+		}
+
 		rawBody, err := ioutil.ReadAll(body)
 		if err != nil {
 			logger.Errorf("Failed reading uploaded message: %v", err)
 			return err
 		}
 
+		// Store message
 		message := &model.Message{
 			DateUTC: date.UTC().Unix(),
 			Size:    uint32(len(rawBody)),
@@ -31,7 +38,18 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 			return err
 		}
 
-		uid, err := self.backend.mailboxesDAO.AllocateNextUidTx(tx, self.model)
+		// Store message body
+		messageRawBody := &model.MessageRawBody{
+			Id:   message.Id,
+			Body: rawBody,
+		}
+		if err := self.backend.messageRawBodiesDAO.CreateTx(tx, messageRawBody); err != nil {
+			logger.Errorf("Failed storing message body in mailbox: %v", err)
+			return err
+		}
+
+		// Store mailbox-to-message cross-post association, where uid and most flags are stored
+		uid, err := self.backend.mailboxesDAO.AllocateNextUidTx(tx, mailbox)
 		if err != nil {
 			return err
 		}
@@ -46,15 +64,8 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 			return err
 		}
 
-		messageRawBody := &model.MessageRawBody{
-			Id:   message.Id,
-			Body: rawBody,
-		}
-		if err := self.backend.messageRawBodiesDAO.CreateTx(tx, messageRawBody); err != nil {
-			logger.Errorf("Failed storing message body in mailbox: %v", err)
-			return err
-		}
-
+		// Success
+		self.model = mailbox
 		return nil
 	})
 }

@@ -43,7 +43,7 @@ func TestMailboxUpdateMessageFlags(t *testing.T) {
 			closeAndDestroyGenjiEngine(genjiEngine)
 		})
 
-		g.It("Should correctly set a new flag additively", func() {
+		g.It("Should correctly add a flag", func() {
 			// setup precondition
 			account := &model.Account{Username: "test"}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
