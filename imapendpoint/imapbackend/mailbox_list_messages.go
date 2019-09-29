@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
@@ -50,6 +51,12 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 					}
 				case imap.FetchFlags:
 					imapMessage.Items[item] = strings.Split(mailboxMessage.FlagsCSV, ",")
+				case imap.FetchInternalDate:
+					message, err := self.backend.messagesDAO.FindByIDTx(tx, mailboxMessage.MessageID)
+					if err != nil {
+						return err
+					}
+					imapMessage.InternalDate = time.Unix(message.DateUTC, 0)
 				case imap.FetchUid:
 					imapMessage.Uid = mailboxMessage.UID
 				default:

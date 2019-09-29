@@ -45,6 +45,38 @@ func TestMailboxListMessages(t *testing.T) {
 
 		g.Describe("ListMessages()", func() {
 
+			g.It("Should correctly return internal date", func() {
+
+				// setup precondition
+				account := &model.Account{Username: "test"}
+				Expect(accountsDAO.Create(account)).Should(Succeed())
+				user, err := imapBackend.Login(nil, "test", "password")
+				Expect(err).ToNot(HaveOccurred())
+				mailbox, err := user.GetMailbox("INBOX")
+				Expect(err).ToNot(HaveOccurred())
+				Expect(mailbox).ToNot(BeNil())
+				time1 := time.Date(2010, 2, 20, 22, 7, 15, 0, time.UTC)
+				time2 := time.Date(2011, 3, 21, 23, 8, 16, 0, time.UTC)
+				time3 := time.Date(2012, 4, 22, 24, 9, 17, 0, time.UTC)
+				Expect(mailbox.CreateMessage([]string{}, time1, strings.NewReader("Subject: A\r\n\r\nBody_A"))).ToNot(HaveOccurred())
+				Expect(mailbox.CreateMessage([]string{}, time2, strings.NewReader("Subject: B\r\n\r\nBody_B"))).ToNot(HaveOccurred())
+				Expect(mailbox.CreateMessage([]string{}, time3, strings.NewReader("Subject: C\r\n\r\nBody_C"))).ToNot(HaveOccurred())
+
+				// Perform test
+
+				messages := make(chan *imap.Message, 3)
+				uid := false
+				seqSet := new(imap.SeqSet)
+				seqSet.AddRange(1, 3)
+				items := []imap.FetchItem{imap.FetchItem(imap.FetchInternalDate)}
+				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
+				message1, message2, message3 := <-messages, <-messages, <-messages
+
+				Expect(message1.InternalDate.UTC()).To(Equal(time1.UTC()))
+				Expect(message2.InternalDate.UTC()).To(Equal(time2.UTC()))
+				Expect(message3.InternalDate.UTC()).To(Equal(time3.UTC()))
+			})
+
 			g.It("Should correctly return UIDs", func() {
 
 				// setup precondition
@@ -61,7 +93,7 @@ func TestMailboxListMessages(t *testing.T) {
 
 				// Perform test
 
-				messages := make(chan *imap.Message, 10)
+				messages := make(chan *imap.Message, 3)
 				uid := false
 				seqSet := new(imap.SeqSet)
 				seqSet.AddRange(1, 3)
