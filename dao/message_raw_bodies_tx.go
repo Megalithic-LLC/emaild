@@ -14,12 +14,12 @@ func (self MessageRawBodiesDAO) CreateTx(tx *genji.Tx, messageRawBody *model.Mes
 	}
 }
 
-func (self MessageRawBodiesDAO) FindByIDTx(tx *genji.Tx, id string) (*model.MessageRawBody, error) {
+func (self MessageRawBodiesDAO) FindByIdTx(tx *genji.Tx, id string) (*model.MessageRawBody, error) {
 	messageRawBodyTable, err := tx.GetTable(model.MessageRawBodyTable)
 	if err != nil {
 		return nil, err
 	}
-	searchFor := &model.MessageRawBody{ID: id}
+	searchFor := &model.MessageRawBody{Id: id}
 	messageRawBodyPK, err := searchFor.PrimaryKey()
 	if err != nil {
 		return nil, err

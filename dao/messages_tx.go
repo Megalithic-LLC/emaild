@@ -10,20 +10,20 @@ func (self MessagesDAO) CreateTx(tx *genji.Tx, message *model.Message) error {
 	if table, err := tx.GetTable(model.MessageTable); err != nil {
 		return err
 	} else {
-		if message.ID == "" {
-			message.ID = xid.New().String()
+		if message.Id == "" {
+			message.Id = xid.New().String()
 		}
 		_, err := table.Insert(message)
 		return err
 	}
 }
 
-func (self MessagesDAO) FindByIDTx(tx *genji.Tx, id string) (*model.Message, error) {
+func (self MessagesDAO) FindByIdTx(tx *genji.Tx, id string) (*model.Message, error) {
 	messageTable, err := tx.GetTable(model.MessageTable)
 	if err != nil {
 		return nil, err
 	}
-	searchFor := &model.Message{ID: id}
+	searchFor := &model.Message{Id: id}
 	messagePK, err := searchFor.PrimaryKey()
 	if err != nil {
 		return nil, err

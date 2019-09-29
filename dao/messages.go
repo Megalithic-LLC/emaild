@@ -23,10 +23,10 @@ func (self MessagesDAO) Create(message *model.Message) error {
 	})
 }
 
-func (self MessagesDAO) FindByID(id string) (*model.Message, error) {
+func (self MessagesDAO) FindById(id string) (*model.Message, error) {
 	var retval *model.Message
 	err := self.db.View(func(tx *genji.Tx) error {
-		message, err := self.FindByIDTx(tx, id)
+		message, err := self.FindByIdTx(tx, id)
 		if err == nil {
 			retval = message
 		}

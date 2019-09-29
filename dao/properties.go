@@ -29,7 +29,7 @@ func (self PropertiesDAO) Get(key string) (string, error) {
 			Where(f.Key.Eq(key)).
 			Limit(1).
 			Run(tx).
-			Iterate(func(recordID []byte, r record.Record) error {
+			Iterate(func(recordId []byte, r record.Record) error {
 				field, err := r.GetField(f.Value.Name())
 				retval = string(field.Data)
 				return err
@@ -65,7 +65,7 @@ func (self PropertiesDAO) SetIfKeyNotExists(key, value string) (string, error) {
 			From(table).
 			Where(f.Key.Eq(key)).
 			Run(tx).
-			Iterate(func(recordID []byte, r record.Record) error {
+			Iterate(func(recordId []byte, r record.Record) error {
 				field, err := r.GetField(f.Value.Name())
 				retval = string(field.Data)
 				found = true

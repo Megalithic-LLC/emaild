@@ -15,8 +15,8 @@ import (
 // GetField implements the field method of the record.Record interface.
 func (m *Message) GetField(name string) (field.Field, error) {
 	switch name {
-	case "ID":
-		return field.NewString("ID", m.ID), nil
+	case "Id":
+		return field.NewString("Id", m.Id), nil
 	case "DateUTC":
 		return field.NewInt64("DateUTC", m.DateUTC), nil
 	case "Size":
@@ -31,7 +31,7 @@ func (m *Message) GetField(name string) (field.Field, error) {
 func (m *Message) Iterate(fn func(field.Field) error) error {
 	var err error
 
-	err = fn(field.NewString("ID", m.ID))
+	err = fn(field.NewString("Id", m.Id))
 	if err != nil {
 		return err
 	}
@@ -56,8 +56,8 @@ func (m *Message) ScanRecord(rec record.Record) error {
 		var err error
 
 		switch f.Name {
-		case "ID":
-			m.ID, err = field.DecodeString(f.Data)
+		case "Id":
+			m.Id, err = field.DecodeString(f.Data)
 		case "DateUTC":
 			m.DateUTC, err = field.DecodeInt64(f.Data)
 		case "Size":
@@ -69,7 +69,7 @@ func (m *Message) ScanRecord(rec record.Record) error {
 
 // PrimaryKey returns the primary key. It implements the table.PrimaryKeyer interface.
 func (m *Message) PrimaryKey() ([]byte, error) {
-	return field.EncodeString(m.ID), nil
+	return field.EncodeString(m.Id), nil
 }
 
 // Indexes creates a map containing the configuration for each index of the table.
@@ -82,7 +82,7 @@ func (m *Message) Indexes() map[string]index.Options {
 // MessageFields describes the fields of the Message record.
 // It can be used to select fields during queries.
 type MessageFields struct {
-	ID      query.StringFieldSelector
+	Id      query.StringFieldSelector
 	DateUTC query.Int64FieldSelector
 	Size    query.Uint32FieldSelector
 }
@@ -90,7 +90,7 @@ type MessageFields struct {
 // NewMessageFields creates a MessageFields.
 func NewMessageFields() *MessageFields {
 	return &MessageFields{
-		ID:      query.StringField("ID"),
+		Id:      query.StringField("Id"),
 		DateUTC: query.Int64Field("DateUTC"),
 		Size:    query.Uint32Field("Size"),
 	}

@@ -41,10 +41,10 @@ func (self MailboxesDAO) Find(where query.Expr, limit int, iter func(mailbox *mo
 	})
 }
 
-func (self MailboxesDAO) FindByID(id string) (*model.Mailbox, error) {
+func (self MailboxesDAO) FindById(id string) (*model.Mailbox, error) {
 	var retval *model.Mailbox
 	err := self.db.View(func(tx *genji.Tx) error {
-		mailbox, err := self.FindByIDTx(tx, id)
+		mailbox, err := self.FindByIdTx(tx, id)
 		if err == nil {
 			retval = mailbox
 		}
@@ -53,11 +53,11 @@ func (self MailboxesDAO) FindByID(id string) (*model.Mailbox, error) {
 	return retval, err
 }
 
-func (self MailboxesDAO) FindOneByName(accountID string, name string) (*model.Mailbox, error) {
-	logger.Tracef("MailboxesDAO:FindOneByName(%s, %s)", accountID, name)
+func (self MailboxesDAO) FindOneByName(accountId string, name string) (*model.Mailbox, error) {
+	logger.Tracef("MailboxesDAO:FindOneByName(%s, %s)", accountId, name)
 	var retval *model.Mailbox
 	err := self.db.View(func(tx *genji.Tx) error {
-		mailbox, err := self.FindOneByNameTx(tx, accountID, name)
+		mailbox, err := self.FindOneByNameTx(tx, accountId, name)
 		if err == nil {
 			retval = mailbox
 		}

@@ -22,8 +22,8 @@ func (self MailboxesDAO) CreateTx(tx *genji.Tx, mailbox *model.Mailbox) error {
 	if table, err := tx.GetTable(model.MailboxTable); err != nil {
 		return err
 	} else {
-		if mailbox.ID == "" {
-			mailbox.ID = xid.New().String()
+		if mailbox.Id == "" {
+			mailbox.Id = xid.New().String()
 		}
 		_, err := table.Insert(mailbox)
 		return err
@@ -42,7 +42,7 @@ func (self MailboxesDAO) FindTx(tx *genji.Tx, where query.Expr, limit int, iter 
 	if limit > 0 {
 		selectStmt = selectStmt.Limit(limit)
 	}
-	return selectStmt.Run(tx).Iterate(func(recordID []byte, r record.Record) error {
+	return selectStmt.Run(tx).Iterate(func(recordId []byte, r record.Record) error {
 		var mailbox model.Mailbox
 		if err := mailbox.ScanRecord(r); err != nil {
 			return err
@@ -51,12 +51,12 @@ func (self MailboxesDAO) FindTx(tx *genji.Tx, where query.Expr, limit int, iter 
 	})
 }
 
-func (self MailboxesDAO) FindByIDTx(tx *genji.Tx, id string) (*model.Mailbox, error) {
+func (self MailboxesDAO) FindByIdTx(tx *genji.Tx, id string) (*model.Mailbox, error) {
 	mailboxTable, err := tx.GetTable(model.MailboxTable)
 	if err != nil {
 		return nil, err
 	}
-	searchFor := &model.Mailbox{ID: id}
+	searchFor := &model.Mailbox{Id: id}
 	mailboxPK, err := searchFor.PrimaryKey()
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (self MailboxesDAO) FindByIDTx(tx *genji.Tx, id string) (*model.Mailbox, er
 	return &mailbox, err
 }
 
-func (self MailboxesDAO) FindOneByNameTx(tx *genji.Tx, accountID string, name string) (*model.Mailbox, error) {
+func (self MailboxesDAO) FindOneByNameTx(tx *genji.Tx, accountId string, name string) (*model.Mailbox, error) {
 	var retval *model.Mailbox
 	mailboxTable, err := tx.GetTable(model.MailboxTable)
 	if err != nil {
@@ -83,13 +83,13 @@ func (self MailboxesDAO) FindOneByNameTx(tx *genji.Tx, accountID string, name st
 		From(mailboxTable).
 		Where(
 			query.And(
-				self.fields.AccountID.Eq(accountID),
+				self.fields.AccountId.Eq(accountId),
 				self.fields.Name.Eq(name),
 			),
 		).
 		Limit(1).
 		Run(tx).
-		Iterate(func(recordID []byte, r record.Record) error {
+		Iterate(func(recordId []byte, r record.Record) error {
 			var mailbox model.Mailbox
 			if err := mailbox.ScanRecord(r); err == nil {
 				retval = &mailbox

@@ -15,8 +15,8 @@ import (
 // GetField implements the field method of the record.Record interface.
 func (a *Account) GetField(name string) (field.Field, error) {
 	switch name {
-	case "ID":
-		return field.NewString("ID", a.ID), nil
+	case "Id":
+		return field.NewString("Id", a.Id), nil
 	case "Username":
 		return field.NewString("Username", a.Username), nil
 	case "Password":
@@ -31,7 +31,7 @@ func (a *Account) GetField(name string) (field.Field, error) {
 func (a *Account) Iterate(fn func(field.Field) error) error {
 	var err error
 
-	err = fn(field.NewString("ID", a.ID))
+	err = fn(field.NewString("Id", a.Id))
 	if err != nil {
 		return err
 	}
@@ -56,8 +56,8 @@ func (a *Account) ScanRecord(rec record.Record) error {
 		var err error
 
 		switch f.Name {
-		case "ID":
-			a.ID, err = field.DecodeString(f.Data)
+		case "Id":
+			a.Id, err = field.DecodeString(f.Data)
 		case "Username":
 			a.Username, err = field.DecodeString(f.Data)
 		case "Password":
@@ -69,7 +69,7 @@ func (a *Account) ScanRecord(rec record.Record) error {
 
 // PrimaryKey returns the primary key. It implements the table.PrimaryKeyer interface.
 func (a *Account) PrimaryKey() ([]byte, error) {
-	return field.EncodeString(a.ID), nil
+	return field.EncodeString(a.Id), nil
 }
 
 // Indexes creates a map containing the configuration for each index of the table.
@@ -82,7 +82,7 @@ func (a *Account) Indexes() map[string]index.Options {
 // AccountFields describes the fields of the Account record.
 // It can be used to select fields during queries.
 type AccountFields struct {
-	ID       query.StringFieldSelector
+	Id       query.StringFieldSelector
 	Username query.StringFieldSelector
 	Password query.BytesFieldSelector
 }
@@ -90,7 +90,7 @@ type AccountFields struct {
 // NewAccountFields creates a AccountFields.
 func NewAccountFields() *AccountFields {
 	return &AccountFields{
-		ID:       query.StringField("ID"),
+		Id:       query.StringField("Id"),
 		Username: query.StringField("Username"),
 		Password: query.BytesField("Password"),
 	}

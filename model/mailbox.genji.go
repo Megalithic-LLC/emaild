@@ -15,10 +15,10 @@ import (
 // GetField implements the field method of the record.Record interface.
 func (m *Mailbox) GetField(name string) (field.Field, error) {
 	switch name {
-	case "ID":
-		return field.NewString("ID", m.ID), nil
-	case "AccountID":
-		return field.NewString("AccountID", m.AccountID), nil
+	case "Id":
+		return field.NewString("Id", m.Id), nil
+	case "AccountId":
+		return field.NewString("AccountId", m.AccountId), nil
 	case "Name":
 		return field.NewString("Name", m.Name), nil
 	case "Messages":
@@ -43,12 +43,12 @@ func (m *Mailbox) GetField(name string) (field.Field, error) {
 func (m *Mailbox) Iterate(fn func(field.Field) error) error {
 	var err error
 
-	err = fn(field.NewString("ID", m.ID))
+	err = fn(field.NewString("Id", m.Id))
 	if err != nil {
 		return err
 	}
 
-	err = fn(field.NewString("AccountID", m.AccountID))
+	err = fn(field.NewString("AccountId", m.AccountId))
 	if err != nil {
 		return err
 	}
@@ -98,10 +98,10 @@ func (m *Mailbox) ScanRecord(rec record.Record) error {
 		var err error
 
 		switch f.Name {
-		case "ID":
-			m.ID, err = field.DecodeString(f.Data)
-		case "AccountID":
-			m.AccountID, err = field.DecodeString(f.Data)
+		case "Id":
+			m.Id, err = field.DecodeString(f.Data)
+		case "AccountId":
+			m.AccountId, err = field.DecodeString(f.Data)
 		case "Name":
 			m.Name, err = field.DecodeString(f.Data)
 		case "Messages":
@@ -123,13 +123,13 @@ func (m *Mailbox) ScanRecord(rec record.Record) error {
 
 // PrimaryKey returns the primary key. It implements the table.PrimaryKeyer interface.
 func (m *Mailbox) PrimaryKey() ([]byte, error) {
-	return field.EncodeString(m.ID), nil
+	return field.EncodeString(m.Id), nil
 }
 
 // Indexes creates a map containing the configuration for each index of the table.
 func (m *Mailbox) Indexes() map[string]index.Options {
 	return map[string]index.Options{
-		"AccountID": index.Options{Unique: false},
+		"AccountId": index.Options{Unique: false},
 		"Name":      index.Options{Unique: false},
 	}
 }
@@ -137,8 +137,8 @@ func (m *Mailbox) Indexes() map[string]index.Options {
 // MailboxFields describes the fields of the Mailbox record.
 // It can be used to select fields during queries.
 type MailboxFields struct {
-	ID          query.StringFieldSelector
-	AccountID   query.StringFieldSelector
+	Id          query.StringFieldSelector
+	AccountId   query.StringFieldSelector
 	Name        query.StringFieldSelector
 	Messages    query.Uint32FieldSelector
 	Recent      query.Uint32FieldSelector
@@ -151,8 +151,8 @@ type MailboxFields struct {
 // NewMailboxFields creates a MailboxFields.
 func NewMailboxFields() *MailboxFields {
 	return &MailboxFields{
-		ID:          query.StringField("ID"),
-		AccountID:   query.StringField("AccountID"),
+		Id:          query.StringField("Id"),
+		AccountId:   query.StringField("AccountId"),
 		Name:        query.StringField("Name"),
 		Messages:    query.Uint32Field("Messages"),
 		Recent:      query.Uint32Field("Recent"),

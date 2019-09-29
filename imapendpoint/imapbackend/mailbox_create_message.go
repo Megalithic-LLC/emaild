@@ -36,9 +36,9 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 			return err
 		}
 		mailboxMessage := &model.MailboxMessage{
-			MailboxID: self.model.ID,
-			MessageID: message.ID,
-			UID:       uid,
+			MailboxId: self.model.Id,
+			MessageId: message.Id,
+			Uid:       uid,
 			FlagsCSV:  strings.Join(flags, ","),
 		}
 		if err := self.backend.mailboxMessagesDAO.CreateTx(tx, mailboxMessage); err != nil {
@@ -47,7 +47,7 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 		}
 
 		messageRawBody := &model.MessageRawBody{
-			ID:   message.ID,
+			Id:   message.Id,
 			Body: rawBody,
 		}
 		if err := self.backend.messageRawBodiesDAO.CreateTx(tx, messageRawBody); err != nil {

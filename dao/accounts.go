@@ -26,8 +26,8 @@ func (self AccountsDAO) Create(account *model.Account) error {
 		if table, err := tx.GetTable(model.AccountTable); err != nil {
 			return err
 		} else {
-			if account.ID == "" {
-				account.ID = xid.New().String()
+			if account.Id == "" {
+				account.Id = xid.New().String()
 			}
 			_, err := table.Insert(account)
 			return err
@@ -48,7 +48,7 @@ func (self AccountsDAO) FindOneByUsername(username string) (*model.Account, erro
 			Where(self.fields.Username.Eq(username)).
 			Limit(1).
 			Run(tx).
-			Iterate(func(recordID []byte, r record.Record) error {
+			Iterate(func(recordId []byte, r record.Record) error {
 				var account model.Account
 				if err := account.ScanRecord(r); err == nil {
 					retval = &account
@@ -69,7 +69,7 @@ func (self AccountsDAO) FindByID(id string) (*model.Account, error) {
 		if err != nil {
 			return err
 		}
-		accountSelector := &model.Account{ID: id}
+		accountSelector := &model.Account{Id: id}
 		accountID, err := accountSelector.PrimaryKey()
 		if err != nil {
 			return err

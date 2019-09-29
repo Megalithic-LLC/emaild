@@ -21,7 +21,7 @@ func (self *Mailbox) UpdateMessagesFlags(uid bool, seqSet *imap.SeqSet, op imap.
 
 			// skip messages that don't match seqSet
 			if uid {
-				if !seqSet.Contains(mailboxMessage.UID) {
+				if !seqSet.Contains(mailboxMessage.Uid) {
 					return nil
 				}
 			} else {

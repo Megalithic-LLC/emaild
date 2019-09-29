@@ -23,10 +23,10 @@ func (self MessageRawBodiesDAO) Create(messageRawBody *model.MessageRawBody) err
 	})
 }
 
-func (self MessageRawBodiesDAO) FindByID(id string) (*model.MessageRawBody, error) {
+func (self MessageRawBodiesDAO) FindById(id string) (*model.MessageRawBody, error) {
 	var retval *model.MessageRawBody
 	err := self.db.View(func(tx *genji.Tx) error {
-		messageRawBody, err := self.FindByIDTx(tx, id)
+		messageRawBody, err := self.FindByIdTx(tx, id)
 		if err == nil {
 			retval = messageRawBody
 		}

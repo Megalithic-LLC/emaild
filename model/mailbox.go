@@ -1,8 +1,8 @@
 package model
 
 type Mailbox struct {
-	ID          string `genji:"pk"`
-	AccountID   string `genji:"index"`
+	Id          string `genji:"pk"`
+	AccountId   string `genji:"index"`
 	Name        string `genji:"index"`
 	Messages    uint32
 	Recent      uint32

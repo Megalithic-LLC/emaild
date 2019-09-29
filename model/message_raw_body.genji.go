@@ -14,8 +14,8 @@ import (
 // GetField implements the field method of the record.Record interface.
 func (m *MessageRawBody) GetField(name string) (field.Field, error) {
 	switch name {
-	case "ID":
-		return field.NewString("ID", m.ID), nil
+	case "Id":
+		return field.NewString("Id", m.Id), nil
 	case "Body":
 		return field.NewBytes("Body", m.Body), nil
 	}
@@ -28,7 +28,7 @@ func (m *MessageRawBody) GetField(name string) (field.Field, error) {
 func (m *MessageRawBody) Iterate(fn func(field.Field) error) error {
 	var err error
 
-	err = fn(field.NewString("ID", m.ID))
+	err = fn(field.NewString("Id", m.Id))
 	if err != nil {
 		return err
 	}
@@ -48,8 +48,8 @@ func (m *MessageRawBody) ScanRecord(rec record.Record) error {
 		var err error
 
 		switch f.Name {
-		case "ID":
-			m.ID, err = field.DecodeString(f.Data)
+		case "Id":
+			m.Id, err = field.DecodeString(f.Data)
 		case "Body":
 			m.Body, err = field.DecodeBytes(f.Data)
 		}
@@ -59,20 +59,20 @@ func (m *MessageRawBody) ScanRecord(rec record.Record) error {
 
 // PrimaryKey returns the primary key. It implements the table.PrimaryKeyer interface.
 func (m *MessageRawBody) PrimaryKey() ([]byte, error) {
-	return field.EncodeString(m.ID), nil
+	return field.EncodeString(m.Id), nil
 }
 
 // MessageRawBodyFields describes the fields of the MessageRawBody record.
 // It can be used to select fields during queries.
 type MessageRawBodyFields struct {
-	ID   query.StringFieldSelector
+	Id   query.StringFieldSelector
 	Body query.BytesFieldSelector
 }
 
 // NewMessageRawBodyFields creates a MessageRawBodyFields.
 func NewMessageRawBodyFields() *MessageRawBodyFields {
 	return &MessageRawBodyFields{
-		ID:   query.StringField("ID"),
+		Id:   query.StringField("Id"),
 		Body: query.BytesField("Body"),
 	}
 }

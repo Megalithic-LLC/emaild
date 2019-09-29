@@ -30,10 +30,10 @@ func (self MailboxMessagesDAO) Find(where query.Expr, limit int, iter func(mailb
 	})
 }
 
-func (self MailboxMessagesDAO) FindByIDs(mailboxID, messageID string) (*model.MailboxMessage, error) {
+func (self MailboxMessagesDAO) FindByIds(mailboxId, messageId string) (*model.MailboxMessage, error) {
 	var retval *model.MailboxMessage
 	err := self.db.View(func(tx *genji.Tx) error {
-		mailboxMessage, err := self.FindByIDsTx(tx, mailboxID, messageID)
+		mailboxMessage, err := self.FindByIdsTx(tx, mailboxId, messageId)
 		if err == nil {
 			retval = mailboxMessage
 		}

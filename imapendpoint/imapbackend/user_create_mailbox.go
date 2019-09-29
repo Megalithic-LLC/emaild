@@ -8,7 +8,7 @@ import (
 func (self *User) CreateMailbox(name string) error {
 	logger.Tracef("User:CreateMailbox(%s)", name)
 	mailbox := &model.Mailbox{
-		AccountID:   self.account.ID,
+		AccountId:   self.account.Id,
 		Name:        name,
 		UidValidity: 1,
 	}

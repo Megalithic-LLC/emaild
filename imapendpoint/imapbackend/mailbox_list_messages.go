@@ -24,7 +24,7 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 
 			// filter messages that don't match seqSet
 			if uid {
-				if !seqSet.Contains(mailboxMessage.UID) {
+				if !seqSet.Contains(mailboxMessage.Uid) {
 					return nil
 				}
 			} else {
@@ -41,14 +41,14 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 				switch item {
 
 				case imap.FetchRFC822, "BODY[]":
-					messageRawBody, err := self.backend.messageRawBodiesDAO.FindByID(mailboxMessage.MessageID)
+					messageRawBody, err := self.backend.messageRawBodiesDAO.FindById(mailboxMessage.MessageId)
 					if err != nil {
 						return err
 					}
 					if messageRawBody != nil {
 						imapMessage.Items[item] = messageRawBody.Body
 					} else {
-						logger.Warnf("Body expected but not found: message id %+v", mailboxMessage.MessageID)
+						logger.Warnf("Body expected but not found: message id %+v", mailboxMessage.MessageId)
 						imapMessage.Items[item] = []byte{}
 					}
 
@@ -58,7 +58,7 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 				case imap.FetchInternalDate:
 					if message == nil {
 						var err error
-						message, err = self.backend.messagesDAO.FindByIDTx(tx, mailboxMessage.MessageID)
+						message, err = self.backend.messagesDAO.FindByIdTx(tx, mailboxMessage.MessageId)
 						if err != nil {
 							return err
 						}
@@ -68,7 +68,7 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 				case imap.FetchRFC822Size:
 					if message == nil {
 						var err error
-						message, err = self.backend.messagesDAO.FindByIDTx(tx, mailboxMessage.MessageID)
+						message, err = self.backend.messagesDAO.FindByIdTx(tx, mailboxMessage.MessageId)
 						if err != nil {
 							return err
 						}
@@ -76,7 +76,7 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 					imapMessage.Size = message.Size
 
 				case imap.FetchUid:
-					imapMessage.Uid = mailboxMessage.UID
+					imapMessage.Uid = mailboxMessage.Uid
 
 				default:
 					return errors.New(fmt.Sprintf("Not implemented yet: unsupported fetch item %s", item))
