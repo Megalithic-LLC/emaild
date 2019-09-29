@@ -3,6 +3,7 @@ package dao
 import (
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
+	"github.com/asdine/genji/query"
 	"github.com/docktermj/go-logger/logger"
 )
 
@@ -31,6 +32,12 @@ func (self MailboxesDAO) AllocateNextUid(mailbox *model.Mailbox) (uint32, error)
 func (self MailboxesDAO) Create(mailbox *model.Mailbox) error {
 	return self.db.Update(func(tx *genji.Tx) error {
 		return self.CreateTx(tx, mailbox)
+	})
+}
+
+func (self MailboxesDAO) Find(where query.Expr, limit int, iter func(mailbox *model.Mailbox) error) error {
+	return self.db.View(func(tx *genji.Tx) error {
+		return self.FindTx(tx, where, limit, iter)
 	})
 }
 
