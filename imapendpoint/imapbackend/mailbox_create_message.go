@@ -13,9 +13,18 @@ import (
 
 func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Literal) error {
 	logger.Tracef("Mailbox:CreateMessage()")
+
 	return self.backend.db.Update(func(tx *genji.Tx) error {
+
+		rawBody, err := ioutil.ReadAll(body)
+		if err != nil {
+			logger.Errorf("Failed reading uploaded message: %v", err)
+			return err
+		}
+
 		message := &model.Message{
 			DateUTC: date.UTC().Unix(),
+			Size:    uint32(len(rawBody)),
 		}
 		if err := self.backend.messagesDAO.CreateTx(tx, message); err != nil {
 			logger.Errorf("Failed storing message: %v", err)
@@ -37,11 +46,6 @@ func (self *Mailbox) CreateMessage(flags []string, date time.Time, body imap.Lit
 			return err
 		}
 
-		rawBody, err := ioutil.ReadAll(body)
-		if err != nil {
-			logger.Errorf("Failed reading uploaded message: %v", err)
-			return err
-		}
 		messageRawBody := &model.MessageRawBody{
 			ID:   message.ID,
 			Body: rawBody,

@@ -19,6 +19,8 @@ func (m *Message) GetField(name string) (field.Field, error) {
 		return field.NewString("ID", m.ID), nil
 	case "DateUTC":
 		return field.NewInt64("DateUTC", m.DateUTC), nil
+	case "Size":
+		return field.NewUint32("Size", m.Size), nil
 	}
 
 	return field.Field{}, errors.New("unknown field")
@@ -39,6 +41,11 @@ func (m *Message) Iterate(fn func(field.Field) error) error {
 		return err
 	}
 
+	err = fn(field.NewUint32("Size", m.Size))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -53,6 +60,8 @@ func (m *Message) ScanRecord(rec record.Record) error {
 			m.ID, err = field.DecodeString(f.Data)
 		case "DateUTC":
 			m.DateUTC, err = field.DecodeInt64(f.Data)
+		case "Size":
+			m.Size, err = field.DecodeUint32(f.Data)
 		}
 		return err
 	})
@@ -75,6 +84,7 @@ func (m *Message) Indexes() map[string]index.Options {
 type MessageFields struct {
 	ID      query.StringFieldSelector
 	DateUTC query.Int64FieldSelector
+	Size    query.Uint32FieldSelector
 }
 
 // NewMessageFields creates a MessageFields.
@@ -82,5 +92,6 @@ func NewMessageFields() *MessageFields {
 	return &MessageFields{
 		ID:      query.StringField("ID"),
 		DateUTC: query.Int64Field("DateUTC"),
+		Size:    query.Uint32Field("Size"),
 	}
 }

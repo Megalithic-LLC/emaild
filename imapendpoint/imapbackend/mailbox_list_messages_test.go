@@ -45,7 +45,7 @@ func TestMailboxListMessages(t *testing.T) {
 
 		g.Describe("ListMessages()", func() {
 
-			g.It("Should correctly return internal date", func() {
+			g.It("Should correctly return internal dates", func() {
 
 				// setup precondition
 				account := &model.Account{Username: "test"}
@@ -107,6 +107,35 @@ func TestMailboxListMessages(t *testing.T) {
 
 				Expect(message2.Uid).To(Equal(message1.Uid + 1))
 				Expect(message3.Uid).To(Equal(message2.Uid + 1))
+			})
+
+			g.It("Should correctly return sizes", func() {
+
+				// setup precondition
+				account := &model.Account{Username: "test"}
+				Expect(accountsDAO.Create(account)).Should(Succeed())
+				user, err := imapBackend.Login(nil, "test", "password")
+				Expect(err).ToNot(HaveOccurred())
+				mailbox, err := user.GetMailbox("INBOX")
+				Expect(err).ToNot(HaveOccurred())
+				Expect(mailbox).ToNot(BeNil())
+				Expect(mailbox.CreateMessage([]string{}, time.Now(), strings.NewReader("Subject: A\r\n\r\n1"))).ToNot(HaveOccurred())
+				Expect(mailbox.CreateMessage([]string{}, time.Now(), strings.NewReader("Subject: B\r\n\r\n22"))).ToNot(HaveOccurred())
+				Expect(mailbox.CreateMessage([]string{}, time.Now(), strings.NewReader("Subject: C\r\n\r\n333"))).ToNot(HaveOccurred())
+
+				// Perform test
+
+				messages := make(chan *imap.Message, 3)
+				uid := false
+				seqSet := new(imap.SeqSet)
+				seqSet.AddRange(1, 3)
+				items := []imap.FetchItem{imap.FetchItem(imap.FetchRFC822Size)}
+				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
+				message1, message2, message3 := <-messages, <-messages, <-messages
+
+				Expect(message1.Size).To(Equal(uint32(15)))
+				Expect(message2.Size).To(Equal(uint32(16)))
+				Expect(message3.Size).To(Equal(uint32(17)))
 			})
 
 		})

@@ -36,8 +36,10 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 			imapMessage := imap.NewMessage(seq, items)
 
 			// populate requested items
+			var message *model.Message // load on-demand
 			for _, item := range items {
 				switch item {
+
 				case imap.FetchRFC822, "BODY[]":
 					messageRawBody, err := self.backend.messageRawBodiesDAO.FindByID(mailboxMessage.MessageID)
 					if err != nil {
@@ -49,16 +51,33 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 						logger.Warnf("Body expected but not found: message id %+v", mailboxMessage.MessageID)
 						imapMessage.Items[item] = []byte{}
 					}
+
 				case imap.FetchFlags:
 					imapMessage.Items[item] = strings.Split(mailboxMessage.FlagsCSV, ",")
+
 				case imap.FetchInternalDate:
-					message, err := self.backend.messagesDAO.FindByIDTx(tx, mailboxMessage.MessageID)
-					if err != nil {
-						return err
+					if message == nil {
+						var err error
+						message, err = self.backend.messagesDAO.FindByIDTx(tx, mailboxMessage.MessageID)
+						if err != nil {
+							return err
+						}
 					}
 					imapMessage.InternalDate = time.Unix(message.DateUTC, 0)
+
+				case imap.FetchRFC822Size:
+					if message == nil {
+						var err error
+						message, err = self.backend.messagesDAO.FindByIDTx(tx, mailboxMessage.MessageID)
+						if err != nil {
+							return err
+						}
+					}
+					imapMessage.Size = message.Size
+
 				case imap.FetchUid:
 					imapMessage.Uid = mailboxMessage.UID
+
 				default:
 					return errors.New(fmt.Sprintf("Not implemented yet: unsupported fetch item %s", item))
 				}
