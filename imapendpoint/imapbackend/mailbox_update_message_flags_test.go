@@ -10,15 +10,12 @@ import (
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
-	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-imap"
 	"github.com/franela/goblin"
 	. "github.com/onsi/gomega"
 )
 
 func TestMailboxUpdateMessageFlags(t *testing.T) {
-	logger.SetLevel(logger.LevelDebug)
-
 	g := goblin.Goblin(t)
 	RegisterFailHandler(func(m string, _ ...int) { g.Fail(m) })
 

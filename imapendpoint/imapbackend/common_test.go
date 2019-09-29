@@ -14,6 +14,10 @@ import (
 	. "github.com/onsi/gomega"
 )
 
+func init() {
+	logger.SetLevel(logger.LevelInfo)
+}
+
 func closeAndDestroyGenjiEngine(engine *engine.Engine) {
 	engine_ := *engine
 	boltEngine, ok := engine_.(*bolt.Engine)
