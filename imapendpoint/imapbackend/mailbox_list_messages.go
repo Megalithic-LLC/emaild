@@ -50,6 +50,8 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 					}
 				case imap.FetchFlags:
 					imapMessage.Items[item] = strings.Split(mailboxMessage.FlagsCSV, ",")
+				case imap.FetchUid:
+					imapMessage.Uid = mailboxMessage.UID
 				default:
 					return errors.New(fmt.Sprintf("Not implemented yet: unsupported fetch item %s", item))
 				}
