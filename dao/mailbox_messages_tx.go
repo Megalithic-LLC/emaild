@@ -8,12 +8,25 @@ import (
 )
 
 func (self MailboxMessagesDAO) CreateTx(tx *genji.Tx, mailboxMessage *model.MailboxMessage) error {
-	if table, err := tx.GetTable(model.MailboxMessageTable); err != nil {
+	if mailboxMessageTable, err := tx.GetTable(model.MailboxMessageTable); err != nil {
 		return err
 	} else {
-		_, err := table.Insert(mailboxMessage)
+		_, err := mailboxMessageTable.Insert(mailboxMessage)
 		return err
 	}
+}
+
+func (self MailboxMessagesDAO) DeleteTx(tx *genji.Tx, mailboxId, messageId string) error {
+	mailboxMessageTable, err := tx.GetTable(model.MailboxMessageTable)
+	if err != nil {
+		return err
+	}
+	searchFor := &model.MailboxMessage{MailboxId: mailboxId, MessageId: messageId}
+	mailboxMessagePK, err := searchFor.PrimaryKey()
+	if err != nil {
+		return err
+	}
+	return mailboxMessageTable.Delete(mailboxMessagePK)
 }
 
 func (self MailboxMessagesDAO) FindTx(tx *genji.Tx, where query.Expr, limit int, iter func(mailboxMessage *model.MailboxMessage) error) error {
@@ -38,7 +51,7 @@ func (self MailboxMessagesDAO) FindTx(tx *genji.Tx, where query.Expr, limit int,
 }
 
 func (self MailboxMessagesDAO) FindByIdsTx(tx *genji.Tx, mailboxId, messageId string) (*model.MailboxMessage, error) {
-	messageTable, err := tx.GetTable(model.MailboxMessageTable)
+	mailboxMessageTable, err := tx.GetTable(model.MailboxMessageTable)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +60,7 @@ func (self MailboxMessagesDAO) FindByIdsTx(tx *genji.Tx, mailboxId, messageId st
 	if err != nil {
 		return nil, err
 	}
-	r, err := messageTable.GetRecord(mailboxMessagePK)
+	r, err := mailboxMessageTable.GetRecord(mailboxMessagePK)
 	if err != nil {
 		return nil, err
 	}

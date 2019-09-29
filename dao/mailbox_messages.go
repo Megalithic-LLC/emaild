@@ -24,6 +24,12 @@ func (self MailboxMessagesDAO) Create(mailboxMessage *model.MailboxMessage) erro
 	})
 }
 
+func (self MailboxMessagesDAO) Delete(mailboxId, messageId string) error {
+	return self.db.Update(func(tx *genji.Tx) error {
+		return self.DeleteTx(tx, mailboxId, messageId)
+	})
+}
+
 func (self MailboxMessagesDAO) Find(where query.Expr, limit int, iter func(mailboxMessage *model.MailboxMessage) error) error {
 	return self.db.View(func(tx *genji.Tx) error {
 		return self.FindTx(tx, where, limit, iter)
@@ -40,6 +46,12 @@ func (self MailboxMessagesDAO) FindByIds(mailboxId, messageId string) (*model.Ma
 		return err
 	})
 	return retval, err
+}
+
+func (self MailboxMessagesDAO) FindForUpdate(where query.Expr, limit int, iter func(mailboxMessage *model.MailboxMessage) error) error {
+	return self.db.Update(func(tx *genji.Tx) error {
+		return self.FindTx(tx, where, limit, iter)
+	})
 }
 
 func (self MailboxMessagesDAO) Replace(mailboxMessage *model.MailboxMessage) error {
