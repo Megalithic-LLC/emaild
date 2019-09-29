@@ -1,6 +1,7 @@
 package imapbackend
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -12,6 +13,8 @@ import (
 	"github.com/asdine/genji"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-imap"
+	"github.com/emersion/go-imap/backend/backendutil"
+	"github.com/emersion/go-message/textproto"
 )
 
 func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.FetchItem, ch chan<- *imap.Message) error {
@@ -56,6 +59,27 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 					} else {
 						logger.Warnf("Body expected but not found: message id %+v", mailboxMessage.MessageId)
 						imapMessage.Items[item] = []byte{}
+					}
+
+				case imap.FetchBodyStructure:
+					if messageRawBody == nil {
+						var err error
+						messageRawBody, err = self.backend.messageRawBodiesDAO.FindById(mailboxMessage.MessageId)
+						if err != nil {
+							return err
+						}
+					}
+					bodyReader := bufio.NewReader(bytes.NewReader(messageRawBody.Body))
+					header, err := textproto.ReadHeader(bodyReader)
+					if err != nil {
+						logger.Warnf("Failed parsing message header: %v", err)
+					} else {
+						bodyStructure, err := backendutil.FetchBodyStructure(header, bodyReader, true)
+						if err != nil {
+							logger.Warnf("Failed parsing bodystructure: %v", err)
+						} else {
+							imapMessage.BodyStructure = bodyStructure
+						}
 					}
 
 				case imap.FetchEnvelope:

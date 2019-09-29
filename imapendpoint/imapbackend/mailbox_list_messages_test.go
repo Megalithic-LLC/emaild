@@ -242,6 +242,31 @@ func TestMailboxListMessages(t *testing.T) {
 				Expect(message3.Size).To(Equal(uint32(17)))
 			})
 
+			g.It("Should return correct bodystructure for a text/plain message", func() {
+
+				// setup precondition
+				account := &model.Account{Username: "test"}
+				Expect(accountsDAO.Create(account)).Should(Succeed())
+				user, err := imapBackend.Login(nil, "test", "password")
+				Expect(err).ToNot(HaveOccurred())
+				mailbox, err := user.GetMailbox("INBOX")
+				Expect(err).ToNot(HaveOccurred())
+				Expect(mailbox).ToNot(BeNil())
+				Expect(mailbox.CreateMessage([]string{}, time.Now(), strings.NewReader("Subject: A\r\n\r\nBodyA"))).ToNot(HaveOccurred())
+
+				// Perform test
+				messages := make(chan *imap.Message, 1)
+				uid := false
+				seqSet := new(imap.SeqSet)
+				seqSet.AddRange(1, 1)
+				items := []imap.FetchItem{imap.FetchItem(imap.FetchBodyStructure)}
+				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
+				message := <-messages
+				Expect(message.BodyStructure).ToNot(BeNil())
+				Expect(message.BodyStructure.MIMEType).To(Equal("text"))
+				Expect(message.BodyStructure.MIMESubType).To(Equal("plain"))
+			})
+
 		})
 	})
 }
