@@ -4,7 +4,6 @@ import (
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/query"
-	"github.com/asdine/genji/record"
 )
 
 type MailboxMessagesDAO struct {
@@ -25,7 +24,7 @@ func (self MailboxMessagesDAO) Create(mailboxMessage *model.MailboxMessage) erro
 	})
 }
 
-func (self MailboxMessagesDAO) Find(where query.Expr, limit int, iter func(recordID []byte, r record.Record) error) error {
+func (self MailboxMessagesDAO) Find(where query.Expr, limit int, iter func(mailboxMessage *model.MailboxMessage) error) error {
 	return self.db.View(func(tx *genji.Tx) error {
 		return self.FindTx(tx, where, limit, iter)
 	})

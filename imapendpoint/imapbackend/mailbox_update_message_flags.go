@@ -5,7 +5,6 @@ import (
 
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
-	"github.com/asdine/genji/record"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-imap"
 )
@@ -16,12 +15,9 @@ func (self *Mailbox) UpdateMessagesFlags(uid bool, seqSet *imap.SeqSet, op imap.
 	return self.backend.db.Update(func(tx *genji.Tx) error {
 
 		var seq uint32 = 0
-		return self.backend.mailboxMessagesDAO.FindTx(tx, nil, 0, func(recordID []byte, r record.Record) error {
+		return self.backend.mailboxMessagesDAO.FindTx(tx, nil, 0, func(mailboxMessage *model.MailboxMessage) error {
+
 			seq++
-			var mailboxMessage model.MailboxMessage
-			if err := mailboxMessage.ScanRecord(r); err != nil {
-				return err
-			}
 
 			// skip messages that don't match seqSet
 			if uid {
@@ -53,7 +49,7 @@ func (self *Mailbox) UpdateMessagesFlags(uid bool, seqSet *imap.SeqSet, op imap.
 					}
 				}
 				mailboxMessage.FlagsCSV = strings.Join(newFlags, ",")
-				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, &mailboxMessage); err != nil {
+				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, mailboxMessage); err != nil {
 					return err
 				}
 
@@ -74,14 +70,14 @@ func (self *Mailbox) UpdateMessagesFlags(uid bool, seqSet *imap.SeqSet, op imap.
 					}
 				}
 				mailboxMessage.FlagsCSV = strings.Join(flagsToKeep, ",")
-				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, &mailboxMessage); err != nil {
+				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, mailboxMessage); err != nil {
 					return err
 				}
 
 			// Perform replacement of flags
 			case imap.SetFlags:
 				mailboxMessage.FlagsCSV = strings.Join(flags, ",")
-				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, &mailboxMessage); err != nil {
+				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, mailboxMessage); err != nil {
 					return err
 				}
 

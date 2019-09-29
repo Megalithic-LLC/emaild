@@ -16,7 +16,7 @@ func (self MailboxMessagesDAO) CreateTx(tx *genji.Tx, mailboxMessage *model.Mail
 	}
 }
 
-func (self MailboxMessagesDAO) FindTx(tx *genji.Tx, where query.Expr, limit int, iter func(recordID []byte, r record.Record) error) error {
+func (self MailboxMessagesDAO) FindTx(tx *genji.Tx, where query.Expr, limit int, iter func(mailboxMessage *model.MailboxMessage) error) error {
 	mailboxMessageTable, err := tx.GetTable(model.MailboxMessageTable)
 	if err != nil {
 		return err
@@ -28,7 +28,13 @@ func (self MailboxMessagesDAO) FindTx(tx *genji.Tx, where query.Expr, limit int,
 	if limit > 0 {
 		selectStmt = selectStmt.Limit(limit)
 	}
-	return selectStmt.Run(tx).Iterate(iter)
+	return selectStmt.Run(tx).Iterate(func(recordID []byte, r record.Record) error {
+		var mailboxMessage model.MailboxMessage
+		if err := mailboxMessage.ScanRecord(r); err != nil {
+			return err
+		}
+		return iter(&mailboxMessage)
+	})
 }
 
 func (self MailboxMessagesDAO) FindByIDsTx(tx *genji.Tx, mailboxID, messageID string) (*model.MailboxMessage, error) {
