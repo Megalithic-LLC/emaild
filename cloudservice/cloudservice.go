@@ -9,10 +9,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/docktermj/go-logger/logger"
 	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/agentstreamproto"
 	"github.com/Megalithic-LLC/on-prem-emaild/dao"
 	"github.com/Megalithic-LLC/on-prem-emaild/propertykey"
+	"github.com/docktermj/go-logger/logger"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
 )
@@ -32,7 +32,7 @@ type CloudService struct {
 func New(propertiesDAO dao.PropertiesDAO) *CloudService {
 	cloudServiceURL := os.Getenv(CLOUDSERVICE_URL)
 	if cloudServiceURL == "" {
-		cloudServiceURL = "http://localhost:3000"
+		cloudServiceURL = "https://api.on-prem.net"
 	}
 	parsedURL, err := url.Parse(cloudServiceURL)
 	if err != nil {
@@ -46,9 +46,15 @@ func New(propertiesDAO dao.PropertiesDAO) *CloudService {
 		return nil
 
 	}
+
+	scheme := "ws"
+	if parsedURL.Scheme == "https" {
+		scheme = "wss"
+	}
+
 	self := CloudService{
 		agentID:         agentID,
-		cloudServiceURL: url.URL{Scheme: "ws", Host: parsedURL.Host, Path: "/v1/agentStream"},
+		cloudServiceURL: url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
 		pending:         map[uint64]*Call{},
 		propertiesDAO:   propertiesDAO,
 		nextID:          1,
