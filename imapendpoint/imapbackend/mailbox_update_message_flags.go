@@ -7,6 +7,7 @@ import (
 	"github.com/asdine/genji"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-imap"
+	"github.com/emersion/go-imap/backend/backendutil"
 )
 
 func (self *Mailbox) UpdateMessagesFlags(uid bool, seqSet *imap.SeqSet, op imap.FlagsOp, flags []string) error {
@@ -30,60 +31,10 @@ func (self *Mailbox) UpdateMessagesFlags(uid bool, seqSet *imap.SeqSet, op imap.
 				}
 			}
 
-			switch op {
-
-			// Perform additive setting of new flags
-			case imap.AddFlags:
-				existingFlags := strings.Split(mailboxMessage.FlagsCSV, ",")
-				newFlags := existingFlags
-				for _, newFlag := range flags {
-					alreadyExists := false
-					for _, existingFlag := range existingFlags {
-						if existingFlag == newFlag {
-							alreadyExists = true
-							break
-						}
-					}
-					if !alreadyExists {
-						newFlags = append(newFlags, newFlag)
-					}
-				}
-				mailboxMessage.FlagsCSV = strings.Join(newFlags, ",")
-				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, mailboxMessage); err != nil {
-					return err
-				}
-
-			// Perform removal of flags
-			case imap.RemoveFlags:
-				existingFlags := strings.Split(mailboxMessage.FlagsCSV, ",")
-				flagsToKeep := []string{}
-				for _, existingFlag := range existingFlags {
-					found := false
-					for _, flag := range flags {
-						if existingFlag == flag {
-							found = true
-							break
-						}
-					}
-					if !found {
-						flagsToKeep = append(flagsToKeep, existingFlag)
-					}
-				}
-				mailboxMessage.FlagsCSV = strings.Join(flagsToKeep, ",")
-				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, mailboxMessage); err != nil {
-					return err
-				}
-
-			// Perform replacement of flags
-			case imap.SetFlags:
-				mailboxMessage.FlagsCSV = strings.Join(flags, ",")
-				if err := self.backend.mailboxMessagesDAO.ReplaceTx(tx, mailboxMessage); err != nil {
-					return err
-				}
-
-			}
-
-			return nil
+			existingFlags := strings.Split(mailboxMessage.FlagsCSV, ",")
+			newFlags := backendutil.UpdateFlags(existingFlags, op, flags)
+			mailboxMessage.FlagsCSV = strings.Join(newFlags, ",")
+			return self.backend.mailboxMessagesDAO.ReplaceTx(tx, mailboxMessage)
 		})
 	})
 }
