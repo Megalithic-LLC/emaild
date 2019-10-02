@@ -1,6 +1,6 @@
 .PHONY: compile
 compile:
-	go install github.com/Megalithic-LLC/on-prem-emaild/cmd/on-prem-emaild
+	go install ./...
 
 dependencies:
 	go get -u github.com/golang/dep/cmd/dep

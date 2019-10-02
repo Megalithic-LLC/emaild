@@ -61,7 +61,7 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 						imapMessage.Items[item] = []byte{}
 					}
 
-				case imap.FetchBodyStructure:
+				case imap.FetchBody, imap.FetchBodyStructure:
 					if messageRawBody == nil {
 						var err error
 						messageRawBody, err = self.backend.messageRawBodiesDAO.FindById(mailboxMessage.MessageId)
@@ -88,37 +88,13 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 						if err != nil {
 							return err
 						}
-						envelope := &imap.Envelope{}
-						parsedMessage, err := mail.ReadMessage(bytes.NewReader(messageRawBody.Body))
+						bodyReader := bufio.NewReader(bytes.NewReader(messageRawBody.Body))
+						header, err := textproto.ReadHeader(bodyReader)
 						if err != nil {
-							logger.Warnf("Failed parsing message %s: %v", mailboxMessage.MessageId, err)
+							logger.Warnf("Failed parsing message header: %v", err)
 						} else {
-							envelope.Subject = parsedMessage.Header.Get("Subject")
-							if date, err := parsedMessage.Header.Date(); err == nil {
-								envelope.Date = date
-							}
-							if imapAddresses, err := toImapAddressList(parsedMessage, "From"); err == nil {
-								envelope.From = imapAddresses
-							}
-							if imapAddresses, err := toImapAddressList(parsedMessage, "Sender"); err == nil {
-								envelope.Sender = imapAddresses
-							}
-							if imapAddresses, err := toImapAddressList(parsedMessage, "Reply-To"); err == nil {
-								envelope.ReplyTo = imapAddresses
-							}
-							if imapAddresses, err := toImapAddressList(parsedMessage, "To"); err == nil {
-								envelope.To = imapAddresses
-							}
-							if imapAddresses, err := toImapAddressList(parsedMessage, "Cc"); err == nil {
-								envelope.Cc = imapAddresses
-							}
-							if imapAddresses, err := toImapAddressList(parsedMessage, "Bcc"); err == nil {
-								envelope.Bcc = imapAddresses
-							}
-							envelope.InReplyTo = parsedMessage.Header.Get("In-Reply-To")
-							envelope.MessageId = parsedMessage.Header.Get("Message-ID")
+							imapMessage.Envelope, _ = backendutil.FetchEnvelope(header)
 						}
-						imapMessage.Envelope = envelope
 					}
 
 				case imap.FetchFlags:
