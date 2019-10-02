@@ -1,6 +1,7 @@
 package imapbackend_test
 
 import (
+	"bytes"
 	"strings"
 	"testing"
 	"time"
@@ -265,6 +266,49 @@ func TestMailboxListMessages(t *testing.T) {
 				Expect(message.BodyStructure).ToNot(BeNil())
 				Expect(message.BodyStructure.MIMEType).To(Equal("text"))
 				Expect(message.BodyStructure.MIMESubType).To(Equal("plain"))
+			})
+
+			g.It("Should return requested headers", func() {
+				// setup precondition
+				account := &model.Account{Username: "test"}
+				Expect(accountsDAO.Create(account)).Should(Succeed())
+				user, err := imapBackend.Login(nil, "test", "password")
+				Expect(err).ToNot(HaveOccurred())
+				mailbox, err := user.GetMailbox("INBOX")
+				Expect(err).ToNot(HaveOccurred())
+				Expect(mailbox).ToNot(BeNil())
+
+				// Perform test positive test
+				{
+					flags := []string{}
+					var date time.Time
+					body := "A: a\r\nB: b\r\nC: c\r\n\r\nbody"
+					Expect(mailbox.CreateMessage(flags, date, strings.NewReader(body))).ToNot(HaveOccurred())
+				}
+				messages := make(chan *imap.Message, 1)
+				uid := false
+				seqSet := new(imap.SeqSet)
+				seqSet.AddRange(1, 1)
+				fetchItem := imap.FetchItem("BODY[HEADER.FIELDS (A C)]")
+				items := []imap.FetchItem{fetchItem}
+				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
+				message := <-messages
+				Expect(message.SeqNum).To(Equal(uint32(1)))
+				Expect(message.Body).ToNot(BeNil())
+				section, err := imap.ParseBodySectionName(fetchItem)
+				Expect(err).ToNot(HaveOccurred())
+				Expect(message.Body).To(HaveKeyWithValue(section, bytes.NewBufferString("A: a\r\nC: c\r\n\r\n")))
+
+				// Perform negative test
+				fetchItem = imap.FetchItem("BODY[HEADER.FIELDS.NOT (A C)]")
+				items = []imap.FetchItem{fetchItem}
+				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
+				message = <-messages
+				Expect(message.SeqNum).To(Equal(uint32(1)))
+				Expect(message.Body).ToNot(BeNil())
+				section, err = imap.ParseBodySectionName(fetchItem)
+				Expect(err).ToNot(HaveOccurred())
+				Expect(message.Body).To(HaveKeyWithValue(section, bytes.NewBufferString("B: b\r\n\r\n")))
 			})
 
 		})

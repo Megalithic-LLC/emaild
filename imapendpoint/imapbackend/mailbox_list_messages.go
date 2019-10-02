@@ -3,8 +3,6 @@ package imapbackend
 import (
 	"bufio"
 	"bytes"
-	"errors"
-	"fmt"
 	"net/mail"
 	"strings"
 	"time"
@@ -45,21 +43,6 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 			var messageRawBody *model.MessageRawBody
 			for _, item := range items {
 				switch item {
-
-				case imap.FetchRFC822, "BODY[]":
-					if messageRawBody == nil {
-						var err error
-						messageRawBody, err = self.backend.messageRawBodiesDAO.FindById(mailboxMessage.MessageId)
-						if err != nil {
-							return err
-						}
-					}
-					if messageRawBody != nil {
-						imapMessage.Items[item] = messageRawBody.Body
-					} else {
-						logger.Warnf("Body expected but not found: message id %+v", mailboxMessage.MessageId)
-						imapMessage.Items[item] = []byte{}
-					}
 
 				case imap.FetchBody, imap.FetchBodyStructure:
 					if messageRawBody == nil {
@@ -124,7 +107,32 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 					imapMessage.Uid = mailboxMessage.Uid
 
 				default:
-					return errors.New(fmt.Sprintf("Not implemented yet: unsupported fetch item %s", item))
+					if messageRawBody == nil {
+						var err error
+						messageRawBody, err = self.backend.messageRawBodiesDAO.FindById(mailboxMessage.MessageId)
+						if err != nil {
+							return err
+						}
+					}
+
+					if messageRawBody == nil {
+						logger.Warnf("Body expected but not found: message id %+v", mailboxMessage.MessageId)
+						imapMessage.Items[item] = []byte{}
+					} else {
+						section, err := imap.ParseBodySectionName(item)
+						if err != nil {
+							return err
+						}
+						bodyReader := bufio.NewReader(bytes.NewReader(messageRawBody.Body))
+						header, err := textproto.ReadHeader(bodyReader)
+						if err != nil {
+							logger.Warnf("Failed parsing message header: %v", err)
+						} else {
+							data, _ := backendutil.FetchBodySection(header, bodyReader, section)
+							imapMessage.Body[section] = data
+						}
+					}
+
 				}
 			}
 
