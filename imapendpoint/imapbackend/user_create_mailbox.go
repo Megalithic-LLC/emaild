@@ -10,6 +10,7 @@ func (self *User) CreateMailbox(name string) error {
 	mailbox := &model.Mailbox{
 		AccountId:   self.account.Id,
 		Name:        name,
+		UidNext:     1,
 		UidValidity: 1,
 	}
 	return self.backend.mailboxesDAO.Create(mailbox)

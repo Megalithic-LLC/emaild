@@ -4,6 +4,7 @@
 
 ### Added
 
+- Search
 - Expunge
 - Update message flags
 - Fetch
