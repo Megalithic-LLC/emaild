@@ -47,7 +47,7 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 				case imap.FetchBody, imap.FetchBodyStructure:
 					if messageRawBody == nil {
 						var err error
-						messageRawBody, err = self.backend.messageRawBodiesDAO.FindById(mailboxMessage.MessageId)
+						messageRawBody, err = self.backend.messageRawBodiesDAO.FindByIdTx(tx, mailboxMessage.MessageId)
 						if err != nil {
 							return err
 						}
@@ -67,7 +67,7 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 
 				case imap.FetchEnvelope:
 					if messageRawBody == nil {
-						messageRawBody, err := self.backend.messageRawBodiesDAO.FindById(mailboxMessage.MessageId)
+						messageRawBody, err := self.backend.messageRawBodiesDAO.FindByIdTx(tx, mailboxMessage.MessageId)
 						if err != nil {
 							return err
 						}
@@ -109,7 +109,7 @@ func (self *Mailbox) ListMessages(uid bool, seqSet *imap.SeqSet, items []imap.Fe
 				default:
 					if messageRawBody == nil {
 						var err error
-						messageRawBody, err = self.backend.messageRawBodiesDAO.FindById(mailboxMessage.MessageId)
+						messageRawBody, err = self.backend.messageRawBodiesDAO.FindByIdTx(tx, mailboxMessage.MessageId)
 						if err != nil {
 							return err
 						}
