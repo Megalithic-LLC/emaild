@@ -48,7 +48,7 @@ func TestUserDeleteMailbox(t *testing.T) {
 			g.It("Should remove cross-post information", func() {
 
 				// Setup precondition
-				accountModel := &model.Account{Username: "test"}
+				accountModel := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(accountModel)).Should(Succeed())
 				mailboxModel := &model.Mailbox{AccountId: accountModel.Id, Name: "foo"}
 				Expect(mailboxesDAO.Create(mailboxModel)).Should(Succeed())
@@ -80,7 +80,7 @@ func TestUserDeleteMailbox(t *testing.T) {
 			g.It("Should garbage collect a message no longer cross-posted into any mailboxes", func() {
 
 				// Setup precondition
-				accountModel := &model.Account{Username: "test"}
+				accountModel := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(accountModel)).Should(Succeed())
 				mailboxModel := &model.Mailbox{AccountId: accountModel.Id, Name: "foo"}
 				Expect(mailboxesDAO.Create(mailboxModel)).Should(Succeed())

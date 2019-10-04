@@ -28,7 +28,7 @@ func TestMailboxExpunge(t *testing.T) {
 	var messageRawBodiesDAO dao.MessageRawBodiesDAO
 	var messagesDAO dao.MessagesDAO
 
-	g.Describe("Mailbox operations", func() {
+	g.Describe("Mailbox", func() {
 
 		g.BeforeEach(func() {
 			genjiEngine = newGenjiEngine()
@@ -49,7 +49,7 @@ func TestMailboxExpunge(t *testing.T) {
 			g.It("Should work", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())

@@ -50,7 +50,7 @@ func TestMailboxListMessages(t *testing.T) {
 			g.It("Should correctly return internal dates", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
@@ -82,7 +82,7 @@ func TestMailboxListMessages(t *testing.T) {
 			g.It("Should correctly return envelopes", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
@@ -185,7 +185,7 @@ func TestMailboxListMessages(t *testing.T) {
 			g.It("Should correctly return UIDs", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
@@ -217,7 +217,7 @@ func TestMailboxListMessages(t *testing.T) {
 			g.It("Should correctly return sizes", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
@@ -246,7 +246,7 @@ func TestMailboxListMessages(t *testing.T) {
 			g.It("Should return correct bodystructure for a text/plain message", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
@@ -270,7 +270,7 @@ func TestMailboxListMessages(t *testing.T) {
 
 			g.It("Should return requested headers", func() {
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())

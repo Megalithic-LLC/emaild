@@ -63,6 +63,14 @@
   revision = "240c8404624e076f633766c16adbe96c7ac516b7"
 
 [[projects]]
+  digest = "1:e13c1e066e074ea6f089349f6972c760860d57e05b8d412ae15096a3a1202928"
+  name = "github.com/emersion/go-smtp"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "d3b0ad34a2c23dd5d1b31aca4b6cb32356249110"
+  version = "v0.11.2"
+
+[[projects]]
   branch = "master"
   digest = "1:47fffd6812689e229e8072737578af99cad0b17707cc07c36344c63bb6b797f1"
   name = "github.com/emersion/go-textwrapper"
@@ -252,7 +260,9 @@
     "github.com/emersion/go-imap/backend",
     "github.com/emersion/go-imap/backend/backendutil",
     "github.com/emersion/go-imap/server",
+    "github.com/emersion/go-message",
     "github.com/emersion/go-message/textproto",
+    "github.com/emersion/go-smtp",
     "github.com/franela/goblin",
     "github.com/golang/protobuf/proto",
     "github.com/gorilla/websocket",

@@ -17,6 +17,8 @@ func (a *Account) GetField(name string) (field.Field, error) {
 	switch name {
 	case "Id":
 		return field.NewString("Id", a.Id), nil
+	case "Email":
+		return field.NewString("Email", a.Email), nil
 	case "Username":
 		return field.NewString("Username", a.Username), nil
 	case "Password":
@@ -32,6 +34,11 @@ func (a *Account) Iterate(fn func(field.Field) error) error {
 	var err error
 
 	err = fn(field.NewString("Id", a.Id))
+	if err != nil {
+		return err
+	}
+
+	err = fn(field.NewString("Email", a.Email))
 	if err != nil {
 		return err
 	}
@@ -58,6 +65,8 @@ func (a *Account) ScanRecord(rec record.Record) error {
 		switch f.Name {
 		case "Id":
 			a.Id, err = field.DecodeString(f.Data)
+		case "Email":
+			a.Email, err = field.DecodeString(f.Data)
 		case "Username":
 			a.Username, err = field.DecodeString(f.Data)
 		case "Password":
@@ -75,6 +84,7 @@ func (a *Account) PrimaryKey() ([]byte, error) {
 // Indexes creates a map containing the configuration for each index of the table.
 func (a *Account) Indexes() map[string]index.Options {
 	return map[string]index.Options{
+		"Email":    index.Options{Unique: true},
 		"Username": index.Options{Unique: true},
 	}
 }
@@ -83,6 +93,7 @@ func (a *Account) Indexes() map[string]index.Options {
 // It can be used to select fields during queries.
 type AccountFields struct {
 	Id       query.StringFieldSelector
+	Email    query.StringFieldSelector
 	Username query.StringFieldSelector
 	Password query.BytesFieldSelector
 }
@@ -91,6 +102,7 @@ type AccountFields struct {
 func NewAccountFields() *AccountFields {
 	return &AccountFields{
 		Id:       query.StringField("Id"),
+		Email:    query.StringField("Email"),
 		Username: query.StringField("Username"),
 		Password: query.BytesField("Password"),
 	}

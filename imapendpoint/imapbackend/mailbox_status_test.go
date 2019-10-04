@@ -47,7 +47,7 @@ func TestMailboxStatus(t *testing.T) {
 
 			g.It("Should work", func() {
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())

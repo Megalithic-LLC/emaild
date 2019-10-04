@@ -50,7 +50,7 @@ func TestMailboxSearchMessages(t *testing.T) {
 			g.It("Should match using From: headers", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
@@ -91,7 +91,7 @@ func TestMailboxSearchMessages(t *testing.T) {
 			g.It("Should match using UIDs", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
@@ -116,7 +116,7 @@ func TestMailboxSearchMessages(t *testing.T) {
 			g.It("Should match using sizes", func() {
 
 				// setup precondition
-				account := &model.Account{Username: "test"}
+				account := &model.Account{Username: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).Should(Succeed())
 				user, err := imapBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
