@@ -5,6 +5,7 @@ import (
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
+	"github.com/asdine/genji/table"
 )
 
 func (self MailboxMessagesDAO) CreateTx(tx *genji.Tx, mailboxMessage *model.MailboxMessage) error {
@@ -62,6 +63,9 @@ func (self MailboxMessagesDAO) FindByIdsTx(tx *genji.Tx, mailboxId, messageId st
 	}
 	r, err := mailboxMessageTable.GetRecord(mailboxMessagePK)
 	if err != nil {
+		if err == table.ErrRecordNotFound {
+			return nil, nil
+		}
 		return nil, err
 	}
 	var mailboxMessage model.MailboxMessage

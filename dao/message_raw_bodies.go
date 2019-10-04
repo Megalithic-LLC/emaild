@@ -23,6 +23,12 @@ func (self MessageRawBodiesDAO) Create(messageRawBody *model.MessageRawBody) err
 	})
 }
 
+func (self MessageRawBodiesDAO) Delete(id string) error {
+	return self.db.Update(func(tx *genji.Tx) error {
+		return self.DeleteTx(tx, id)
+	})
+}
+
 func (self MessageRawBodiesDAO) FindById(id string) (*model.MessageRawBody, error) {
 	var retval *model.MessageRawBody
 	err := self.db.View(func(tx *genji.Tx) error {

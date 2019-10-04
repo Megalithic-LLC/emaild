@@ -3,19 +3,33 @@ package dao
 import (
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
+	"github.com/asdine/genji/table"
 	"github.com/rs/xid"
 )
 
 func (self MessagesDAO) CreateTx(tx *genji.Tx, message *model.Message) error {
-	if table, err := tx.GetTable(model.MessageTable); err != nil {
+	if messageTable, err := tx.GetTable(model.MessageTable); err != nil {
 		return err
 	} else {
 		if message.Id == "" {
 			message.Id = xid.New().String()
 		}
-		_, err := table.Insert(message)
+		_, err := messageTable.Insert(message)
 		return err
 	}
+}
+
+func (self MessagesDAO) DeleteTx(tx *genji.Tx, id string) error {
+	messageTable, err := tx.GetTable(model.MessageTable)
+	if err != nil {
+		return err
+	}
+	searchFor := &model.Message{Id: id}
+	messagePK, err := searchFor.PrimaryKey()
+	if err != nil {
+		return err
+	}
+	return messageTable.Delete(messagePK)
 }
 
 func (self MessagesDAO) FindByIdTx(tx *genji.Tx, id string) (*model.Message, error) {
@@ -30,6 +44,9 @@ func (self MessagesDAO) FindByIdTx(tx *genji.Tx, id string) (*model.Message, err
 	}
 	r, err := messageTable.GetRecord(messagePK)
 	if err != nil {
+		if err == table.ErrRecordNotFound {
+			return nil, nil
+		}
 		return nil, err
 	}
 	var message model.Message

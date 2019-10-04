@@ -30,6 +30,19 @@ func (self MailboxesDAO) CreateTx(tx *genji.Tx, mailbox *model.Mailbox) error {
 	}
 }
 
+func (self MailboxesDAO) DeleteTx(tx *genji.Tx, id string) error {
+	mailboxTable, err := tx.GetTable(model.MailboxTable)
+	if err != nil {
+		return err
+	}
+	searchFor := &model.Mailbox{Id: id}
+	mailboxPK, err := searchFor.PrimaryKey()
+	if err != nil {
+		return err
+	}
+	return mailboxTable.Delete(mailboxPK)
+}
+
 func (self MailboxesDAO) FindTx(tx *genji.Tx, where query.Expr, limit int, iter func(mailbox *model.Mailbox) error) error {
 	mailboxTable, err := tx.GetTable(model.MailboxTable)
 	if err != nil {

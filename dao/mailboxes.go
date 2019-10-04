@@ -35,6 +35,12 @@ func (self MailboxesDAO) Create(mailbox *model.Mailbox) error {
 	})
 }
 
+func (self MailboxesDAO) Delete(id string) error {
+	return self.db.Update(func(tx *genji.Tx) error {
+		return self.DeleteTx(tx, id)
+	})
+}
+
 func (self MailboxesDAO) Find(where query.Expr, limit int, iter func(mailbox *model.Mailbox) error) error {
 	return self.db.View(func(tx *genji.Tx) error {
 		return self.FindTx(tx, where, limit, iter)
