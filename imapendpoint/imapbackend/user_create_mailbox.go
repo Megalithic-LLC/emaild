@@ -7,11 +7,6 @@ import (
 
 func (self *User) CreateMailbox(name string) error {
 	logger.Tracef("User:CreateMailbox(%s)", name)
-	mailbox := &model.Mailbox{
-		AccountId:   self.account.Id,
-		Name:        name,
-		UidNext:     1,
-		UidValidity: 1,
-	}
+	mailbox := model.NewMailbox(self.account.Id, name)
 	return self.backend.mailboxesDAO.Create(mailbox)
 }

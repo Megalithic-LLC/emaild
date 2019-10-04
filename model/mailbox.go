@@ -8,3 +8,13 @@ type Mailbox struct {
 	UidValidity uint32
 	Subscribed  bool
 }
+
+func NewMailbox(accountId, name string) *Mailbox {
+	self := Mailbox{
+		AccountId:   accountId,
+		Name:        name,
+		UidNext:     1,
+		UidValidity: 1,
+	}
+	return &self
+}
