@@ -1,4 +1,4 @@
-package smtpbackend_test
+package submissionbackend_test
 
 import (
 	"strings"
@@ -7,7 +7,7 @@ import (
 	"github.com/Megalithic-LLC/on-prem-emaild/dao"
 	"github.com/Megalithic-LLC/on-prem-emaild/localdelivery"
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
-	"github.com/Megalithic-LLC/on-prem-emaild/smtpendpoint/smtpbackend"
+	"github.com/Megalithic-LLC/on-prem-emaild/submissionendpoint/submissionbackend"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
 	"github.com/franela/goblin"
@@ -20,7 +20,7 @@ func TestLocalDelivery(t *testing.T) {
 
 	var genjiEngine *engine.Engine
 	var db *genji.DB
-	var smtpBackend *smtpbackend.SmtpBackend
+	var submissionBackend *submissionbackend.SubmissionBackend
 	var accountsDAO dao.AccountsDAO
 	var localDelivery *localdelivery.LocalDelivery
 	var mailboxesDAO dao.MailboxesDAO
@@ -28,7 +28,7 @@ func TestLocalDelivery(t *testing.T) {
 	var messageRawBodiesDAO dao.MessageRawBodiesDAO
 	var messagesDAO dao.MessagesDAO
 
-	g.Describe("SmtpBackend", func() {
+	g.Describe("submissionBackend", func() {
 		g.BeforeEach(func() {
 			genjiEngine = newGenjiEngine()
 			db = newDB(genjiEngine)
@@ -38,7 +38,7 @@ func TestLocalDelivery(t *testing.T) {
 			messageRawBodiesDAO = dao.NewMessageRawBodiesDAO(db)
 			messagesDAO = dao.NewMessagesDAO(db)
 			localDelivery = localdelivery.New(accountsDAO, db, mailboxesDAO, mailboxMessagesDAO, messageRawBodiesDAO, messagesDAO)
-			smtpBackend = newSmtpBackend(accountsDAO, db, localDelivery, mailboxesDAO, mailboxMessagesDAO, messageRawBodiesDAO, messagesDAO)
+			submissionBackend = newSubmissionBackend(accountsDAO, db, localDelivery, mailboxesDAO, mailboxMessagesDAO, messageRawBodiesDAO, messagesDAO)
 		})
 		g.AfterEach(func() {
 			closeAndDestroyGenjiEngine(genjiEngine)
@@ -52,7 +52,7 @@ func TestLocalDelivery(t *testing.T) {
 				Expect(accountsDAO.Create(account)).To(Succeed())
 
 				// Perform delivery
-				session, err := smtpBackend.AnonymousLogin(nil)
+				session, err := submissionBackend.Login(nil, "test", "password")
 				Expect(err).ToNot(HaveOccurred())
 				Expect(session.Mail("")).To(Succeed())
 				Expect(session.Rcpt("test@acme.org")).To(Succeed())

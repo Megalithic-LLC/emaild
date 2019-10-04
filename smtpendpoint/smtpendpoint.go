@@ -3,6 +3,7 @@ package smtpendpoint
 import (
 	"net"
 
+	"github.com/Megalithic-LLC/on-prem-emaild/smtpendpoint/smtpbackend"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-smtp"
 )
@@ -12,7 +13,7 @@ type SmtpEndpoint struct {
 	server   *smtp.Server
 }
 
-func New(smtpBackend smtp.Backend) *SmtpEndpoint {
+func New(smtpBackend *smtpbackend.SmtpBackend) *SmtpEndpoint {
 
 	self := SmtpEndpoint{}
 

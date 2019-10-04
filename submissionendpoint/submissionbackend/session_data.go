@@ -1,4 +1,4 @@
-package smtpbackend
+package submissionbackend
 
 import (
 	"io"
@@ -8,7 +8,7 @@ import (
 )
 
 func (self *Session) Data(r io.Reader) error {
-	logger.Tracef("SMTP:Session:Data()")
+	logger.Tracef("Submission:Session:Data()")
 
 	data, err := ioutil.ReadAll(r)
 	if err != nil {

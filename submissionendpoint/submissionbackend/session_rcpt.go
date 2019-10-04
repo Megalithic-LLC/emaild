@@ -1,4 +1,4 @@
-package smtpbackend
+package submissionbackend
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 )
 
 func (self *Session) Rcpt(to string) error {
-	logger.Tracef("SMTP:Session:Rcpt(%s)", to)
+	logger.Tracef("Submission:Session:Rcpt(%s)", to)
 
 	if _, err := mail.ParseAddress(to); err != nil {
 		return err

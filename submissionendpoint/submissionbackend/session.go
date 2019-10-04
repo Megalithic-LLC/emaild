@@ -1,4 +1,4 @@
-package smtpbackend
+package submissionbackend
 
 import (
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
@@ -6,6 +6,6 @@ import (
 
 type Session struct {
 	account    *model.Account
-	backend    *SmtpBackend
+	backend    *SubmissionBackend
 	recipients []*model.Account
 }

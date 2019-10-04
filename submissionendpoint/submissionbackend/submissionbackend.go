@@ -1,4 +1,4 @@
-package smtpbackend
+package submissionbackend
 
 import (
 	"github.com/Megalithic-LLC/on-prem-emaild/dao"
@@ -6,7 +6,7 @@ import (
 	"github.com/asdine/genji"
 )
 
-type SmtpBackend struct {
+type SubmissionBackend struct {
 	accountsDAO         dao.AccountsDAO
 	db                  *genji.DB
 	localDelivery       *localdelivery.LocalDelivery
@@ -24,8 +24,8 @@ func New(
 	mailboxMessagesDAO dao.MailboxMessagesDAO,
 	messageRawBodiesDAO dao.MessageRawBodiesDAO,
 	messagesDAO dao.MessagesDAO,
-) *SmtpBackend {
-	self := SmtpBackend{
+) *SubmissionBackend {
+	self := SubmissionBackend{
 		accountsDAO:         accountsDAO,
 		db:                  db,
 		localDelivery:       localDelivery,

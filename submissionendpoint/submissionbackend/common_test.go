@@ -1,4 +1,4 @@
-package smtpbackend_test
+package submissionbackend_test
 
 import (
 	"io/ioutil"
@@ -7,7 +7,7 @@ import (
 	"github.com/Megalithic-LLC/on-prem-emaild/dao"
 	"github.com/Megalithic-LLC/on-prem-emaild/localdelivery"
 	"github.com/Megalithic-LLC/on-prem-emaild/model"
-	"github.com/Megalithic-LLC/on-prem-emaild/smtpendpoint/smtpbackend"
+	"github.com/Megalithic-LLC/on-prem-emaild/submissionendpoint/submissionbackend"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
 	"github.com/asdine/genji/engine/bolt"
@@ -72,7 +72,7 @@ func newGenjiEngine() *engine.Engine {
 	return &eng
 }
 
-func newSmtpBackend(
+func newSubmissionBackend(
 	accountsDAO dao.AccountsDAO,
 	db *genji.DB,
 	localDelivery *localdelivery.LocalDelivery,
@@ -80,8 +80,8 @@ func newSmtpBackend(
 	mailboxMessagesDAO dao.MailboxMessagesDAO,
 	messageRawBodiesDAO dao.MessageRawBodiesDAO,
 	messagesDAO dao.MessagesDAO,
-) *smtpbackend.SmtpBackend {
-	return smtpbackend.New(
+) *submissionbackend.SubmissionBackend {
+	return submissionbackend.New(
 		accountsDAO,
 		db,
 		localDelivery,

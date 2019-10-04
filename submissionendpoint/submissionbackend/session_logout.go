@@ -1,10 +1,10 @@
-package smtpbackend
+package submissionbackend
 
 import (
 	"github.com/docktermj/go-logger/logger"
 )
 
 func (self *Session) Logout() error {
-	logger.Tracef("SMTP:Session:Logout()")
+	logger.Tracef("Submission:Session:Logout()")
 	return nil
 }

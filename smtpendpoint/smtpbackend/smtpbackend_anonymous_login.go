@@ -9,8 +9,8 @@ import (
 func (self *SmtpBackend) AnonymousLogin(state *smtp.ConnectionState) (smtp.Session, error) {
 	logger.Tracef("SmtpBackend:AnonymousLogin()")
 	session := Session{
-		backend:            self,
-		recipientMailboxes: []*model.Mailbox{},
+		backend:    self,
+		recipients: []*model.Account{},
 	}
 	return &session, nil
 }

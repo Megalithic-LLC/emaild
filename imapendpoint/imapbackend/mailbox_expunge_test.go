@@ -28,7 +28,7 @@ func TestMailboxExpunge(t *testing.T) {
 	var messageRawBodiesDAO dao.MessageRawBodiesDAO
 	var messagesDAO dao.MessagesDAO
 
-	g.Describe("Mailbox operations", func() {
+	g.Describe("Mailbox", func() {
 
 		g.BeforeEach(func() {
 			genjiEngine = newGenjiEngine()
