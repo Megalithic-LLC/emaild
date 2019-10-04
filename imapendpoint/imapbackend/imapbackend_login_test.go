@@ -49,6 +49,7 @@ func TestImapBackendLogin(t *testing.T) {
 			// setup precondition
 			account := &model.Account{
 				Username: "test",
+				Email:    "test@acme.org",
 			}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
 

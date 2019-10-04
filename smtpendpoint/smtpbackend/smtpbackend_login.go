@@ -1,6 +1,7 @@
 package smtpbackend
 
 import (
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-smtp"
 )
@@ -15,8 +16,9 @@ func (self *SmtpBackend) Login(state *smtp.ConnectionState, username, password s
 	}
 
 	session := Session{
-		account: account,
-		backend: self,
+		account:            account,
+		backend:            self,
+		recipientMailboxes: []*model.Mailbox{},
 	}
 	return &session, nil
 }

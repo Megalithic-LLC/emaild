@@ -45,7 +45,7 @@ func TestMailboxUpdateMessageFlags(t *testing.T) {
 
 		g.It("Should correctly add a flag", func() {
 			// setup precondition
-			account := &model.Account{Username: "test"}
+			account := &model.Account{Username: "test", Email: "test@acme.org"}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
 			user, err := imapBackend.Login(nil, "test", "password")
 			Expect(err).ToNot(HaveOccurred())
@@ -88,7 +88,7 @@ func TestMailboxUpdateMessageFlags(t *testing.T) {
 
 		g.It("Should correctly replace existing flags", func() {
 			// setup precondition
-			account := &model.Account{Username: "test"}
+			account := &model.Account{Username: "test", Email: "test@acme.org"}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
 			user, err := imapBackend.Login(nil, "test", "password")
 			Expect(err).ToNot(HaveOccurred())
@@ -130,7 +130,7 @@ func TestMailboxUpdateMessageFlags(t *testing.T) {
 
 		g.It("Should correctly remove a flag", func() {
 			// setup precondition
-			account := &model.Account{Username: "test"}
+			account := &model.Account{Username: "test", Email: "test@acme.org"}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
 			user, err := imapBackend.Login(nil, "test", "password")
 			Expect(err).ToNot(HaveOccurred())

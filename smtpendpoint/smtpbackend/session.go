@@ -5,6 +5,7 @@ import (
 )
 
 type Session struct {
-	account *model.Account
-	backend *SmtpBackend
+	account            *model.Account
+	backend            *SmtpBackend
+	recipientMailboxes []*model.Mailbox
 }
