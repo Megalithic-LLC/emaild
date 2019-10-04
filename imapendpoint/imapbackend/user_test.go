@@ -25,7 +25,7 @@ func TestUser(t *testing.T) {
 	var messageRawBodiesDAO dao.MessageRawBodiesDAO
 	var messagesDAO dao.MessagesDAO
 
-	g.Describe("User operations", func() {
+	g.Describe("User", func() {
 		g.BeforeEach(func() {
 			genjiEngine = newGenjiEngine()
 			db = newDB(genjiEngine)

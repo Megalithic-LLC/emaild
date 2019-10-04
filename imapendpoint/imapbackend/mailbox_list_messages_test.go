@@ -70,7 +70,7 @@ func TestMailboxListMessages(t *testing.T) {
 				uid := false
 				seqSet := new(imap.SeqSet)
 				seqSet.AddRange(1, 3)
-				items := []imap.FetchItem{imap.FetchItem(imap.FetchInternalDate)}
+				items := []imap.FetchItem{imap.FetchInternalDate}
 				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
 				message1, message2, message3 := <-messages, <-messages, <-messages
 
@@ -131,7 +131,7 @@ func TestMailboxListMessages(t *testing.T) {
 				uid := false
 				seqSet := new(imap.SeqSet)
 				seqSet.AddRange(1, 3)
-				items := []imap.FetchItem{imap.FetchItem(imap.FetchEnvelope)}
+				items := []imap.FetchItem{imap.FetchEnvelope}
 				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
 				message1, message2, message3 := <-messages, <-messages, <-messages
 
@@ -202,7 +202,7 @@ func TestMailboxListMessages(t *testing.T) {
 				uid := false
 				seqSet := new(imap.SeqSet)
 				seqSet.AddRange(1, 3)
-				items := []imap.FetchItem{imap.FetchItem(imap.FetchUid)}
+				items := []imap.FetchItem{imap.FetchUid}
 				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
 				message1, message2, message3 := <-messages, <-messages, <-messages
 
@@ -234,7 +234,7 @@ func TestMailboxListMessages(t *testing.T) {
 				uid := false
 				seqSet := new(imap.SeqSet)
 				seqSet.AddRange(1, 3)
-				items := []imap.FetchItem{imap.FetchItem(imap.FetchRFC822Size)}
+				items := []imap.FetchItem{imap.FetchRFC822Size}
 				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
 				message1, message2, message3 := <-messages, <-messages, <-messages
 
@@ -260,7 +260,7 @@ func TestMailboxListMessages(t *testing.T) {
 				uid := false
 				seqSet := new(imap.SeqSet)
 				seqSet.AddRange(1, 1)
-				items := []imap.FetchItem{imap.FetchItem(imap.FetchBodyStructure)}
+				items := []imap.FetchItem{imap.FetchBodyStructure}
 				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
 				message := <-messages
 				Expect(message.BodyStructure).ToNot(BeNil())
