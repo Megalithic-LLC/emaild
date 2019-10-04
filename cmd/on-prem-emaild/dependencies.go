@@ -5,9 +5,12 @@ import (
 	"github.com/Megalithic-LLC/on-prem-emaild/dao"
 	"github.com/Megalithic-LLC/on-prem-emaild/imapendpoint"
 	"github.com/Megalithic-LLC/on-prem-emaild/imapendpoint/imapbackend"
+	"github.com/Megalithic-LLC/on-prem-emaild/smtpendpoint"
+	"github.com/Megalithic-LLC/on-prem-emaild/smtpendpoint/smtpbackend"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
 	imap_backend "github.com/emersion/go-imap/backend"
+	"github.com/emersion/go-smtp"
 	"github.com/karlkfi/inject"
 )
 
@@ -19,6 +22,8 @@ var (
 	genjiEngine  *engine.Engine
 	imapBackend  imap_backend.Backend
 	imapEndpoint *imapendpoint.ImapEndpoint
+	smtpBackend  smtp.Backend
+	smtpEndpoint *smtpendpoint.SmtpEndpoint
 
 	accountsDAO         dao.AccountsDAO
 	mailboxesDAO        dao.MailboxesDAO
@@ -36,6 +41,8 @@ func DefineDependencies() {
 	graph.Define(&genjiEngine, inject.NewAutoProvider(newGenjiEngine))
 	graph.Define(&imapBackend, inject.NewAutoProvider(imapbackend.New))
 	graph.Define(&imapEndpoint, inject.NewAutoProvider(imapendpoint.New))
+	graph.Define(&smtpBackend, inject.NewAutoProvider(smtpbackend.New))
+	graph.Define(&smtpEndpoint, inject.NewAutoProvider(smtpendpoint.New))
 
 	graph.Define(&accountsDAO, inject.NewAutoProvider(dao.NewAccountsDAO))
 	graph.Define(&mailboxesDAO, inject.NewAutoProvider(dao.NewMailboxesDAO))
