@@ -1,4 +1,4 @@
-//go:generate protoc --proto_path=agentstreamproto --go_out=plugins=grpc:agentstreamproto agentstream.proto
+//go:generate protoc --proto_path=emailproto --go_out=plugins=grpc:emailproto email.proto
 package cloudservice
 
 import (
@@ -9,12 +9,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
-	"github.com/on-prem-net/emaild/dao"
-	"github.com/on-prem-net/emaild/propertykey"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
+	"github.com/on-prem-net/emaild/cloudservice/emailproto"
+	"github.com/on-prem-net/emaild/dao"
+	"github.com/on-prem-net/emaild/propertykey"
 )
 
 const CLOUDSERVICE_URL = "CLOUDSERVICE_URL"
@@ -66,7 +66,7 @@ func New(propertiesDAO dao.PropertiesDAO) *CloudService {
 	return &self
 }
 
-func NewCall(req agentstreamproto.ClientMessage) *Call {
+func NewCall(req emailproto.ClientMessage) *Call {
 	return &Call{
 		Req:  req,
 		Done: make(chan bool),
@@ -145,7 +145,7 @@ func (self *CloudService) reader() {
 		}
 
 		// Decode message
-		var message agentstreamproto.ServerMessage
+		var message emailproto.ServerMessage
 		if err := proto.Unmarshal(rawMessage, &message); err != nil {
 			logger.Errorf("Failed decoding message: %v", err)
 			break
@@ -173,7 +173,7 @@ func (self *CloudService) reader() {
 	self.mutex.Unlock()
 }
 
-func (self *CloudService) SendRequest(req agentstreamproto.ClientMessage) (*agentstreamproto.ServerMessage, error) {
+func (self *CloudService) SendRequest(req emailproto.ClientMessage) (*emailproto.ServerMessage, error) {
 	self.mutex.Lock()
 	req.Id = self.getNextID()
 	call := NewCall(req)
@@ -205,7 +205,7 @@ func (self *CloudService) SendRequest(req agentstreamproto.ClientMessage) (*agen
 	return call.Res, call.Error
 }
 
-func (self *CloudService) SendResponse(res agentstreamproto.ClientMessage) error {
+func (self *CloudService) SendResponse(res emailproto.ClientMessage) error {
 	logger.Tracef("CloudService:SendResponse()")
 
 	// Encode response

@@ -1,14 +1,14 @@
 package cloudservice
 
 import (
-	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 )
 
 func (self *CloudService) SendErrorResponse(requestId uint64, err error) error {
-	errorRes := agentstreamproto.ClientMessage{
+	errorRes := emailproto.ClientMessage{
 		Id: requestId,
-		MessageType: &agentstreamproto.ClientMessage_ErrorResponse{
-			ErrorResponse: &agentstreamproto.ErrorResponse{
+		MessageType: &emailproto.ClientMessage_ErrorResponse{
+			ErrorResponse: &emailproto.ErrorResponse{
 				Error: err.Error(),
 			},
 		},

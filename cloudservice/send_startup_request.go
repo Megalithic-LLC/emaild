@@ -1,13 +1,13 @@
 package cloudservice
 
 import (
-	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 )
 
-func (self *CloudService) SendStartupRequest() (*agentstreamproto.ServerMessage, error) {
-	req := agentstreamproto.ClientMessage{
-		MessageType: &agentstreamproto.ClientMessage_StartupRequest{
-			StartupRequest: &agentstreamproto.StartupRequest{},
+func (self *CloudService) SendStartupRequest() (*emailproto.ServerMessage, error) {
+	req := emailproto.ClientMessage{
+		MessageType: &emailproto.ClientMessage_StartupRequest{
+			StartupRequest: &emailproto.StartupRequest{},
 		},
 	}
 	return self.SendRequest(req)

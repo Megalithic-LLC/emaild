@@ -2,18 +2,18 @@ package cloudservice
 
 import (
 	"github.com/docktermj/go-logger/logger"
-	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 )
 
-func (self *CloudService) route(message agentstreamproto.ServerMessage) {
+func (self *CloudService) route(message emailproto.ServerMessage) {
 	logger.Tracef("AgentStream:route()")
 
 	switch message.MessageType.(type) {
 
-	case *agentstreamproto.ServerMessage_ClaimRequest:
+	case *emailproto.ServerMessage_ClaimRequest:
 		claimRequest := message.GetClaimRequest()
 		self.handleClaimRequest(message.Id, *claimRequest)
-	case *agentstreamproto.ServerMessage_ConfigChangedRequest:
+	case *emailproto.ServerMessage_ConfigChangedRequest:
 		configChangedRequest := message.GetConfigChangedRequest()
 		self.handleConfigChangedRequest(message.Id, *configChangedRequest)
 	}

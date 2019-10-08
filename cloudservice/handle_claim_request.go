@@ -2,11 +2,11 @@ package cloudservice
 
 import (
 	"github.com/docktermj/go-logger/logger"
-	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 	"github.com/on-prem-net/emaild/propertykey"
 )
 
-func (self *CloudService) handleClaimRequest(requestId uint64, claimReq agentstreamproto.ClaimRequest) {
+func (self *CloudService) handleClaimRequest(requestId uint64, claimReq emailproto.ClaimRequest) {
 	logger.Tracef("CloudService:handleClaimRequest(%d)", requestId)
 
 	if err := self.propertiesDAO.Set(propertykey.Token, claimReq.Token); err != nil {

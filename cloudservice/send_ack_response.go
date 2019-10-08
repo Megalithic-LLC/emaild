@@ -1,14 +1,14 @@
 package cloudservice
 
 import (
-	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 )
 
 func (self *CloudService) SendAckResponse(requestId uint64) error {
-	ackRes := agentstreamproto.ClientMessage{
+	ackRes := emailproto.ClientMessage{
 		Id: requestId,
-		MessageType: &agentstreamproto.ClientMessage_AckResponse{
-			AckResponse: &agentstreamproto.AckResponse{},
+		MessageType: &emailproto.ClientMessage_AckResponse{
+			AckResponse: &emailproto.AckResponse{},
 		},
 	}
 	return self.SendResponse(ackRes)

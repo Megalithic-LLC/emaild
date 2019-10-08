@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/docktermj/go-logger/logger"
-	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 	"github.com/on-prem-net/emaild/propertykey"
 )
 
-func (self *CloudService) handleConfigChangedRequest(requestId uint64, configChangedReq agentstreamproto.ConfigChangedRequest) {
+func (self *CloudService) handleConfigChangedRequest(requestId uint64, configChangedReq emailproto.ConfigChangedRequest) {
 	logger.Tracef("CloudService:handleConfigChangedRequest(%d)", requestId)
 
 	if err := self.SendAckResponse(requestId); err != nil {

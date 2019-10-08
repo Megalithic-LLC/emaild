@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package agentstreamproto;
+package emailproto;
 
 message ClientMessage {
     uint64 id = 1;
