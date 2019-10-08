@@ -10,7 +10,7 @@ func (self *ImapBackend) Login(_ *imap.ConnInfo, username, password string) (bac
 	logger.Tracef("ImapBackend:Login(%s)", username)
 
 	// Verify account
-	account, err := self.accountsDAO.FindOneByUsername(username)
+	account, err := self.accountsDAO.FindOneByEmail(username)
 	if err != nil {
 		return nil, err
 	}

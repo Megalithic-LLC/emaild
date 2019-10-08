@@ -3,12 +3,12 @@ package imapbackend_test
 import (
 	"testing"
 
-	"github.com/on-prem-net/emaild/dao"
-	"github.com/on-prem-net/emaild/imapendpoint/imapbackend"
-	"github.com/on-prem-net/emaild/model"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
 	"github.com/franela/goblin"
+	"github.com/on-prem-net/emaild/dao"
+	"github.com/on-prem-net/emaild/imapendpoint/imapbackend"
+	"github.com/on-prem-net/emaild/model"
 	. "github.com/onsi/gomega"
 )
 
@@ -47,14 +47,11 @@ func TestImapBackendLogin(t *testing.T) {
 
 		g.It("Should allow access to a known account", func() {
 			// setup precondition
-			account := &model.Account{
-				Username: "test",
-				Email:    "test@acme.org",
-			}
+			account := &model.Account{Name: "test", Email: "test@acme.org"}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
 
 			// perform test
-			_, err := imapBackend.Login(nil, "test", "password")
+			_, err := imapBackend.Login(nil, "test@acme.org", "password")
 			Expect(err).ToNot(HaveOccurred())
 		})
 	})

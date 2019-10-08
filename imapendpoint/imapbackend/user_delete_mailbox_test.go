@@ -4,13 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/on-prem-net/emaild/dao"
-	"github.com/on-prem-net/emaild/imapendpoint/imapbackend"
-	"github.com/on-prem-net/emaild/model"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
 	"github.com/emersion/go-imap"
 	"github.com/franela/goblin"
+	"github.com/on-prem-net/emaild/dao"
+	"github.com/on-prem-net/emaild/imapendpoint/imapbackend"
+	"github.com/on-prem-net/emaild/model"
 	. "github.com/onsi/gomega"
 )
 
@@ -48,7 +48,7 @@ func TestUserDeleteMailbox(t *testing.T) {
 			g.It("Should remove cross-post information", func() {
 
 				// Setup precondition
-				accountModel := &model.Account{Username: "test", Email: "test@acme.org"}
+				accountModel := &model.Account{Name: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(accountModel)).Should(Succeed())
 				mailboxModel := &model.Mailbox{AccountId: accountModel.Id, Name: "foo"}
 				Expect(mailboxesDAO.Create(mailboxModel)).Should(Succeed())
@@ -59,7 +59,7 @@ func TestUserDeleteMailbox(t *testing.T) {
 				Expect(mailboxMessagesDAO.Create(mailboxMessageModel)).Should(Succeed())
 
 				// Verify precondition
-				user, err := imapBackend.Login(nil, "test", "password")
+				user, err := imapBackend.Login(nil, "test@acme.org", "password")
 				mailbox, err := user.GetMailbox("foo")
 				Expect(err).ToNot(HaveOccurred())
 				messages := make(chan *imap.Message, 1)
@@ -80,7 +80,7 @@ func TestUserDeleteMailbox(t *testing.T) {
 			g.It("Should garbage collect a message no longer cross-posted into any mailboxes", func() {
 
 				// Setup precondition
-				accountModel := &model.Account{Username: "test", Email: "test@acme.org"}
+				accountModel := &model.Account{Name: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(accountModel)).Should(Succeed())
 				mailboxModel := &model.Mailbox{AccountId: accountModel.Id, Name: "foo"}
 				Expect(mailboxesDAO.Create(mailboxModel)).Should(Succeed())
@@ -91,7 +91,7 @@ func TestUserDeleteMailbox(t *testing.T) {
 				Expect(mailboxMessagesDAO.Create(mailboxMessageModel)).Should(Succeed())
 
 				// Verify precondition
-				user, err := imapBackend.Login(nil, "test", "password")
+				user, err := imapBackend.Login(nil, "test@acme.org", "password")
 				mailbox, err := user.GetMailbox("foo")
 				Expect(err).ToNot(HaveOccurred())
 				messages := make(chan *imap.Message, 1)

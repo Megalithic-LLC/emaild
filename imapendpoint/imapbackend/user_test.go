@@ -3,12 +3,12 @@ package imapbackend_test
 import (
 	"testing"
 
-	"github.com/on-prem-net/emaild/dao"
-	"github.com/on-prem-net/emaild/imapendpoint/imapbackend"
-	"github.com/on-prem-net/emaild/model"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
 	"github.com/franela/goblin"
+	"github.com/on-prem-net/emaild/dao"
+	"github.com/on-prem-net/emaild/imapendpoint/imapbackend"
+	"github.com/on-prem-net/emaild/model"
 	. "github.com/onsi/gomega"
 )
 
@@ -42,11 +42,11 @@ func TestUser(t *testing.T) {
 
 		g.It("Should refuse access to a non-existent mailbox", func() {
 			// setup precondition
-			account := &model.Account{Username: "test", Email: "test@acme.org"}
+			account := &model.Account{Name: "test", Email: "test@acme.org"}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
 
 			// Perform test
-			user, err := imapBackend.Login(nil, "test", "password")
+			user, err := imapBackend.Login(nil, "test@acme.org", "password")
 			Expect(err).ToNot(HaveOccurred())
 			_, err = user.GetMailbox("nonexistent")
 			Expect(err).Should(HaveOccurred())
@@ -54,9 +54,9 @@ func TestUser(t *testing.T) {
 
 		g.It("Should allow access to a known mailbox", func() {
 			// setup precondition
-			account := &model.Account{Username: "test", Email: "test@acme.org"}
+			account := &model.Account{Name: "test", Email: "test@acme.org"}
 			Expect(accountsDAO.Create(account)).Should(Succeed())
-			user, err := imapBackend.Login(nil, "test", "password")
+			user, err := imapBackend.Login(nil, "test@acme.org", "password")
 			Expect(err).ToNot(HaveOccurred())
 			Expect(user.CreateMailbox("foo")).ToNot(HaveOccurred())
 

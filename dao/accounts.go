@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"github.com/on-prem-net/emaild/model"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/table"
+	"github.com/on-prem-net/emaild/model"
 )
 
 type AccountsDAO struct {
@@ -28,24 +28,6 @@ func (self AccountsDAO) FindOneByEmail(email string) (*model.Account, error) {
 	var retval *model.Account
 	err := self.db.View(func(tx *genji.Tx) error {
 		account, err := self.FindOneByEmailTx(tx, email)
-		if err == nil {
-			retval = account
-		}
-		return err
-	})
-	if err != nil {
-		return nil, err
-	}
-	if retval == nil {
-		return nil, table.ErrRecordNotFound
-	}
-	return retval, nil
-}
-
-func (self AccountsDAO) FindOneByUsername(username string) (*model.Account, error) {
-	var retval *model.Account
-	err := self.db.View(func(tx *genji.Tx) error {
-		account, err := self.FindOneByUsernameTx(tx, username)
 		if err == nil {
 			retval = account
 		}

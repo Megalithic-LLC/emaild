@@ -4,13 +4,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/asdine/genji"
+	"github.com/asdine/genji/engine"
+	"github.com/franela/goblin"
 	"github.com/on-prem-net/emaild/dao"
 	"github.com/on-prem-net/emaild/localdelivery"
 	"github.com/on-prem-net/emaild/model"
 	"github.com/on-prem-net/emaild/submissionendpoint/submissionbackend"
-	"github.com/asdine/genji"
-	"github.com/asdine/genji/engine"
-	"github.com/franela/goblin"
 	. "github.com/onsi/gomega"
 )
 
@@ -48,11 +48,11 @@ func TestLocalDelivery(t *testing.T) {
 
 			g.It("Should correctly deliver to a single recipient", func() {
 				// setup precondition
-				account := &model.Account{Username: "test", Email: "test@acme.org"}
+				account := &model.Account{Name: "test", Email: "test@acme.org"}
 				Expect(accountsDAO.Create(account)).To(Succeed())
 
 				// Perform delivery
-				session, err := submissionBackend.Login(nil, "test", "password")
+				session, err := submissionBackend.Login(nil, "test@acme.org", "password")
 				Expect(err).ToNot(HaveOccurred())
 				Expect(session.Mail("")).To(Succeed())
 				Expect(session.Rcpt("test@acme.org")).To(Succeed())

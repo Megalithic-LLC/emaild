@@ -10,5 +10,5 @@ type User struct {
 }
 
 func (self *User) Username() string {
-	return self.account.Username
+	return self.account.Email
 }

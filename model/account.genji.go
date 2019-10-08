@@ -17,10 +17,16 @@ func (a *Account) GetField(name string) (field.Field, error) {
 	switch name {
 	case "Id":
 		return field.NewString("Id", a.Id), nil
+	case "Name":
+		return field.NewString("Name", a.Name), nil
 	case "Email":
 		return field.NewString("Email", a.Email), nil
-	case "Username":
-		return field.NewString("Username", a.Username), nil
+	case "First":
+		return field.NewString("First", a.First), nil
+	case "Last":
+		return field.NewString("Last", a.Last), nil
+	case "DisplayName":
+		return field.NewString("DisplayName", a.DisplayName), nil
 	case "Password":
 		return field.NewBytes("Password", a.Password), nil
 	}
@@ -38,12 +44,27 @@ func (a *Account) Iterate(fn func(field.Field) error) error {
 		return err
 	}
 
+	err = fn(field.NewString("Name", a.Name))
+	if err != nil {
+		return err
+	}
+
 	err = fn(field.NewString("Email", a.Email))
 	if err != nil {
 		return err
 	}
 
-	err = fn(field.NewString("Username", a.Username))
+	err = fn(field.NewString("First", a.First))
+	if err != nil {
+		return err
+	}
+
+	err = fn(field.NewString("Last", a.Last))
+	if err != nil {
+		return err
+	}
+
+	err = fn(field.NewString("DisplayName", a.DisplayName))
 	if err != nil {
 		return err
 	}
@@ -65,10 +86,16 @@ func (a *Account) ScanRecord(rec record.Record) error {
 		switch f.Name {
 		case "Id":
 			a.Id, err = field.DecodeString(f.Data)
+		case "Name":
+			a.Name, err = field.DecodeString(f.Data)
 		case "Email":
 			a.Email, err = field.DecodeString(f.Data)
-		case "Username":
-			a.Username, err = field.DecodeString(f.Data)
+		case "First":
+			a.First, err = field.DecodeString(f.Data)
+		case "Last":
+			a.Last, err = field.DecodeString(f.Data)
+		case "DisplayName":
+			a.DisplayName, err = field.DecodeString(f.Data)
 		case "Password":
 			a.Password, err = field.DecodeBytes(f.Data)
 		}
@@ -84,26 +111,31 @@ func (a *Account) PrimaryKey() ([]byte, error) {
 // Indexes creates a map containing the configuration for each index of the table.
 func (a *Account) Indexes() map[string]index.Options {
 	return map[string]index.Options{
-		"Email":    index.Options{Unique: true},
-		"Username": index.Options{Unique: true},
+		"Email": index.Options{Unique: true},
 	}
 }
 
 // AccountFields describes the fields of the Account record.
 // It can be used to select fields during queries.
 type AccountFields struct {
-	Id       query.StringFieldSelector
-	Email    query.StringFieldSelector
-	Username query.StringFieldSelector
-	Password query.BytesFieldSelector
+	Id          query.StringFieldSelector
+	Name        query.StringFieldSelector
+	Email       query.StringFieldSelector
+	First       query.StringFieldSelector
+	Last        query.StringFieldSelector
+	DisplayName query.StringFieldSelector
+	Password    query.BytesFieldSelector
 }
 
 // NewAccountFields creates a AccountFields.
 func NewAccountFields() *AccountFields {
 	return &AccountFields{
-		Id:       query.StringField("Id"),
-		Email:    query.StringField("Email"),
-		Username: query.StringField("Username"),
-		Password: query.BytesField("Password"),
+		Id:          query.StringField("Id"),
+		Name:        query.StringField("Name"),
+		Email:       query.StringField("Email"),
+		First:       query.StringField("First"),
+		Last:        query.StringField("Last"),
+		DisplayName: query.StringField("DisplayName"),
+		Password:    query.BytesField("Password"),
 	}
 }

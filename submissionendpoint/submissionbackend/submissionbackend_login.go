@@ -1,16 +1,16 @@
 package submissionbackend
 
 import (
-	"github.com/on-prem-net/emaild/model"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-smtp"
+	"github.com/on-prem-net/emaild/model"
 )
 
 func (self *SubmissionBackend) Login(state *smtp.ConnectionState, username, password string) (smtp.Session, error) {
 	logger.Tracef("SubmissionBackend:Login(%s)", username)
 
 	// Verify account
-	account, err := self.accountsDAO.FindOneByUsername(username)
+	account, err := self.accountsDAO.FindOneByEmail(username)
 	if err != nil {
 		return nil, err
 	}

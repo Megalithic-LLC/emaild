@@ -1,11 +1,11 @@
 package dao
 
 import (
-	"github.com/on-prem-net/emaild/model"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
 	"github.com/asdine/genji/table"
+	"github.com/on-prem-net/emaild/model"
 	"github.com/rs/xid"
 )
 
@@ -47,34 +47,6 @@ func (self AccountsDAO) FindOneByEmailTx(tx *genji.Tx, email string) (*model.Acc
 		return nil, table.ErrRecordNotFound
 	}
 	return retval, nil
-}
-
-func (self AccountsDAO) FindOneByUsernameTx(tx *genji.Tx, username string) (*model.Account, error) {
-	var retval *model.Account
-	accountTable, err := tx.GetTable(model.AccountTable)
-	if err != nil {
-		return nil, err
-	}
-	err = query.
-		Select().
-		From(accountTable).
-		Where(self.fields.Username.Eq(username)).
-		Limit(1).
-		Run(tx).
-		Iterate(func(recordId []byte, r record.Record) error {
-			var account model.Account
-			if err := account.ScanRecord(r); err == nil {
-				retval = &account
-			}
-			return err
-		})
-	if err != nil {
-		return nil, err
-	}
-	if retval == nil {
-		return nil, table.ErrRecordNotFound
-	}
-	return retval, err
 }
 
 func (self AccountsDAO) FindByIdTx(tx *genji.Tx, id string) (*model.Account, error) {
