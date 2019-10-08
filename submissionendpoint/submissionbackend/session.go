@@ -1,7 +1,7 @@
 package submissionbackend
 
 import (
-	"github.com/Megalithic-LLC/on-prem-emaild/model"
+	"github.com/on-prem-net/emaild/model"
 )
 
 type Session struct {

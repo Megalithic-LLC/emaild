@@ -1,7 +1,7 @@
 package cloudservice
 
 import (
-	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
 )
 
 type Call struct {

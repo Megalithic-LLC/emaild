@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/agentstreamproto"
-	"github.com/Megalithic-LLC/on-prem-emaild/dao"
-	"github.com/Megalithic-LLC/on-prem-emaild/propertykey"
+	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/dao"
+	"github.com/on-prem-net/emaild/propertykey"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"

@@ -3,7 +3,7 @@ package submissionendpoint
 import (
 	"net"
 
-	"github.com/Megalithic-LLC/on-prem-emaild/submissionendpoint/submissionbackend"
+	"github.com/on-prem-net/emaild/submissionendpoint/submissionbackend"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-smtp"
 )

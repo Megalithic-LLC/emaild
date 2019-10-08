@@ -1,7 +1,7 @@
 package imapbackend
 
 import (
-	"github.com/Megalithic-LLC/on-prem-emaild/model"
+	"github.com/on-prem-net/emaild/model"
 )
 
 type User struct {

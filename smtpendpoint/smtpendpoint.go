@@ -3,7 +3,7 @@ package smtpendpoint
 import (
 	"net"
 
-	"github.com/Megalithic-LLC/on-prem-emaild/smtpendpoint/smtpbackend"
+	"github.com/on-prem-net/emaild/smtpendpoint/smtpbackend"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-smtp"
 )

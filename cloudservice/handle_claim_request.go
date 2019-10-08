@@ -2,8 +2,8 @@ package cloudservice
 
 import (
 	"github.com/docktermj/go-logger/logger"
-	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/agentstreamproto"
-	"github.com/Megalithic-LLC/on-prem-emaild/propertykey"
+	"github.com/on-prem-net/emaild/cloudservice/agentstreamproto"
+	"github.com/on-prem-net/emaild/propertykey"
 )
 
 func (self *CloudService) handleClaimRequest(requestId uint64, claimReq agentstreamproto.ClaimRequest) {

@@ -1,8 +1,8 @@
 package submissionbackend
 
 import (
-	"github.com/Megalithic-LLC/on-prem-emaild/dao"
-	"github.com/Megalithic-LLC/on-prem-emaild/localdelivery"
+	"github.com/on-prem-net/emaild/dao"
+	"github.com/on-prem-net/emaild/localdelivery"
 	"github.com/asdine/genji"
 )
 
