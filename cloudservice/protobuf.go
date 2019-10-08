@@ -10,6 +10,7 @@ func AccountFromProtobuf(pbAccount *emailproto.Account) model.Account {
 		Id:                pbAccount.Id,
 		ServiceInstanceId: pbAccount.ServiceInstanceId,
 		Name:              pbAccount.Name,
+		DomainId:          pbAccount.DomainId,
 		Email:             pbAccount.Email,
 		First:             pbAccount.First,
 		Last:              pbAccount.Last,

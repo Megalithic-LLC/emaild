@@ -21,6 +21,8 @@ func (a *Account) GetField(name string) (field.Field, error) {
 		return field.NewString("ServiceInstanceId", a.ServiceInstanceId), nil
 	case "Name":
 		return field.NewString("Name", a.Name), nil
+	case "DomainId":
+		return field.NewString("DomainId", a.DomainId), nil
 	case "Email":
 		return field.NewString("Email", a.Email), nil
 	case "First":
@@ -52,6 +54,11 @@ func (a *Account) Iterate(fn func(field.Field) error) error {
 	}
 
 	err = fn(field.NewString("Name", a.Name))
+	if err != nil {
+		return err
+	}
+
+	err = fn(field.NewString("DomainId", a.DomainId))
 	if err != nil {
 		return err
 	}
@@ -97,6 +104,8 @@ func (a *Account) ScanRecord(rec record.Record) error {
 			a.ServiceInstanceId, err = field.DecodeString(f.Data)
 		case "Name":
 			a.Name, err = field.DecodeString(f.Data)
+		case "DomainId":
+			a.DomainId, err = field.DecodeString(f.Data)
 		case "Email":
 			a.Email, err = field.DecodeString(f.Data)
 		case "First":
@@ -130,6 +139,7 @@ type AccountFields struct {
 	Id                query.StringFieldSelector
 	ServiceInstanceId query.StringFieldSelector
 	Name              query.StringFieldSelector
+	DomainId          query.StringFieldSelector
 	Email             query.StringFieldSelector
 	First             query.StringFieldSelector
 	Last              query.StringFieldSelector
@@ -143,6 +153,7 @@ func NewAccountFields() *AccountFields {
 		Id:                query.StringField("Id"),
 		ServiceInstanceId: query.StringField("ServiceInstanceId"),
 		Name:              query.StringField("Name"),
+		DomainId:          query.StringField("DomainId"),
 		Email:             query.StringField("Email"),
 		First:             query.StringField("First"),
 		Last:              query.StringField("Last"),

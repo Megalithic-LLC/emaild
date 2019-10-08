@@ -36,11 +36,12 @@ message Account {
     string id                  = 1;
     string service_instance_id = 2;
     string name                = 3;
-    string email               = 4;
-    string first               = 5;
-    string last                = 6;
-    string display_name        = 7;
-    bytes password             = 8;
+    string domain_id           = 4;
+    string email               = 5;
+    string first               = 6;
+    string last                = 7;
+    string display_name        = 8;
+    bytes password             = 9;
 }
 
 message AckResponse {
