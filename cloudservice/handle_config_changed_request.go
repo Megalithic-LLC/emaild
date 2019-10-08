@@ -15,9 +15,13 @@ func (self *CloudService) handleConfigChangedRequest(requestId uint64, configCha
 		logger.Errorf("Failed sending ack response: %v", err)
 	}
 
-	for table, hash := range configChangedReq.HashesByTable {
-		hashAsHex := fmt.Sprintf("%x", hash)
+	self.processConfigChanges(configChangedReq.HashesByTable)
+}
 
+func (self *CloudService) processConfigChanges(configHashesByTable map[string][]byte) {
+	logger.Tracef("CloudService:processConfigChanges()")
+	for table, hash := range configHashesByTable {
+		hashAsHex := fmt.Sprintf("%x", hash)
 		key := fmt.Sprintf(propertykey.HashByTablePattern, table)
 		if value, err := self.propertiesDAO.Get(key); err != nil {
 			logger.Errorf("Failed looking up table config hash: %v", err)
@@ -28,5 +32,4 @@ func (self *CloudService) handleConfigChangedRequest(requestId uint64, configCha
 			self.propertiesDAO.Set(key, hashAsHex)
 		}
 	}
-
 }

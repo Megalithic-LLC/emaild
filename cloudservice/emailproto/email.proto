@@ -20,6 +20,7 @@ message ServerMessage {
         ErrorResponse        error_response = 4;
         ClaimRequest         claim_request  = 5;
         ConfigChangedRequest config_changed_request = 6;
+        StartupResponse      startup_response = 7;
     }
 }
 
@@ -42,4 +43,8 @@ message NoopRequest {
 }
 
 message StartupRequest {
+}
+
+message StartupResponse {
+    map<string,bytes> config_hashes_by_table = 1;
 }

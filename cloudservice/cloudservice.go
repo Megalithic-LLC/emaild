@@ -17,7 +17,7 @@ import (
 	"github.com/on-prem-net/emaild/propertykey"
 )
 
-const CLOUDSERVICE_URL = "CLOUDSERVICE_URL"
+const API_URL = "API_URL"
 
 type CloudService struct {
 	agentID         string
@@ -30,13 +30,13 @@ type CloudService struct {
 }
 
 func New(propertiesDAO dao.PropertiesDAO) *CloudService {
-	cloudServiceURL := os.Getenv(CLOUDSERVICE_URL)
+	cloudServiceURL := os.Getenv(API_URL)
 	if cloudServiceURL == "" {
 		cloudServiceURL = "https://api.on-prem.net"
 	}
 	parsedURL, err := url.Parse(cloudServiceURL)
 	if err != nil {
-		logger.Fatalf("Malformed %s", CLOUDSERVICE_URL)
+		logger.Fatalf("Malformed %s", API_URL)
 		return nil
 	}
 
@@ -106,8 +106,10 @@ func (self *CloudService) dialer() {
 		self.conn = conn
 
 		// Initial handshake
-		if _, err := self.SendStartupRequest(); err != nil {
+		if res, err := self.SendStartupRequest(); err != nil {
 			logger.Warnf("Failed contacting cloud service: %v", err)
+		} else if startupRes := res.GetStartupResponse(); startupRes != nil {
+			self.processConfigChanges(startupRes.ConfigHashesByTable)
 		}
 	}
 }
