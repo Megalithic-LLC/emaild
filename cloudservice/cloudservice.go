@@ -21,22 +21,24 @@ import (
 const API_URL = "API_URL"
 
 type CloudService struct {
-	accountsDAO     dao.AccountsDAO
-	agentID         string
-	cloudServiceURL url.URL
-	conn            *websocket.Conn
-	db              *genji.DB
-	mutex           sync.Mutex
-	nextID          uint64
-	pending         map[uint64]*Call
-	propertiesDAO   dao.PropertiesDAO
-	snapshotsDAO    dao.SnapshotsDAO
+	accountsDAO         dao.AccountsDAO
+	agentID             string
+	cloudServiceURL     url.URL
+	conn                *websocket.Conn
+	db                  *genji.DB
+	mutex               sync.Mutex
+	nextID              uint64
+	pending             map[uint64]*Call
+	propertiesDAO       dao.PropertiesDAO
+	serviceInstancesDAO dao.ServiceInstancesDAO
+	snapshotsDAO        dao.SnapshotsDAO
 }
 
 func New(
 	accountsDAO dao.AccountsDAO,
 	db *genji.DB,
 	propertiesDAO dao.PropertiesDAO,
+	serviceInstancesDAO dao.ServiceInstancesDAO,
 	snapshotsDAO dao.SnapshotsDAO,
 ) *CloudService {
 	cloudServiceURL := os.Getenv(API_URL)
@@ -62,14 +64,15 @@ func New(
 	}
 
 	self := CloudService{
-		accountsDAO:     accountsDAO,
-		agentID:         agentID,
-		cloudServiceURL: url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
-		db:              db,
-		nextID:          1,
-		pending:         map[uint64]*Call{},
-		propertiesDAO:   propertiesDAO,
-		snapshotsDAO:    snapshotsDAO,
+		accountsDAO:         accountsDAO,
+		agentID:             agentID,
+		cloudServiceURL:     url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
+		db:                  db,
+		nextID:              1,
+		pending:             map[uint64]*Call{},
+		propertiesDAO:       propertiesDAO,
+		serviceInstancesDAO: serviceInstancesDAO,
+		snapshotsDAO:        snapshotsDAO,
 	}
 
 	go self.dialer()

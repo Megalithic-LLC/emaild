@@ -5,26 +5,28 @@ package emailproto;
 message ClientMessage {
     uint64 id = 1;
     oneof message_type {
-        AckResponse         ack_response          = 2;
-        NoopRequest         noop_request          = 3;
-        StartupRequest      startup_request       = 4;
-        ErrorResponse       error_response        = 5;
-        GetAccountsRequest  get_accounts_request  = 6;
-        GetSnapshotsRequest get_snapshots_request = 7;
+        AckResponse                ack_response                  = 2;
+        NoopRequest                noop_request                  = 3;
+        StartupRequest             startup_request               = 4;
+        ErrorResponse              error_response                = 5;
+        GetAccountsRequest         get_accounts_request          = 6;
+        GetSnapshotsRequest        get_snapshots_request         = 7;
+        GetServiceInstancesRequest get_service_instances_request = 8;
     }
 }
 
 message ServerMessage {
     uint64 id = 1;
     oneof message_type {
-        AckResponse          ack_response           = 2;
-        NoopRequest          noop_request           = 3;
-        ErrorResponse        error_response         = 4;
-        ClaimRequest         claim_request          = 5;
-        ConfigChangedRequest config_changed_request = 6;
-        StartupResponse      startup_response       = 7;
-        GetAccountsResponse  get_accounts_response  = 8;
-        GetSnapshotsResponse get_snapshots_response = 9;
+        AckResponse                 ack_response                   = 2;
+        NoopRequest                 noop_request                   = 3;
+        ErrorResponse               error_response                 = 4;
+        ClaimRequest                claim_request                  = 5;
+        ConfigChangedRequest        config_changed_request         = 6;
+        StartupResponse             startup_response               = 7;
+        GetAccountsResponse         get_accounts_response          = 8;
+        GetSnapshotsResponse        get_snapshots_response         = 9;
+        GetServiceInstancesResponse get_service_instances_response = 10;
     }
 }
 
@@ -61,6 +63,13 @@ message GetAccountsResponse {
     repeated Account accounts = 1;
 }
 
+message GetServiceInstancesRequest {
+}
+
+message GetServiceInstancesResponse {
+    repeated ServiceInstance service_instances = 1;
+}
+
 message GetSnapshotsRequest {
 }
 
@@ -71,10 +80,15 @@ message GetSnapshotsResponse {
 message NoopRequest {
 }
 
+message ServiceInstance {
+    string id                   = 1;
+    string service_id           = 2;
+    string plan_id              = 3;
+}
+
 message Snapshot {
     string id       = 1;
-    string agent_id = 2;
-    string name     = 3;
+    string name     = 2;
 }
 
 message StartupRequest {

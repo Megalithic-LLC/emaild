@@ -27,6 +27,14 @@ func AccountsFromProtobuf(pbAccounts []emailproto.Account) []*model.Account {
 	return accounts
 }
 
+func ServiceInstanceFromProtobuf(pbServiceInstance *emailproto.ServiceInstance) model.ServiceInstance {
+	return model.ServiceInstance{
+		Id:        pbServiceInstance.Id,
+		ServiceId: pbServiceInstance.ServiceId,
+		PlanId:    pbServiceInstance.PlanId,
+	}
+}
+
 func SnapshotFromProtobuf(pbSnapshot *emailproto.Snapshot) model.Snapshot {
 	return model.Snapshot{
 		Id:   pbSnapshot.Id,
