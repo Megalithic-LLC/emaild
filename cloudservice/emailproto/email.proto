@@ -5,11 +5,12 @@ package emailproto;
 message ClientMessage {
     uint64 id = 1;
     oneof message_type {
-        AckResponse        ack_response         = 2;
-        NoopRequest        noop_request         = 3;
-        StartupRequest     startup_request      = 4;
-        ErrorResponse      error_response       = 5;
-        GetAccountsRequest get_accounts_request = 6;
+        AckResponse         ack_response          = 2;
+        NoopRequest         noop_request          = 3;
+        StartupRequest      startup_request       = 4;
+        ErrorResponse       error_response        = 5;
+        GetAccountsRequest  get_accounts_request  = 6;
+        GetSnapshotsRequest get_snapshots_request = 7;
     }
 }
 
@@ -23,6 +24,7 @@ message ServerMessage {
         ConfigChangedRequest config_changed_request = 6;
         StartupResponse      startup_response       = 7;
         GetAccountsResponse  get_accounts_response  = 8;
+        GetSnapshotsResponse get_snapshots_response = 9;
     }
 }
 
@@ -59,7 +61,20 @@ message GetAccountsResponse {
     repeated Account accounts = 1;
 }
 
+message GetSnapshotsRequest {
+}
+
+message GetSnapshotsResponse {
+    repeated Snapshot snapshots = 1;
+}
+
 message NoopRequest {
+}
+
+message Snapshot {
+    string id       = 1;
+    string agent_id = 2;
+    string name     = 3;
 }
 
 message StartupRequest {

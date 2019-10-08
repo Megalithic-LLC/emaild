@@ -11,6 +11,7 @@ const (
 	MessageRawBodyTable = "msg_braw"
 	MessageTable        = "msg"
 	PropertyTable       = "prop"
+	SnapshotTable       = "s"
 )
 
 var (
@@ -21,5 +22,6 @@ var (
 		MessageRawBodyTable: new(MessageRawBody),
 		MessageTable:        new(Message),
 		PropertyTable:       new(Property),
+		SnapshotTable:       new(Snapshot),
 	}
 )

@@ -30,12 +30,14 @@ type CloudService struct {
 	nextID          uint64
 	pending         map[uint64]*Call
 	propertiesDAO   dao.PropertiesDAO
+	snapshotsDAO    dao.SnapshotsDAO
 }
 
 func New(
 	accountsDAO dao.AccountsDAO,
 	db *genji.DB,
 	propertiesDAO dao.PropertiesDAO,
+	snapshotsDAO dao.SnapshotsDAO,
 ) *CloudService {
 	cloudServiceURL := os.Getenv(API_URL)
 	if cloudServiceURL == "" {
@@ -64,9 +66,10 @@ func New(
 		agentID:         agentID,
 		cloudServiceURL: url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
 		db:              db,
+		nextID:          1,
 		pending:         map[uint64]*Call{},
 		propertiesDAO:   propertiesDAO,
-		nextID:          1,
+		snapshotsDAO:    snapshotsDAO,
 	}
 
 	go self.dialer()

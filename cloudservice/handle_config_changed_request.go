@@ -34,9 +34,11 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 
 			logger.Debugf("Table %s has changes", tableName)
 
-			if tableName == "accounts" {
+			switch tableName {
+
+			case "accounts":
 				if res, err := self.SendGetAccountsRequest(); err != nil {
-					logger.Errorf("Failed requesting account changes: %v", err)
+					logger.Errorf("Failed requesting latest accounts: %v", err)
 				} else if getAccountsRes := res.GetGetAccountsResponse(); getAccountsRes != nil {
 					if err := self.db.Update(func(tx *genji.Tx) error {
 						for _, pbAccount := range getAccountsRes.Accounts {
@@ -57,6 +59,31 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 						self.propertiesDAO.Set(key, hashAsHex)
 					}
 				}
+
+			case "snapshots":
+				if res, err := self.SendGetSnapshotsRequest(); err != nil {
+					logger.Errorf("Failed requesting latest shapshots: %v", err)
+				} else if getSnapshotsRes := res.GetGetSnapshotsResponse(); getSnapshotsRes != nil {
+					if err := self.db.Update(func(tx *genji.Tx) error {
+						for _, pbSnapshot := range getSnapshotsRes.Snapshots {
+							snapshot := SnapshotFromProtobuf(pbSnapshot)
+							err := self.snapshotsDAO.ReplaceTx(tx, &snapshot)
+							if err == table.ErrRecordNotFound {
+								err = self.snapshotsDAO.CreateTx(tx, &snapshot)
+							}
+							if err != nil {
+								return err
+							}
+						}
+						return nil
+					}); err != nil {
+						logger.Errorf("Failed updating snapshots: %v", err)
+					} else {
+						logger.Infof("Updated %d snapshots", len(getSnapshotsRes.Snapshots))
+						self.propertiesDAO.Set(key, hashAsHex)
+					}
+				}
+
 			}
 
 		}

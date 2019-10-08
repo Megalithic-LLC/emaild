@@ -1,6 +1,10 @@
 package main
 
 import (
+	"github.com/asdine/genji"
+	"github.com/asdine/genji/engine"
+	imap_backend "github.com/emersion/go-imap/backend"
+	"github.com/karlkfi/inject"
 	"github.com/on-prem-net/emaild/cloudservice"
 	"github.com/on-prem-net/emaild/dao"
 	"github.com/on-prem-net/emaild/imapendpoint"
@@ -10,10 +14,6 @@ import (
 	"github.com/on-prem-net/emaild/smtpendpoint/smtpbackend"
 	"github.com/on-prem-net/emaild/submissionendpoint"
 	"github.com/on-prem-net/emaild/submissionendpoint/submissionbackend"
-	"github.com/asdine/genji"
-	"github.com/asdine/genji/engine"
-	imap_backend "github.com/emersion/go-imap/backend"
-	"github.com/karlkfi/inject"
 )
 
 var (
@@ -36,6 +36,7 @@ var (
 	messageRawBodiesDAO dao.MessageRawBodiesDAO
 	messagesDAO         dao.MessagesDAO
 	propertiesDAO       dao.PropertiesDAO
+	snapshotsDAO        dao.SnapshotsDAO
 )
 
 func DefineDependencies() {
@@ -58,4 +59,5 @@ func DefineDependencies() {
 	graph.Define(&messageRawBodiesDAO, inject.NewAutoProvider(dao.NewMessageRawBodiesDAO))
 	graph.Define(&messagesDAO, inject.NewAutoProvider(dao.NewMessagesDAO))
 	graph.Define(&propertiesDAO, inject.NewAutoProvider(dao.NewPropertiesDAO))
+	graph.Define(&snapshotsDAO, inject.NewAutoProvider(dao.NewSnapshotsDAO))
 }

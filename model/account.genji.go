@@ -17,6 +17,8 @@ func (a *Account) GetField(name string) (field.Field, error) {
 	switch name {
 	case "Id":
 		return field.NewString("Id", a.Id), nil
+	case "ServiceInstanceId":
+		return field.NewString("ServiceInstanceId", a.ServiceInstanceId), nil
 	case "Name":
 		return field.NewString("Name", a.Name), nil
 	case "Email":
@@ -40,6 +42,11 @@ func (a *Account) Iterate(fn func(field.Field) error) error {
 	var err error
 
 	err = fn(field.NewString("Id", a.Id))
+	if err != nil {
+		return err
+	}
+
+	err = fn(field.NewString("ServiceInstanceId", a.ServiceInstanceId))
 	if err != nil {
 		return err
 	}
@@ -86,6 +93,8 @@ func (a *Account) ScanRecord(rec record.Record) error {
 		switch f.Name {
 		case "Id":
 			a.Id, err = field.DecodeString(f.Data)
+		case "ServiceInstanceId":
+			a.ServiceInstanceId, err = field.DecodeString(f.Data)
 		case "Name":
 			a.Name, err = field.DecodeString(f.Data)
 		case "Email":
@@ -118,24 +127,26 @@ func (a *Account) Indexes() map[string]index.Options {
 // AccountFields describes the fields of the Account record.
 // It can be used to select fields during queries.
 type AccountFields struct {
-	Id          query.StringFieldSelector
-	Name        query.StringFieldSelector
-	Email       query.StringFieldSelector
-	First       query.StringFieldSelector
-	Last        query.StringFieldSelector
-	DisplayName query.StringFieldSelector
-	Password    query.BytesFieldSelector
+	Id                query.StringFieldSelector
+	ServiceInstanceId query.StringFieldSelector
+	Name              query.StringFieldSelector
+	Email             query.StringFieldSelector
+	First             query.StringFieldSelector
+	Last              query.StringFieldSelector
+	DisplayName       query.StringFieldSelector
+	Password          query.BytesFieldSelector
 }
 
 // NewAccountFields creates a AccountFields.
 func NewAccountFields() *AccountFields {
 	return &AccountFields{
-		Id:          query.StringField("Id"),
-		Name:        query.StringField("Name"),
-		Email:       query.StringField("Email"),
-		First:       query.StringField("First"),
-		Last:        query.StringField("Last"),
-		DisplayName: query.StringField("DisplayName"),
-		Password:    query.BytesField("Password"),
+		Id:                query.StringField("Id"),
+		ServiceInstanceId: query.StringField("ServiceInstanceId"),
+		Name:              query.StringField("Name"),
+		Email:             query.StringField("Email"),
+		First:             query.StringField("First"),
+		Last:              query.StringField("Last"),
+		DisplayName:       query.StringField("DisplayName"),
+		Password:          query.BytesField("Password"),
 	}
 }
