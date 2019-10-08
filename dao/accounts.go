@@ -56,3 +56,9 @@ func (self AccountsDAO) FindById(id string) (*model.Account, error) {
 	}
 	return retval, nil
 }
+
+func (self AccountsDAO) Replace(account *model.Account) error {
+	return self.db.Update(func(tx *genji.Tx) error {
+		return self.ReplaceTx(tx, account)
+	})
+}

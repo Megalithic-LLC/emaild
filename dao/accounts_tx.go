@@ -67,3 +67,15 @@ func (self AccountsDAO) FindByIdTx(tx *genji.Tx, id string) (*model.Account, err
 	err = account.ScanRecord(r)
 	return &account, err
 }
+
+func (self AccountsDAO) ReplaceTx(tx *genji.Tx, account *model.Account) error {
+	accountTable, err := tx.GetTable(model.AccountTable)
+	if err != nil {
+		return err
+	}
+	pk, err := account.PrimaryKey()
+	if err != nil {
+		return err
+	}
+	return accountTable.Replace(pk, account)
+}

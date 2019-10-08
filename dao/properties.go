@@ -4,6 +4,7 @@ import (
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
+	"github.com/asdine/genji/table"
 	"github.com/on-prem-net/emaild/model"
 )
 
@@ -40,12 +41,21 @@ func (self PropertiesDAO) Get(key string) (string, error) {
 
 func (self PropertiesDAO) Set(key, value string) error {
 	return self.db.Update(func(tx *genji.Tx) error {
-		if table, err := tx.GetTable(model.PropertyTable); err != nil {
-			return err
-		} else {
-			_, err := table.Insert(&model.Property{Key: key, Value: value})
+		propertyTable, err := tx.GetTable(model.PropertyTable)
+		if err != nil {
 			return err
 		}
+		searchFor := &model.Property{Key: key}
+		pk, err := searchFor.PrimaryKey()
+		if err != nil {
+			return err
+		}
+		if _, err := propertyTable.GetRecord(pk); err == table.ErrRecordNotFound {
+			_, err := propertyTable.Insert(&model.Property{Key: key, Value: value})
+			return err
+		}
+		property := model.Property{Key: key, Value: value}
+		return propertyTable.Replace(pk, &property)
 	})
 }
 

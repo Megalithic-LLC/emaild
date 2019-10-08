@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/asdine/genji"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
@@ -20,16 +21,22 @@ import (
 const API_URL = "API_URL"
 
 type CloudService struct {
+	accountsDAO     dao.AccountsDAO
 	agentID         string
 	cloudServiceURL url.URL
 	conn            *websocket.Conn
+	db              *genji.DB
 	mutex           sync.Mutex
 	nextID          uint64
 	pending         map[uint64]*Call
 	propertiesDAO   dao.PropertiesDAO
 }
 
-func New(propertiesDAO dao.PropertiesDAO) *CloudService {
+func New(
+	accountsDAO dao.AccountsDAO,
+	db *genji.DB,
+	propertiesDAO dao.PropertiesDAO,
+) *CloudService {
 	cloudServiceURL := os.Getenv(API_URL)
 	if cloudServiceURL == "" {
 		cloudServiceURL = "https://api.on-prem.net"
@@ -53,8 +60,10 @@ func New(propertiesDAO dao.PropertiesDAO) *CloudService {
 	}
 
 	self := CloudService{
+		accountsDAO:     accountsDAO,
 		agentID:         agentID,
 		cloudServiceURL: url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
+		db:              db,
 		pending:         map[uint64]*Call{},
 		propertiesDAO:   propertiesDAO,
 		nextID:          1,
