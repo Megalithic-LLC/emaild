@@ -31,6 +31,7 @@ var (
 	submissionEndpoint *submissionendpoint.SubmissionEndpoint
 
 	accountsDAO         dao.AccountsDAO
+	domainsDAO          dao.DomainsDAO
 	mailboxesDAO        dao.MailboxesDAO
 	mailboxMessagesDAO  dao.MailboxMessagesDAO
 	messageRawBodiesDAO dao.MessageRawBodiesDAO
@@ -55,6 +56,7 @@ func DefineDependencies() {
 	graph.Define(&submissionEndpoint, inject.NewAutoProvider(submissionendpoint.New))
 
 	graph.Define(&accountsDAO, inject.NewAutoProvider(dao.NewAccountsDAO))
+	graph.Define(&domainsDAO, inject.NewAutoProvider(dao.NewDomainsDAO))
 	graph.Define(&mailboxesDAO, inject.NewAutoProvider(dao.NewMailboxesDAO))
 	graph.Define(&mailboxMessagesDAO, inject.NewAutoProvider(dao.NewMailboxMessagesDAO))
 	graph.Define(&messageRawBodiesDAO, inject.NewAutoProvider(dao.NewMessageRawBodiesDAO))

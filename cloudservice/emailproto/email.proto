@@ -12,6 +12,7 @@ message ClientMessage {
         GetAccountsRequest         get_accounts_request          = 6;
         GetSnapshotsRequest        get_snapshots_request         = 7;
         GetServiceInstancesRequest get_service_instances_request = 8;
+        GetDomainsRequest          get_domains_request           = 9;
     }
 }
 
@@ -27,6 +28,7 @@ message ServerMessage {
         GetAccountsResponse         get_accounts_response          = 8;
         GetSnapshotsResponse        get_snapshots_response         = 9;
         GetServiceInstancesResponse get_service_instances_response = 10;
+        GetDomainsResponse          get_domains_response           = 11;
     }
 }
 
@@ -52,6 +54,12 @@ message ConfigChangedRequest {
     map<string,bytes> hashes_by_table = 1;
 }
 
+message Domain {
+    string id                  = 1;
+    string service_instance_id = 2;
+    string name                = 3;
+}
+
 message ErrorResponse {
     string error = 1;
 }
@@ -61,6 +69,13 @@ message GetAccountsRequest {
 
 message GetAccountsResponse {
     repeated Account accounts = 1;
+}
+
+message GetDomainsRequest {
+}
+
+message GetDomainsResponse {
+    repeated Domain domains = 1;
 }
 
 message GetServiceInstancesRequest {

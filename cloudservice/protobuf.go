@@ -27,6 +27,23 @@ func AccountsFromProtobuf(pbAccounts []emailproto.Account) []*model.Account {
 	return accounts
 }
 
+func DomainFromProtobuf(pbDomain *emailproto.Domain) model.Domain {
+	return model.Domain{
+		Id:                pbDomain.Id,
+		ServiceInstanceId: pbDomain.ServiceInstanceId,
+		Name:              pbDomain.Name,
+	}
+}
+
+func DomainsFromProtobuf(pbDomains []emailproto.Domain) []*model.Domain {
+	domains := []*model.Domain{}
+	for _, pbDomain := range pbDomains {
+		domain := DomainFromProtobuf(&pbDomain)
+		domains = append(domains, &domain)
+	}
+	return domains
+}
+
 func ServiceInstanceFromProtobuf(pbServiceInstance *emailproto.ServiceInstance) model.ServiceInstance {
 	return model.ServiceInstance{
 		Id:        pbServiceInstance.Id,

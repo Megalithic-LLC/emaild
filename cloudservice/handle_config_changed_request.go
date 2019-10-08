@@ -60,6 +60,30 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					}
 				}
 
+			case "domains":
+				if res, err := self.SendGetDomainsRequest(); err != nil {
+					logger.Errorf("Failed requesting latest domains: %v", err)
+				} else if getDomainsRes := res.GetGetDomainsResponse(); getDomainsRes != nil {
+					if err := self.db.Update(func(tx *genji.Tx) error {
+						for _, pbDomain := range getDomainsRes.Domains {
+							domain := DomainFromProtobuf(pbDomain)
+							err := self.domainsDAO.ReplaceTx(tx, &domain)
+							if err == table.ErrRecordNotFound {
+								err = self.domainsDAO.CreateTx(tx, &domain)
+							}
+							if err != nil {
+								return err
+							}
+						}
+						return nil
+					}); err != nil {
+						logger.Errorf("Failed updating domains: %v", err)
+					} else {
+						logger.Infof("Updated %d domains", len(getDomainsRes.Domains))
+						self.propertiesDAO.Set(key, hashAsHex)
+					}
+				}
+
 			case "serviceInstances":
 				if res, err := self.SendGetServiceInstancesRequest(); err != nil {
 					logger.Errorf("Failed requesting latest service instances: %v", err)

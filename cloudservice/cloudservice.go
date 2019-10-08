@@ -26,6 +26,7 @@ type CloudService struct {
 	cloudServiceURL     url.URL
 	conn                *websocket.Conn
 	db                  *genji.DB
+	domainsDAO          dao.DomainsDAO
 	mutex               sync.Mutex
 	nextID              uint64
 	pending             map[uint64]*Call
@@ -37,6 +38,7 @@ type CloudService struct {
 func New(
 	accountsDAO dao.AccountsDAO,
 	db *genji.DB,
+	domainsDAO dao.DomainsDAO,
 	propertiesDAO dao.PropertiesDAO,
 	serviceInstancesDAO dao.ServiceInstancesDAO,
 	snapshotsDAO dao.SnapshotsDAO,
@@ -68,6 +70,7 @@ func New(
 		agentID:             agentID,
 		cloudServiceURL:     url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
 		db:                  db,
+		domainsDAO:          domainsDAO,
 		nextID:              1,
 		pending:             map[uint64]*Call{},
 		propertiesDAO:       propertiesDAO,

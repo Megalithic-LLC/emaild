@@ -54,12 +54,12 @@ func (self AccountsDAO) FindByIdTx(tx *genji.Tx, id string) (*model.Account, err
 	if err != nil {
 		return nil, err
 	}
-	accountSelector := &model.Account{Id: id}
-	accountID, err := accountSelector.PrimaryKey()
+	searchFor := &model.Account{Id: id}
+	pk, err := searchFor.PrimaryKey()
 	if err != nil {
 		return nil, err
 	}
-	r, err := accountTable.GetRecord(accountID)
+	r, err := accountTable.GetRecord(pk)
 	if err != nil {
 		return nil, err
 	}
