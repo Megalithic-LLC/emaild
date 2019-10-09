@@ -14,7 +14,8 @@ message ClientMessage {
         GetServiceInstancesRequest      get_service_instances_request       = 8;
         GetDomainsRequest               get_domains_request                 = 9;
         SetSnapshotProgressRequest      set_snapshot_progress_request       = 10;
-        GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 11; 
+        GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 11;
+        SetSnapshotChunkRequest         set_snapshot_chunk_request          = 12;
     }
 }
 
@@ -111,6 +112,12 @@ message ServiceInstance {
     string id                   = 1;
     string service_id           = 2;
     string plan_id              = 3;
+}
+
+message SetSnapshotChunkRequest {
+    string snapshot_id = 1;
+    uint32 number      = 2;
+    bytes data         = 3;
 }
 
 message SetSnapshotProgressRequest {

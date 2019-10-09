@@ -214,7 +214,13 @@ func (self *CloudService) SnapshotProgress(snapshot *model.Snapshot, progress fl
 	}
 	if getSnapshotChunksMissingResponse := res.GetGetSnapshotChunksMissingResponse(); getSnapshotChunksMissingResponse != nil {
 		for _, chunkNumber := range getSnapshotChunksMissingResponse.Chunks {
-			_ = chunkNumber // TODO
+			data, err := self.snapshotManager.GetChunk(snapshot, chunkNumber)
+			if err != nil {
+				logger.Errorf("Failed reading snapshot chunk: %v", err)
+				return
+			}
+			self.SendSetSnapshotChunkRequest(snapshot.Id, chunkNumber, data)
 		}
+		logger.Infof("Snapshot %s uploaded to cloud", snapshot.Id)
 	}
 }
