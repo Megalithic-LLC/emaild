@@ -16,6 +16,7 @@ import (
 	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 	"github.com/on-prem-net/emaild/dao"
 	"github.com/on-prem-net/emaild/propertykey"
+	"github.com/on-prem-net/emaild/snapshotmanager"
 )
 
 const API_URL = "API_URL"
@@ -32,6 +33,7 @@ type CloudService struct {
 	pending             map[uint64]*Call
 	propertiesDAO       dao.PropertiesDAO
 	serviceInstancesDAO dao.ServiceInstancesDAO
+	snapshotManager     *snapshotmanager.SnapshotManager
 	snapshotsDAO        dao.SnapshotsDAO
 }
 
@@ -41,6 +43,7 @@ func New(
 	domainsDAO dao.DomainsDAO,
 	propertiesDAO dao.PropertiesDAO,
 	serviceInstancesDAO dao.ServiceInstancesDAO,
+	snapshotManager *snapshotmanager.SnapshotManager,
 	snapshotsDAO dao.SnapshotsDAO,
 ) *CloudService {
 	cloudServiceURL := os.Getenv(API_URL)
@@ -75,6 +78,7 @@ func New(
 		pending:             map[uint64]*Call{},
 		propertiesDAO:       propertiesDAO,
 		serviceInstancesDAO: serviceInstancesDAO,
+		snapshotManager:     snapshotManager,
 		snapshotsDAO:        snapshotsDAO,
 	}
 

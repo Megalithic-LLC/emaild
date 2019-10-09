@@ -9,7 +9,7 @@ import (
 	"github.com/docktermj/go-logger/logger"
 )
 
-func newGenjiEngine() *engine.Engine {
+func newGenjiEngine() engine.Engine {
 	dir, err := os.Getwd()
 	if err != nil {
 		logger.Fatalf("Failed determining current dir: %v", err)
@@ -23,5 +23,5 @@ func newGenjiEngine() *engine.Engine {
 		return nil
 	}
 	logger.Infof("Opened database %s", filepath)
-	return &eng
+	return eng
 }

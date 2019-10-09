@@ -17,7 +17,7 @@ func (self *CloudService) handleConfigChangedRequest(requestId uint64, configCha
 		logger.Errorf("Failed sending ack response: %v", err)
 	}
 
-	self.processConfigChanges(configChangedReq.HashesByTable)
+	go self.processConfigChanges(configChangedReq.HashesByTable)
 }
 
 func (self *CloudService) processConfigChanges(configHashesByTable map[string][]byte) {
@@ -138,6 +138,8 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					} else {
 						logger.Infof("Updated %d snapshots", len(getSnapshotsRes.Snapshots))
 						self.propertiesDAO.Set(key, hashAsHex)
+
+						self.snapshotManager.Perform()
 					}
 				}
 

@@ -7,8 +7,8 @@ import (
 	"github.com/on-prem-net/emaild/model"
 )
 
-func newDB(engine *engine.Engine) *genji.DB {
-	db, err := genji.New(*engine)
+func newDB(engine engine.Engine) *genji.DB {
+	db, err := genji.New(engine)
 	if err != nil {
 		logger.Fatalf("Failed creating database engine: %v", err)
 		return nil

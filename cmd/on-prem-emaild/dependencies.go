@@ -12,6 +12,7 @@ import (
 	"github.com/on-prem-net/emaild/localdelivery"
 	"github.com/on-prem-net/emaild/smtpendpoint"
 	"github.com/on-prem-net/emaild/smtpendpoint/smtpbackend"
+	"github.com/on-prem-net/emaild/snapshotmanager"
 	"github.com/on-prem-net/emaild/submissionendpoint"
 	"github.com/on-prem-net/emaild/submissionendpoint/submissionbackend"
 )
@@ -21,12 +22,13 @@ var (
 
 	cloudService       *cloudservice.CloudService
 	db                 *genji.DB
-	genjiEngine        *engine.Engine
+	genjiEngine        engine.Engine
 	imapBackend        imap_backend.Backend
 	imapEndpoint       *imapendpoint.ImapEndpoint
 	localDelivery      *localdelivery.LocalDelivery
 	smtpBackend        *smtpbackend.SmtpBackend
 	smtpEndpoint       *smtpendpoint.SmtpEndpoint
+	snapshotManager    *snapshotmanager.SnapshotManager
 	submissionBackend  *submissionbackend.SubmissionBackend
 	submissionEndpoint *submissionendpoint.SubmissionEndpoint
 
@@ -52,6 +54,7 @@ func DefineDependencies() {
 	graph.Define(&localDelivery, inject.NewAutoProvider(localdelivery.New))
 	graph.Define(&smtpBackend, inject.NewAutoProvider(smtpbackend.New))
 	graph.Define(&smtpEndpoint, inject.NewAutoProvider(smtpendpoint.New))
+	graph.Define(&snapshotManager, inject.NewAutoProvider(snapshotmanager.New))
 	graph.Define(&submissionBackend, inject.NewAutoProvider(submissionbackend.New))
 	graph.Define(&submissionEndpoint, inject.NewAutoProvider(submissionendpoint.New))
 
