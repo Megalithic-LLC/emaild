@@ -5,31 +5,33 @@ package emailproto;
 message ClientMessage {
     uint64 id = 1;
     oneof message_type {
-        AckResponse                ack_response                  = 2;
-        NoopRequest                noop_request                  = 3;
-        StartupRequest             startup_request               = 4;
-        ErrorResponse              error_response                = 5;
-        GetAccountsRequest         get_accounts_request          = 6;
-        GetSnapshotsRequest        get_snapshots_request         = 7;
-        GetServiceInstancesRequest get_service_instances_request = 8;
-        GetDomainsRequest          get_domains_request           = 9;
-        SnapshotProgressRequest    snapshot_progress_request     = 10;
+        AckResponse                     ack_response                        = 2;
+        NoopRequest                     noop_request                        = 3;
+        StartupRequest                  startup_request                     = 4;
+        ErrorResponse                   error_response                      = 5;
+        GetAccountsRequest              get_accounts_request                = 6;
+        GetSnapshotsRequest             get_snapshots_request               = 7;
+        GetServiceInstancesRequest      get_service_instances_request       = 8;
+        GetDomainsRequest               get_domains_request                 = 9;
+        SetSnapshotProgressRequest      set_snapshot_progress_request       = 10;
+        GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 11; 
     }
 }
 
 message ServerMessage {
     uint64 id = 1;
     oneof message_type {
-        AckResponse                 ack_response                   = 2;
-        NoopRequest                 noop_request                   = 3;
-        ErrorResponse               error_response                 = 4;
-        ClaimRequest                claim_request                  = 5;
-        ConfigChangedRequest        config_changed_request         = 6;
-        StartupResponse             startup_response               = 7;
-        GetAccountsResponse         get_accounts_response          = 8;
-        GetSnapshotsResponse        get_snapshots_response         = 9;
-        GetServiceInstancesResponse get_service_instances_response = 10;
-        GetDomainsResponse          get_domains_response           = 11;
+        AckResponse                      ack_response                         = 2;
+        NoopRequest                      noop_request                         = 3;
+        ErrorResponse                    error_response                       = 4;
+        ClaimRequest                     claim_request                        = 5;
+        ConfigChangedRequest             config_changed_request               = 6;
+        StartupResponse                  startup_response                     = 7;
+        GetAccountsResponse              get_accounts_response                = 8;
+        GetSnapshotsResponse             get_snapshots_response               = 9;
+        GetServiceInstancesResponse      get_service_instances_response       = 10;
+        GetDomainsResponse               get_domains_response                 = 11;
+        GetSnapshotChunksMissingResponse get_snapshot_chunks_missing_response = 12;
     }
 }
 
@@ -87,6 +89,14 @@ message GetServiceInstancesResponse {
     repeated ServiceInstance service_instances = 1;
 }
 
+message GetSnapshotChunksMissingRequest {
+    string snapshot_id = 1;
+}
+
+message GetSnapshotChunksMissingResponse {
+    repeated uint32 chunks = 1;
+}
+
 message GetSnapshotsRequest {
 }
 
@@ -103,15 +113,15 @@ message ServiceInstance {
     string plan_id              = 3;
 }
 
-message Snapshot {
-    string id       = 1;
-    string name     = 2;
-}
-
-message SnapshotProgressRequest {
+message SetSnapshotProgressRequest {
     string snapshot_id = 1;
     float progress     = 2;
     uint64 size        = 3;
+}
+
+message Snapshot {
+    string id       = 1;
+    string name     = 2;
 }
 
 message StartupRequest {

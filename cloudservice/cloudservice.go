@@ -201,5 +201,20 @@ func (self *CloudService) reader() {
 
 func (self *CloudService) SnapshotProgress(snapshot *model.Snapshot, progress float32, size uint64) {
 	logger.Tracef("CloudService:SnapshotProgress()")
-	self.SendSnapshotProgressRequest(snapshot.Id, progress, size)
+	if _, err := self.SendSetSnapshotProgressRequest(snapshot.Id, progress, size); err != nil {
+		logger.Errorf("Failed updating cloud service with snapshot progress: %v", err)
+		return
+	}
+
+	// Upload to cloud
+	res, err := self.SendGetSnapshotChunksMissingRequest(snapshot.Id)
+	if err != nil {
+		logger.Errorf("Failed asking cloud service for missing chunks of snapshot: %v", err)
+		return
+	}
+	if getSnapshotChunksMissingResponse := res.GetGetSnapshotChunksMissingResponse(); getSnapshotChunksMissingResponse != nil {
+		for _, chunkNumber := range getSnapshotChunksMissingResponse.Chunks {
+			_ = chunkNumber // TODO
+		}
+	}
 }
