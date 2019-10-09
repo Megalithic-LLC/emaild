@@ -2,6 +2,7 @@ package snapshotmanager
 
 import (
 	"os"
+	"sync"
 
 	"github.com/asdine/genji/engine"
 	"github.com/docktermj/go-logger/logger"
@@ -11,6 +12,7 @@ import (
 
 type SnapshotManager struct {
 	genjiEngine  engine.Engine
+	mutex        sync.Mutex
 	snapshotsDAO dao.SnapshotsDAO
 }
 
@@ -26,8 +28,30 @@ func New(
 	return &self
 }
 
+func (self *SnapshotManager) getSnapshotsDir() (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		logger.Errorf("Unable to get working dir: %v", err)
+		return "", err
+	}
+	snapshotsDir := dir + "/snapshots"
+	if _, err := os.Stat(snapshotsDir); os.IsNotExist(err) {
+		if err := os.Mkdir(snapshotsDir, os.ModePerm); err != nil {
+			logger.Errorf("Failure creating snapshots dir: %v", err)
+			return "", err
+		}
+	} else if err != nil {
+		logger.Errorf("Unable to get snapshots dir: %v", err)
+		return "", err
+	}
+	return snapshotsDir, nil
+}
+
 // Perform any work to get things caught up with desired state
 func (self *SnapshotManager) Perform() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
 	logger.Trace("SnapshotManager.Perform()")
 	snapshots, err := self.snapshotsDAO.FindAll()
 	if err != nil {
@@ -36,28 +60,20 @@ func (self *SnapshotManager) Perform() {
 	}
 	logger.Debugf("Got %d snapshots", len(snapshots))
 
+	// Create snapshots as needed
 	for _, snapshot := range snapshots {
 		self.ensureSnapshotExists(snapshot)
 	}
+
+	// Expunge snapshots as needed
+	self.expungeSnapshotFiles(snapshots)
 }
 
 func (self *SnapshotManager) ensureSnapshotExists(snapshot *model.Snapshot) (os.FileInfo, error) {
 	logger.Tracef("SnapshotManager.performSnapshot(%v)", snapshot)
 
-	dir, err := os.Getwd()
+	snapshotsDir, err := self.getSnapshotsDir()
 	if err != nil {
-		logger.Errorf("Unable to get working dir: %v", err)
-		return nil, err
-	}
-
-	snapshotsDir := dir + "/snapshots"
-	if _, err := os.Stat(snapshotsDir); os.IsNotExist(err) {
-		if err := os.Mkdir(snapshotsDir, os.ModePerm); err != nil {
-			logger.Errorf("Failure creating snapshots dir: %v", err)
-			return nil, err
-		}
-	} else if err != nil {
-		logger.Errorf("Unable to get snapshots dir: %v", err)
 		return nil, err
 	}
 
@@ -83,4 +99,8 @@ func (self *SnapshotManager) ensureSnapshotExists(snapshot *model.Snapshot) (os.
 	}
 
 	return file.Stat()
+}
+
+func (self *SnapshotManager) getSnapshotFileName(snapshot *model.Snapshot) string {
+	return "snapshot-" + snapshot.Id + ".db"
 }

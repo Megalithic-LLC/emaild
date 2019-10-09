@@ -20,6 +20,17 @@ func (self SnapshotsDAO) CreateTx(tx *genji.Tx, snapshot *model.Snapshot) error 
 	}
 }
 
+func (self SnapshotsDAO) DeleteAllTx(tx *genji.Tx) error {
+	snapshotTable, err := tx.GetTable(model.SnapshotTable)
+	if err != nil {
+		return err
+	}
+	return query.
+		Delete().
+		From(snapshotTable).
+		Run(tx)
+}
+
 func (self SnapshotsDAO) FindAllTx(tx *genji.Tx) ([]*model.Snapshot, error) {
 	snapshotTable, err := tx.GetTable(model.SnapshotTable)
 	if err != nil {

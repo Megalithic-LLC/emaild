@@ -122,6 +122,9 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					logger.Errorf("Failed requesting latest shapshots: %v", err)
 				} else if getSnapshotsRes := res.GetGetSnapshotsResponse(); getSnapshotsRes != nil {
 					if err := self.db.Update(func(tx *genji.Tx) error {
+						if err := self.snapshotsDAO.DeleteAllTx(tx); err != nil {
+							return err
+						}
 						for _, pbSnapshot := range getSnapshotsRes.Snapshots {
 							snapshot := SnapshotFromProtobuf(pbSnapshot)
 							err := self.snapshotsDAO.ReplaceTx(tx, &snapshot)
