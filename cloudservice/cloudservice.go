@@ -2,7 +2,6 @@
 package cloudservice
 
 import (
-	"errors"
 	"net/http"
 	"net/url"
 	"os"
@@ -15,6 +14,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 	"github.com/on-prem-net/emaild/dao"
+	"github.com/on-prem-net/emaild/model"
 	"github.com/on-prem-net/emaild/propertykey"
 	"github.com/on-prem-net/emaild/snapshotmanager"
 )
@@ -68,7 +68,7 @@ func New(
 		scheme = "wss"
 	}
 
-	self := CloudService{
+	self := &CloudService{
 		accountsDAO:         accountsDAO,
 		agentID:             agentID,
 		cloudServiceURL:     url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
@@ -85,7 +85,9 @@ func New(
 	go self.dialer()
 	go self.reader()
 
-	return &self
+	snapshotManager.RegisterListener(self)
+
+	return self
 }
 
 func NewCall(req emailproto.ClientMessage) *Call {
@@ -197,48 +199,7 @@ func (self *CloudService) reader() {
 	self.mutex.Unlock()
 }
 
-func (self *CloudService) SendRequest(req emailproto.ClientMessage) (*emailproto.ServerMessage, error) {
-	self.mutex.Lock()
-	req.Id = self.getNextID()
-	call := NewCall(req)
-	self.pending[req.Id] = call
-
-	// Encode request
-	rawMessage, err := proto.Marshal(&req)
-	if err != nil {
-		logger.Errorf("Failed encoding request: %v", err)
-		defer self.mutex.Unlock()
-		return nil, err
-	}
-
-	// Send request
-	if err := self.conn.WriteMessage(websocket.BinaryMessage, rawMessage); err != nil {
-		delete(self.pending, req.Id)
-		defer self.mutex.Unlock()
-		return nil, err
-	}
-
-	self.mutex.Unlock()
-
-	select {
-	case <-call.Done:
-	case <-time.After(2 * time.Second):
-		call.Error = errors.New("request timeout")
-	}
-
-	return call.Res, call.Error
-}
-
-func (self *CloudService) SendResponse(res emailproto.ClientMessage) error {
-	logger.Tracef("CloudService:SendResponse()")
-
-	// Encode response
-	rawMessage, err := proto.Marshal(&res)
-	if err != nil {
-		logger.Errorf("Failed encoding response: %v", err)
-		return err
-	}
-
-	// Send response
-	return self.conn.WriteMessage(websocket.BinaryMessage, rawMessage)
+func (self *CloudService) SnapshotProgress(snapshot *model.Snapshot, progress float32, size uint64) {
+	logger.Tracef("CloudService:SnapshotProgress()")
+	self.SendSnapshotProgressRequest(snapshot.Id, progress, size)
 }

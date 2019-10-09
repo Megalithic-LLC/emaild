@@ -12,8 +12,13 @@ import (
 
 type SnapshotManager struct {
 	genjiEngine  engine.Engine
+	listeners    []Listener
 	mutex        sync.Mutex
 	snapshotsDAO dao.SnapshotsDAO
+}
+
+type Listener interface {
+	SnapshotProgress(snapshot *model.Snapshot, progress float32, size uint64)
 }
 
 func New(
@@ -22,10 +27,21 @@ func New(
 ) *SnapshotManager {
 	self := SnapshotManager{
 		genjiEngine:  genjiEngine,
+		listeners:    []Listener{},
 		snapshotsDAO: snapshotsDAO,
 	}
 	go self.Perform()
 	return &self
+}
+
+func (self *SnapshotManager) RegisterListener(listener Listener) {
+	self.listeners = append(self.listeners, listener)
+}
+
+func (self *SnapshotManager) NotifyListenersOfProgress(snapshot *model.Snapshot, progress float32, size uint64) {
+	for _, listener := range self.listeners {
+		go listener.SnapshotProgress(snapshot, progress, size)
+	}
 }
 
 func (self *SnapshotManager) getSnapshotsDir() (string, error) {

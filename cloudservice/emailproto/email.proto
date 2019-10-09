@@ -13,6 +13,7 @@ message ClientMessage {
         GetSnapshotsRequest        get_snapshots_request         = 7;
         GetServiceInstancesRequest get_service_instances_request = 8;
         GetDomainsRequest          get_domains_request           = 9;
+        SnapshotProgressRequest    snapshot_progress_request     = 10;
     }
 }
 
@@ -105,6 +106,12 @@ message ServiceInstance {
 message Snapshot {
     string id       = 1;
     string name     = 2;
+}
+
+message SnapshotProgressRequest {
+    string snapshot_id = 1;
+    float progress     = 2;
+    uint64 size        = 3;
 }
 
 message StartupRequest {
