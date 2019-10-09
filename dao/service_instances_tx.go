@@ -2,6 +2,7 @@ package dao
 
 import (
 	"github.com/asdine/genji"
+	"github.com/asdine/genji/query"
 	"github.com/on-prem-net/emaild/model"
 	"github.com/rs/xid"
 )
@@ -16,6 +17,17 @@ func (self ServiceInstancesDAO) CreateTx(tx *genji.Tx, serviceInstance *model.Se
 		_, err := serviceInstanceTable.Insert(serviceInstance)
 		return err
 	}
+}
+
+func (self ServiceInstancesDAO) DeleteAllTx(tx *genji.Tx) error {
+	serviceInstanceTable, err := tx.GetTable(model.ServiceInstanceTable)
+	if err != nil {
+		return err
+	}
+	return query.
+		Delete().
+		From(serviceInstanceTable).
+		Run(tx)
 }
 
 func (self ServiceInstancesDAO) FindByIdTx(tx *genji.Tx, id string) (*model.ServiceInstance, error) {

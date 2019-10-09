@@ -21,6 +21,17 @@ func (self AccountsDAO) CreateTx(tx *genji.Tx, account *model.Account) error {
 	}
 }
 
+func (self AccountsDAO) DeleteAllTx(tx *genji.Tx) error {
+	accountTable, err := tx.GetTable(model.AccountTable)
+	if err != nil {
+		return err
+	}
+	return query.
+		Delete().
+		From(accountTable).
+		Run(tx)
+}
+
 func (self AccountsDAO) FindOneByEmailTx(tx *genji.Tx, email string) (*model.Account, error) {
 	var retval *model.Account
 	accountTable, err := tx.GetTable(model.AccountTable)

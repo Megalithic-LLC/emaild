@@ -2,6 +2,7 @@ package dao
 
 import (
 	"github.com/asdine/genji"
+	"github.com/asdine/genji/query"
 	"github.com/on-prem-net/emaild/model"
 	"github.com/rs/xid"
 )
@@ -16,6 +17,17 @@ func (self DomainsDAO) CreateTx(tx *genji.Tx, domain *model.Domain) error {
 		_, err := domainTable.Insert(domain)
 		return err
 	}
+}
+
+func (self DomainsDAO) DeleteAllTx(tx *genji.Tx) error {
+	domainTable, err := tx.GetTable(model.DomainTable)
+	if err != nil {
+		return err
+	}
+	return query.
+		Delete().
+		From(domainTable).
+		Run(tx)
 }
 
 func (self DomainsDAO) FindByIdTx(tx *genji.Tx, id string) (*model.Domain, error) {

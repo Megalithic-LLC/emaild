@@ -41,6 +41,9 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					logger.Errorf("Failed requesting latest accounts: %v", err)
 				} else if getAccountsRes := res.GetGetAccountsResponse(); getAccountsRes != nil {
 					if err := self.db.Update(func(tx *genji.Tx) error {
+						if err := self.accountsDAO.DeleteAllTx(tx); err != nil {
+							return err
+						}
 						for _, pbAccount := range getAccountsRes.Accounts {
 							account := AccountFromProtobuf(pbAccount)
 							err := self.accountsDAO.ReplaceTx(tx, &account)
@@ -65,6 +68,9 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					logger.Errorf("Failed requesting latest domains: %v", err)
 				} else if getDomainsRes := res.GetGetDomainsResponse(); getDomainsRes != nil {
 					if err := self.db.Update(func(tx *genji.Tx) error {
+						if err := self.domainsDAO.DeleteAllTx(tx); err != nil {
+							return err
+						}
 						for _, pbDomain := range getDomainsRes.Domains {
 							domain := DomainFromProtobuf(pbDomain)
 							err := self.domainsDAO.ReplaceTx(tx, &domain)
@@ -89,6 +95,9 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					logger.Errorf("Failed requesting latest service instances: %v", err)
 				} else if getServiceInstancesRes := res.GetGetServiceInstancesResponse(); getServiceInstancesRes != nil {
 					if err := self.db.Update(func(tx *genji.Tx) error {
+						if err := self.serviceInstancesDAO.DeleteAllTx(tx); err != nil {
+							return err
+						}
 						for _, pbServiceInstance := range getServiceInstancesRes.ServiceInstances {
 							serviceInstance := ServiceInstanceFromProtobuf(pbServiceInstance)
 							err := self.serviceInstancesDAO.ReplaceTx(tx, &serviceInstance)
