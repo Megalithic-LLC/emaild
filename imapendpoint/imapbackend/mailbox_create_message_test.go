@@ -1,7 +1,7 @@
 package imapbackend_test
 
 import (
-	"bytes"
+	"io/ioutil"
 	"strings"
 	"testing"
 	"time"
@@ -72,9 +72,13 @@ func TestMailboxCreateMessage(t *testing.T) {
 				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
 				message := <-messages
 				Expect(message.SeqNum).To(Equal(uint32(1)))
-				section, err := imap.ParseBodySectionName(fetchItem)
+				sectionName, err := imap.ParseBodySectionName(fetchItem)
 				Expect(err).ToNot(HaveOccurred())
-				Expect(message.Body).To(HaveKeyWithValue(section, bytes.NewBufferString("Subject: hi\r\n\r\nbody")))
+				section := message.GetBody(sectionName)
+				Expect(section).ToNot(BeNil())
+				sectionValue, err := ioutil.ReadAll(section)
+				Expect(err).ToNot(HaveOccurred())
+				Expect(sectionValue).To(Equal([]byte("Subject: hi\r\n\r\nbody")))
 			})
 
 		})

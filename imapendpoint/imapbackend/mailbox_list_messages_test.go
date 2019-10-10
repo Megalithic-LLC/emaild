@@ -1,7 +1,7 @@
 package imapbackend_test
 
 import (
-	"bytes"
+	"io/ioutil"
 	"strings"
 	"testing"
 	"time"
@@ -294,10 +294,12 @@ func TestMailboxListMessages(t *testing.T) {
 				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
 				message := <-messages
 				Expect(message.SeqNum).To(Equal(uint32(1)))
-				Expect(message.Body).ToNot(BeNil())
-				section, err := imap.ParseBodySectionName(fetchItem)
+				sectionName, err := imap.ParseBodySectionName(fetchItem)
 				Expect(err).ToNot(HaveOccurred())
-				Expect(message.Body).To(HaveKeyWithValue(section, bytes.NewBufferString("A: a\r\nC: c\r\n\r\n")))
+				section := message.GetBody(sectionName)
+				Expect(section).ToNot(BeNil())
+				sectionValue, err := ioutil.ReadAll(section)
+				Expect(sectionValue).To(Equal([]byte("A: a\r\nC: c\r\n\r\n")))
 
 				// Perform negative test
 				fetchItem = imap.FetchItem("BODY[HEADER.FIELDS.NOT (A C)]")
@@ -305,10 +307,12 @@ func TestMailboxListMessages(t *testing.T) {
 				Expect(mailbox.ListMessages(uid, seqSet, items, messages)).ToNot(HaveOccurred())
 				message = <-messages
 				Expect(message.SeqNum).To(Equal(uint32(1)))
-				Expect(message.Body).ToNot(BeNil())
-				section, err = imap.ParseBodySectionName(fetchItem)
+				sectionName, err = imap.ParseBodySectionName(fetchItem)
 				Expect(err).ToNot(HaveOccurred())
-				Expect(message.Body).To(HaveKeyWithValue(section, bytes.NewBufferString("B: b\r\n\r\n")))
+				section = message.GetBody(sectionName)
+				Expect(section).ToNot(BeNil())
+				sectionValue, err = ioutil.ReadAll(section)
+				Expect(sectionValue).To(Equal([]byte("B: b\r\n\r\n")))
 			})
 
 		})
