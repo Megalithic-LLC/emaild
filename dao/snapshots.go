@@ -25,7 +25,7 @@ func (self SnapshotsDAO) Create(snapshot *model.Snapshot) error {
 
 func (self SnapshotsDAO) FindAll() ([]*model.Snapshot, error) {
 	retval := []*model.Snapshot{}
-	err := self.db.Update(func(tx *genji.Tx) error {
+	err := self.db.View(func(tx *genji.Tx) error {
 		snapshots, err := self.FindAllTx(tx)
 		if err == nil {
 			retval = snapshots

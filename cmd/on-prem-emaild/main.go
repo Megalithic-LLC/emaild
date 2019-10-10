@@ -36,7 +36,9 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(5)*time.Second)
 	defer cancel()
 	_ = ctx
-	//	imapEndpoint.Shutdown(ctx)
+	imapEndpoint.Shutdown()
+	smtpEndpoint.Shutdown()
+	submissionEndpoint.Shutdown()
 	logger.Infof("Shutting down")
 	if db != nil {
 		db.Close()

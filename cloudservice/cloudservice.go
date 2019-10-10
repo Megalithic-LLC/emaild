@@ -14,9 +14,12 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/on-prem-net/emaild/cloudservice/emailproto"
 	"github.com/on-prem-net/emaild/dao"
+	"github.com/on-prem-net/emaild/imapendpoint"
 	"github.com/on-prem-net/emaild/model"
 	"github.com/on-prem-net/emaild/propertykey"
+	"github.com/on-prem-net/emaild/smtpendpoint"
 	"github.com/on-prem-net/emaild/snapshotmanager"
+	"github.com/on-prem-net/emaild/submissionendpoint"
 )
 
 const API_URL = "API_URL"
@@ -29,13 +32,16 @@ type CloudService struct {
 	db                  *genji.DB
 	domainsDAO          dao.DomainsDAO
 	endpointsDAO        dao.EndpointsDAO
+	imapEndpoint        *imapendpoint.ImapEndpoint
 	mutex               sync.Mutex
 	nextID              uint64
 	pending             map[uint64]*Call
 	propertiesDAO       dao.PropertiesDAO
 	serviceInstancesDAO dao.ServiceInstancesDAO
+	smtpEndpoint        *smtpendpoint.SmtpEndpoint
 	snapshotManager     *snapshotmanager.SnapshotManager
 	snapshotsDAO        dao.SnapshotsDAO
+	submissionEndpoint  *submissionendpoint.SubmissionEndpoint
 }
 
 func New(
@@ -43,10 +49,13 @@ func New(
 	db *genji.DB,
 	domainsDAO dao.DomainsDAO,
 	endpointsDAO dao.EndpointsDAO,
+	imapEndpoint *imapendpoint.ImapEndpoint,
 	propertiesDAO dao.PropertiesDAO,
 	serviceInstancesDAO dao.ServiceInstancesDAO,
+	smtpEndpoint *smtpendpoint.SmtpEndpoint,
 	snapshotManager *snapshotmanager.SnapshotManager,
 	snapshotsDAO dao.SnapshotsDAO,
+	submissionEndpoint *submissionendpoint.SubmissionEndpoint,
 ) *CloudService {
 	cloudServiceURL := os.Getenv(API_URL)
 	if cloudServiceURL == "" {
@@ -77,12 +86,15 @@ func New(
 		db:                  db,
 		domainsDAO:          domainsDAO,
 		endpointsDAO:        endpointsDAO,
+		imapEndpoint:        imapEndpoint,
 		nextID:              1,
 		pending:             map[uint64]*Call{},
 		propertiesDAO:       propertiesDAO,
 		serviceInstancesDAO: serviceInstancesDAO,
+		smtpEndpoint:        smtpEndpoint,
 		snapshotManager:     snapshotManager,
 		snapshotsDAO:        snapshotsDAO,
+		submissionEndpoint:  submissionEndpoint,
 	}
 
 	go self.dialer()

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"github.com/asdine/genji"
+	"github.com/asdine/genji/query"
 	"github.com/on-prem-net/emaild/model"
 )
 
@@ -20,6 +21,12 @@ func NewEndpointsDAO(db *genji.DB) EndpointsDAO {
 func (self EndpointsDAO) Create(endpoint *model.Endpoint) error {
 	return self.db.Update(func(tx *genji.Tx) error {
 		return self.CreateTx(tx, endpoint)
+	})
+}
+
+func (self EndpointsDAO) Find(where query.Expr, limit int, iter func(endpoint *model.Endpoint) error) error {
+	return self.db.View(func(tx *genji.Tx) error {
+		return self.FindTx(tx, where, limit, iter)
 	})
 }
 

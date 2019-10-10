@@ -141,6 +141,14 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					} else {
 						logger.Infof("Updated %d service instances", len(getServiceInstancesRes.ServiceInstances))
 						self.propertiesDAO.Set(key, hashAsHex)
+
+						self.imapEndpoint.Shutdown()
+						self.smtpEndpoint.Shutdown()
+						self.submissionEndpoint.Shutdown()
+
+						self.imapEndpoint.Start()
+						self.smtpEndpoint.Start()
+						self.submissionEndpoint.Start()
 					}
 				}
 
