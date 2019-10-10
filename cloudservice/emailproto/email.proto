@@ -13,7 +13,7 @@ message ClientMessage {
         GetSnapshotsRequest             get_snapshots_request               = 7;
         GetServiceInstancesRequest      get_service_instances_request       = 8;
         GetDomainsRequest               get_domains_request                 = 9;
-        SetSnapshotProgressRequest      set_snapshot_progress_request       = 10;
+        UpdateSnapshotRequest           update_snapshot_request             = 10;
         GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 11;
         SetSnapshotChunkRequest         set_snapshot_chunk_request          = 12;
     }
@@ -120,15 +120,12 @@ message SetSnapshotChunkRequest {
     bytes data         = 3;
 }
 
-message SetSnapshotProgressRequest {
-    string snapshot_id = 1;
-    float progress     = 2;
-    uint64 size        = 3;
-}
-
 message Snapshot {
     string id       = 1;
     string name     = 2;
+    string engine   = 3;
+    float progress  = 4;
+    uint64 size     = 5;
 }
 
 message StartupRequest {
@@ -136,4 +133,8 @@ message StartupRequest {
 
 message StartupResponse {
     map<string,bytes> config_hashes_by_table = 1;
+}
+
+message UpdateSnapshotRequest {
+    Snapshot snapshot = 1;
 }

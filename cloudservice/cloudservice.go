@@ -199,9 +199,9 @@ func (self *CloudService) reader() {
 	self.mutex.Unlock()
 }
 
-func (self *CloudService) SnapshotProgress(snapshot *model.Snapshot, progress float32, size uint64) {
-	logger.Tracef("CloudService:SnapshotProgress()")
-	if _, err := self.SendSetSnapshotProgressRequest(snapshot.Id, progress, size); err != nil {
+func (self *CloudService) UpdateSnapshot(snapshot *model.Snapshot) {
+	logger.Tracef("CloudService:UpdateSnapshot()")
+	if _, err := self.SendUpdateSnapshotRequest(snapshot); err != nil {
 		logger.Errorf("Failed updating cloud service with snapshot progress: %v", err)
 		return
 	}

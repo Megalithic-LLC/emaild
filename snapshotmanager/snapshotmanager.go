@@ -18,7 +18,7 @@ type SnapshotManager struct {
 }
 
 type Listener interface {
-	SnapshotProgress(snapshot *model.Snapshot, progress float32, size uint64)
+	UpdateSnapshot(snapshot *model.Snapshot)
 }
 
 func New(
@@ -38,9 +38,9 @@ func (self *SnapshotManager) RegisterListener(listener Listener) {
 	self.listeners = append(self.listeners, listener)
 }
 
-func (self *SnapshotManager) NotifyListenersOfProgress(snapshot *model.Snapshot, progress float32, size uint64) {
+func (self *SnapshotManager) NotifyListeners(snapshot *model.Snapshot) {
 	for _, listener := range self.listeners {
-		go listener.SnapshotProgress(snapshot, progress, size)
+		go listener.UpdateSnapshot(snapshot)
 	}
 }
 

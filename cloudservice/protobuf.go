@@ -55,8 +55,11 @@ func ServiceInstanceFromProtobuf(pbServiceInstance *emailproto.ServiceInstance) 
 
 func SnapshotFromProtobuf(pbSnapshot *emailproto.Snapshot) model.Snapshot {
 	return model.Snapshot{
-		Id:   pbSnapshot.Id,
-		Name: pbSnapshot.Name,
+		Id:       pbSnapshot.Id,
+		Name:     pbSnapshot.Name,
+		Engine:   pbSnapshot.Engine,
+		Progress: pbSnapshot.Progress,
+		Size:     pbSnapshot.Size,
 	}
 }
 
@@ -67,4 +70,17 @@ func SnapshotsFromProtobuf(pbSnapshots []emailproto.Snapshot) []*model.Snapshot 
 		snapshots = append(snapshots, &snapshot)
 	}
 	return snapshots
+}
+
+func SnapshotToProtobuf(snapshot *model.Snapshot) *emailproto.Snapshot {
+	if snapshot == nil {
+		return nil
+	}
+	return &emailproto.Snapshot{
+		Id:       snapshot.Id,
+		Name:     snapshot.Name,
+		Engine:   snapshot.Engine,
+		Progress: snapshot.Progress,
+		Size:     snapshot.Size,
+	}
 }
