@@ -45,6 +45,27 @@ func DomainsFromProtobuf(pbDomains []emailproto.Domain) []*model.Domain {
 	return domains
 }
 
+func EndpointFromProtobuf(pbEndpoint *emailproto.Endpoint) model.Endpoint {
+	return model.Endpoint{
+		Id:                pbEndpoint.Id,
+		ServiceInstanceId: pbEndpoint.ServiceInstanceId,
+		Protocol:          pbEndpoint.Protocol,
+		Type:              pbEndpoint.Type,
+		Port:              uint16(pbEndpoint.Port),
+		Path:              pbEndpoint.Path,
+		Enabled:           pbEndpoint.Enabled,
+	}
+}
+
+func EndpointsFromProtobuf(pbEndpoints []emailproto.Endpoint) []*model.Endpoint {
+	endpoints := []*model.Endpoint{}
+	for _, pbEndpoint := range pbEndpoints {
+		endpoint := EndpointFromProtobuf(&pbEndpoint)
+		endpoints = append(endpoints, &endpoint)
+	}
+	return endpoints
+}
+
 func ServiceInstanceFromProtobuf(pbServiceInstance *emailproto.ServiceInstance) model.ServiceInstance {
 	return model.ServiceInstance{
 		Id:        pbServiceInstance.Id,

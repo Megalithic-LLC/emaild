@@ -90,6 +90,33 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					}
 				}
 
+			case "endpoints":
+				if res, err := self.SendGetEndpointsRequest(); err != nil {
+					logger.Errorf("Failed requesting latest endpoints: %v", err)
+				} else if getEndpointsRes := res.GetGetEndpointsResponse(); getEndpointsRes != nil {
+					if err := self.db.Update(func(tx *genji.Tx) error {
+						if err := self.endpointsDAO.DeleteAllTx(tx); err != nil {
+							return err
+						}
+						for _, pbEndpoint := range getEndpointsRes.Endpoints {
+							endpoint := EndpointFromProtobuf(pbEndpoint)
+							err := self.endpointsDAO.ReplaceTx(tx, &endpoint)
+							if err == table.ErrRecordNotFound {
+								err = self.endpointsDAO.CreateTx(tx, &endpoint)
+							}
+							if err != nil {
+								return err
+							}
+						}
+						return nil
+					}); err != nil {
+						logger.Errorf("Failed updating endpoints: %v", err)
+					} else {
+						logger.Infof("Updated %d endpoints", len(getEndpointsRes.Endpoints))
+						self.propertiesDAO.Set(key, hashAsHex)
+					}
+				}
+
 			case "serviceInstances":
 				if res, err := self.SendGetServiceInstancesRequest(); err != nil {
 					logger.Errorf("Failed requesting latest service instances: %v", err)

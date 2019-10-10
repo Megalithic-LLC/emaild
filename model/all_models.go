@@ -7,11 +7,12 @@ import (
 const (
 	AccountTable         = "a"
 	DomainTable          = "d"
+	EndpointTable        = "e"
 	MailboxTable         = "mbx"
-	MailboxMessageTable  = "mbx_msg"
-	MessageRawBodyTable  = "msg_braw"
-	MessageTable         = "msg"
-	PropertyTable        = "prop"
+	MailboxMessageTable  = "mm"
+	MessageRawBodyTable  = "mrb"
+	MessageTable         = "m"
+	PropertyTable        = "p"
 	ServiceInstanceTable = "si"
 	SnapshotTable        = "s"
 )
@@ -20,6 +21,7 @@ var (
 	Tables = map[string]record.Record{
 		AccountTable:         new(Account),
 		DomainTable:          new(Domain),
+		EndpointTable:        new(Endpoint),
 		MailboxTable:         new(Mailbox),
 		MailboxMessageTable:  new(MailboxMessage),
 		MessageRawBodyTable:  new(MessageRawBody),

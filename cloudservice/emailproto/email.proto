@@ -16,6 +16,7 @@ message ClientMessage {
         UpdateSnapshotRequest           update_snapshot_request             = 10;
         GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 11;
         SetSnapshotChunkRequest         set_snapshot_chunk_request          = 12;
+        GetEndpointsRequest             get_endpoints_request               = 13;
     }
 }
 
@@ -33,6 +34,7 @@ message ServerMessage {
         GetServiceInstancesResponse      get_service_instances_response       = 10;
         GetDomainsResponse               get_domains_response                 = 11;
         GetSnapshotChunksMissingResponse get_snapshot_chunks_missing_response = 12;
+        GetEndpointsResponse             get_endpoints_response               = 13;
     }
 }
 
@@ -65,6 +67,16 @@ message Domain {
     string name                = 3;
 }
 
+message Endpoint {
+    string id                  = 1;
+    string service_instance_id = 2;
+    string protocol            = 3;
+    string type                = 4;
+    uint32 port                = 5;
+    string path                = 6;
+    bool Enabled               = 7;
+}
+
 message ErrorResponse {
     string error = 1;
 }
@@ -81,6 +93,13 @@ message GetDomainsRequest {
 
 message GetDomainsResponse {
     repeated Domain domains = 1;
+}
+
+message GetEndpointsRequest {
+}
+
+message GetEndpointsResponse {
+    repeated Endpoint endpoints = 1;
 }
 
 message GetServiceInstancesRequest {
