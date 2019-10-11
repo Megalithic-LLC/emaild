@@ -64,7 +64,8 @@ func (self *ImapEndpoint) Start() {
 			var err error
 			listener, err := net.Listen("tcp", server.Addr)
 			if err != nil {
-				logger.Fatalf("Failed listening: %v", err)
+				logger.Errorf("Failed listening: %v", err)
+				return
 			}
 
 			logger.Infof("Listening for IMAP4rev1 on %v", server.Addr)

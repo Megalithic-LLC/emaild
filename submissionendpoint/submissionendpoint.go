@@ -64,7 +64,8 @@ func (self *SubmissionEndpoint) Start() {
 			var err error
 			listener, err := net.Listen("tcp", server.Addr)
 			if err != nil {
-				logger.Fatalf("Failed listening: %v", err)
+				logger.Errorf("Failed listening: %v", err)
+				return
 			}
 
 			logger.Infof("Listening for SMTP Submission on %v", server.Addr)
