@@ -63,28 +63,6 @@ func (self *SnapshotManager) getSnapshotsDir() (string, error) {
 	return snapshotsDir, nil
 }
 
-// Perform any work to get things caught up with desired state
-func (self *SnapshotManager) Perform() {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	logger.Trace("SnapshotManager.Perform()")
-	snapshots, err := self.snapshotsDAO.FindAll()
-	if err != nil {
-		logger.Errorf("Failed loading snapshots: %v")
-		return
-	}
-	logger.Debugf("Got %d snapshots", len(snapshots))
-
-	// Create snapshots as needed
-	for _, snapshot := range snapshots {
-		self.ensureSnapshotExists(snapshot)
-	}
-
-	// Expunge snapshots as needed
-	self.expungeSnapshotFiles(snapshots)
-}
-
 func (self *SnapshotManager) ensureSnapshotExists(snapshot *model.Snapshot) (os.FileInfo, error) {
 	logger.Tracef("SnapshotManager.performSnapshot(%v)", snapshot)
 
@@ -93,7 +71,7 @@ func (self *SnapshotManager) ensureSnapshotExists(snapshot *model.Snapshot) (os.
 		return nil, err
 	}
 
-	filename := "snapshot-" + snapshot.Id + ".db"
+	filename := self.getSnapshotFileName(snapshot)
 	filepath := snapshotsDir + "/" + filename
 
 	if fileInfo, err := os.Stat(filepath); err == nil {

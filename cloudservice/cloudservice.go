@@ -25,23 +25,22 @@ import (
 const API_URL = "API_URL"
 
 type CloudService struct {
-	accountsDAO         dao.AccountsDAO
-	agentID             string
-	cloudServiceURL     url.URL
-	conn                *websocket.Conn
-	db                  *genji.DB
-	domainsDAO          dao.DomainsDAO
-	endpointsDAO        dao.EndpointsDAO
-	imapEndpoint        *imapendpoint.ImapEndpoint
-	mutex               sync.Mutex
-	nextID              uint64
-	pending             map[uint64]*Call
-	propertiesDAO       dao.PropertiesDAO
-	serviceInstancesDAO dao.ServiceInstancesDAO
-	smtpEndpoint        *smtpendpoint.SmtpEndpoint
-	snapshotManager     *snapshotmanager.SnapshotManager
-	snapshotsDAO        dao.SnapshotsDAO
-	submissionEndpoint  *submissionendpoint.SubmissionEndpoint
+	accountsDAO        dao.AccountsDAO
+	agentID            string
+	cloudServiceURL    url.URL
+	conn               *websocket.Conn
+	db                 *genji.DB
+	domainsDAO         dao.DomainsDAO
+	endpointsDAO       dao.EndpointsDAO
+	imapEndpoint       *imapendpoint.ImapEndpoint
+	mutex              sync.Mutex
+	nextID             uint64
+	pending            map[uint64]*Call
+	propertiesDAO      dao.PropertiesDAO
+	smtpEndpoint       *smtpendpoint.SmtpEndpoint
+	snapshotManager    *snapshotmanager.SnapshotManager
+	snapshotsDAO       dao.SnapshotsDAO
+	submissionEndpoint *submissionendpoint.SubmissionEndpoint
 }
 
 func New(
@@ -51,7 +50,6 @@ func New(
 	endpointsDAO dao.EndpointsDAO,
 	imapEndpoint *imapendpoint.ImapEndpoint,
 	propertiesDAO dao.PropertiesDAO,
-	serviceInstancesDAO dao.ServiceInstancesDAO,
 	smtpEndpoint *smtpendpoint.SmtpEndpoint,
 	snapshotManager *snapshotmanager.SnapshotManager,
 	snapshotsDAO dao.SnapshotsDAO,
@@ -80,21 +78,20 @@ func New(
 	}
 
 	self := &CloudService{
-		accountsDAO:         accountsDAO,
-		agentID:             agentID,
-		cloudServiceURL:     url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
-		db:                  db,
-		domainsDAO:          domainsDAO,
-		endpointsDAO:        endpointsDAO,
-		imapEndpoint:        imapEndpoint,
-		nextID:              1,
-		pending:             map[uint64]*Call{},
-		propertiesDAO:       propertiesDAO,
-		serviceInstancesDAO: serviceInstancesDAO,
-		smtpEndpoint:        smtpEndpoint,
-		snapshotManager:     snapshotManager,
-		snapshotsDAO:        snapshotsDAO,
-		submissionEndpoint:  submissionEndpoint,
+		accountsDAO:        accountsDAO,
+		agentID:            agentID,
+		cloudServiceURL:    url.URL{Scheme: scheme, Host: parsedURL.Host, Path: "/v1/agentStream"},
+		db:                 db,
+		domainsDAO:         domainsDAO,
+		endpointsDAO:       endpointsDAO,
+		imapEndpoint:       imapEndpoint,
+		nextID:             1,
+		pending:            map[uint64]*Call{},
+		propertiesDAO:      propertiesDAO,
+		smtpEndpoint:       smtpEndpoint,
+		snapshotManager:    snapshotManager,
+		snapshotsDAO:       snapshotsDAO,
+		submissionEndpoint: submissionEndpoint,
 	}
 
 	go self.dialer()

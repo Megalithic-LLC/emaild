@@ -114,33 +114,6 @@ func (self *CloudService) processConfigChanges(configHashesByTable map[string][]
 					} else {
 						logger.Infof("Updated %d endpoints", len(getEndpointsRes.Endpoints))
 						self.propertiesDAO.Set(key, hashAsHex)
-					}
-				}
-
-			case "serviceInstances":
-				if res, err := self.SendGetServiceInstancesRequest(); err != nil {
-					logger.Errorf("Failed requesting latest service instances: %v", err)
-				} else if getServiceInstancesRes := res.GetGetServiceInstancesResponse(); getServiceInstancesRes != nil {
-					if err := self.db.Update(func(tx *genji.Tx) error {
-						if err := self.serviceInstancesDAO.DeleteAllTx(tx); err != nil {
-							return err
-						}
-						for _, pbServiceInstance := range getServiceInstancesRes.ServiceInstances {
-							serviceInstance := ServiceInstanceFromProtobuf(pbServiceInstance)
-							err := self.serviceInstancesDAO.ReplaceTx(tx, &serviceInstance)
-							if err == table.ErrRecordNotFound {
-								err = self.serviceInstancesDAO.CreateTx(tx, &serviceInstance)
-							}
-							if err != nil {
-								return err
-							}
-						}
-						return nil
-					}); err != nil {
-						logger.Errorf("Failed updating service instances: %v", err)
-					} else {
-						logger.Infof("Updated %d service instances", len(getServiceInstancesRes.ServiceInstances))
-						self.propertiesDAO.Set(key, hashAsHex)
 
 						self.imapEndpoint.Shutdown()
 						self.smtpEndpoint.Shutdown()

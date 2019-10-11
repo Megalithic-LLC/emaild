@@ -40,7 +40,6 @@ var (
 	messageRawBodiesDAO dao.MessageRawBodiesDAO
 	messagesDAO         dao.MessagesDAO
 	propertiesDAO       dao.PropertiesDAO
-	serviceInstancesDAO dao.ServiceInstancesDAO
 	snapshotsDAO        dao.SnapshotsDAO
 )
 
@@ -67,6 +66,5 @@ func DefineDependencies() {
 	graph.Define(&messageRawBodiesDAO, inject.NewAutoProvider(dao.NewMessageRawBodiesDAO))
 	graph.Define(&messagesDAO, inject.NewAutoProvider(dao.NewMessagesDAO))
 	graph.Define(&propertiesDAO, inject.NewAutoProvider(dao.NewPropertiesDAO))
-	graph.Define(&serviceInstancesDAO, inject.NewAutoProvider(dao.NewServiceInstancesDAO))
 	graph.Define(&snapshotsDAO, inject.NewAutoProvider(dao.NewSnapshotsDAO))
 }

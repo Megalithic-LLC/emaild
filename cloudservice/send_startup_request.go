@@ -7,7 +7,9 @@ import (
 func (self *CloudService) SendStartupRequest() (*emailproto.ServerMessage, error) {
 	req := emailproto.ClientMessage{
 		MessageType: &emailproto.ClientMessage_StartupRequest{
-			StartupRequest: &emailproto.StartupRequest{},
+			StartupRequest: &emailproto.StartupRequest{
+				ServiceId: "blmkmfd5jj89vu275l5g",
+			},
 		},
 	}
 	return self.SendRequest(req)

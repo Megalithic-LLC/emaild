@@ -11,12 +11,11 @@ message ClientMessage {
         ErrorResponse                   error_response                      = 5;
         GetAccountsRequest              get_accounts_request                = 6;
         GetSnapshotsRequest             get_snapshots_request               = 7;
-        GetServiceInstancesRequest      get_service_instances_request       = 8;
-        GetDomainsRequest               get_domains_request                 = 9;
-        UpdateSnapshotRequest           update_snapshot_request             = 10;
-        GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 11;
-        SetSnapshotChunkRequest         set_snapshot_chunk_request          = 12;
-        GetEndpointsRequest             get_endpoints_request               = 13;
+        GetDomainsRequest               get_domains_request                 = 8;
+        UpdateSnapshotRequest           update_snapshot_request             = 9;
+        GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 10;
+        SetSnapshotChunkRequest         set_snapshot_chunk_request          = 11;
+        GetEndpointsRequest             get_endpoints_request               = 12;
     }
 }
 
@@ -31,23 +30,21 @@ message ServerMessage {
         StartupResponse                  startup_response                     = 7;
         GetAccountsResponse              get_accounts_response                = 8;
         GetSnapshotsResponse             get_snapshots_response               = 9;
-        GetServiceInstancesResponse      get_service_instances_response       = 10;
-        GetDomainsResponse               get_domains_response                 = 11;
-        GetSnapshotChunksMissingResponse get_snapshot_chunks_missing_response = 12;
-        GetEndpointsResponse             get_endpoints_response               = 13;
+        GetDomainsResponse               get_domains_response                 = 10;
+        GetSnapshotChunksMissingResponse get_snapshot_chunks_missing_response = 11;
+        GetEndpointsResponse             get_endpoints_response               = 12;
     }
 }
 
 message Account {
     string id                  = 1;
-    string service_instance_id = 2;
-    string name                = 3;
-    string domain_id           = 4;
-    string email               = 5;
-    string first               = 6;
-    string last                = 7;
-    string display_name        = 8;
-    bytes password             = 9;
+    string name                = 2;
+    string domain_id           = 3;
+    string email               = 4;
+    string first               = 5;
+    string last                = 6;
+    string display_name        = 7;
+    bytes password             = 8;
 }
 
 message AckResponse {
@@ -69,12 +66,11 @@ message Domain {
 
 message Endpoint {
     string id                  = 1;
-    string service_instance_id = 2;
-    string protocol            = 3;
-    string type                = 4;
-    uint32 port                = 5;
-    string path                = 6;
-    bool Enabled               = 7;
+    string protocol            = 2;
+    string type                = 3;
+    uint32 port                = 4;
+    string path                = 5;
+    bool Enabled               = 6;
 }
 
 message ErrorResponse {
@@ -102,13 +98,6 @@ message GetEndpointsResponse {
     repeated Endpoint endpoints = 1;
 }
 
-message GetServiceInstancesRequest {
-}
-
-message GetServiceInstancesResponse {
-    repeated ServiceInstance service_instances = 1;
-}
-
 message GetSnapshotChunksMissingRequest {
     string snapshot_id = 1;
 }
@@ -127,12 +116,6 @@ message GetSnapshotsResponse {
 message NoopRequest {
 }
 
-message ServiceInstance {
-    string id                   = 1;
-    string service_id           = 2;
-    string plan_id              = 3;
-}
-
 message SetSnapshotChunkRequest {
     string snapshot_id = 1;
     uint32 number      = 2;
@@ -140,14 +123,16 @@ message SetSnapshotChunkRequest {
 }
 
 message Snapshot {
-    string id       = 1;
-    string name     = 2;
-    string engine   = 3;
-    float progress  = 4;
-    uint64 size     = 5;
+    string id         = 1;
+    string name       = 2;
+    string engine     = 3;
+    float progress    = 4;
+    uint64 size       = 5;
+    string service_id = 6;
 }
 
 message StartupRequest {
+    string service_id = 1;
 }
 
 message StartupResponse {

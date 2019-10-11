@@ -7,15 +7,14 @@ import (
 
 func AccountFromProtobuf(pbAccount *emailproto.Account) model.Account {
 	return model.Account{
-		Id:                pbAccount.Id,
-		ServiceInstanceId: pbAccount.ServiceInstanceId,
-		Name:              pbAccount.Name,
-		DomainId:          pbAccount.DomainId,
-		Email:             pbAccount.Email,
-		First:             pbAccount.First,
-		Last:              pbAccount.Last,
-		DisplayName:       pbAccount.DisplayName,
-		Password:          pbAccount.Password,
+		Id:          pbAccount.Id,
+		Name:        pbAccount.Name,
+		DomainId:    pbAccount.DomainId,
+		Email:       pbAccount.Email,
+		First:       pbAccount.First,
+		Last:        pbAccount.Last,
+		DisplayName: pbAccount.DisplayName,
+		Password:    pbAccount.Password,
 	}
 }
 
@@ -30,9 +29,8 @@ func AccountsFromProtobuf(pbAccounts []emailproto.Account) []*model.Account {
 
 func DomainFromProtobuf(pbDomain *emailproto.Domain) model.Domain {
 	return model.Domain{
-		Id:                pbDomain.Id,
-		ServiceInstanceId: pbDomain.ServiceInstanceId,
-		Name:              pbDomain.Name,
+		Id:   pbDomain.Id,
+		Name: pbDomain.Name,
 	}
 }
 
@@ -47,13 +45,12 @@ func DomainsFromProtobuf(pbDomains []emailproto.Domain) []*model.Domain {
 
 func EndpointFromProtobuf(pbEndpoint *emailproto.Endpoint) model.Endpoint {
 	return model.Endpoint{
-		Id:                pbEndpoint.Id,
-		ServiceInstanceId: pbEndpoint.ServiceInstanceId,
-		Protocol:          pbEndpoint.Protocol,
-		Type:              pbEndpoint.Type,
-		Port:              uint16(pbEndpoint.Port),
-		Path:              pbEndpoint.Path,
-		Enabled:           pbEndpoint.Enabled,
+		Id:       pbEndpoint.Id,
+		Protocol: pbEndpoint.Protocol,
+		Type:     pbEndpoint.Type,
+		Port:     uint16(pbEndpoint.Port),
+		Path:     pbEndpoint.Path,
+		Enabled:  pbEndpoint.Enabled,
 	}
 }
 
@@ -64,14 +61,6 @@ func EndpointsFromProtobuf(pbEndpoints []emailproto.Endpoint) []*model.Endpoint 
 		endpoints = append(endpoints, &endpoint)
 	}
 	return endpoints
-}
-
-func ServiceInstanceFromProtobuf(pbServiceInstance *emailproto.ServiceInstance) model.ServiceInstance {
-	return model.ServiceInstance{
-		Id:        pbServiceInstance.Id,
-		ServiceId: pbServiceInstance.ServiceId,
-		PlanId:    pbServiceInstance.PlanId,
-	}
 }
 
 func SnapshotFromProtobuf(pbSnapshot *emailproto.Snapshot) model.Snapshot {
@@ -98,10 +87,11 @@ func SnapshotToProtobuf(snapshot *model.Snapshot) *emailproto.Snapshot {
 		return nil
 	}
 	return &emailproto.Snapshot{
-		Id:       snapshot.Id,
-		Name:     snapshot.Name,
-		Engine:   snapshot.Engine,
-		Progress: snapshot.Progress,
-		Size:     snapshot.Size,
+		Id:        snapshot.Id,
+		ServiceId: snapshot.ServiceId,
+		Name:      snapshot.Name,
+		Engine:    snapshot.Engine,
+		Progress:  snapshot.Progress,
+		Size:      snapshot.Size,
 	}
 }

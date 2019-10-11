@@ -16,6 +16,8 @@ func (s *Snapshot) GetField(name string) (field.Field, error) {
 	switch name {
 	case "Id":
 		return field.NewString("Id", s.Id), nil
+	case "ServiceId":
+		return field.NewString("ServiceId", s.ServiceId), nil
 	case "Name":
 		return field.NewString("Name", s.Name), nil
 	case "Engine":
@@ -35,6 +37,11 @@ func (s *Snapshot) Iterate(fn func(field.Field) error) error {
 	var err error
 
 	err = fn(field.NewString("Id", s.Id))
+	if err != nil {
+		return err
+	}
+
+	err = fn(field.NewString("ServiceId", s.ServiceId))
 	if err != nil {
 		return err
 	}
@@ -71,6 +78,8 @@ func (s *Snapshot) ScanRecord(rec record.Record) error {
 		switch f.Name {
 		case "Id":
 			s.Id, err = field.DecodeString(f.Data)
+		case "ServiceId":
+			s.ServiceId, err = field.DecodeString(f.Data)
 		case "Name":
 			s.Name, err = field.DecodeString(f.Data)
 		case "Engine":
@@ -92,20 +101,22 @@ func (s *Snapshot) PrimaryKey() ([]byte, error) {
 // SnapshotFields describes the fields of the Snapshot record.
 // It can be used to select fields during queries.
 type SnapshotFields struct {
-	Id       query.StringFieldSelector
-	Name     query.StringFieldSelector
-	Engine   query.StringFieldSelector
-	Progress query.Float32FieldSelector
-	Size     query.Uint64FieldSelector
+	Id        query.StringFieldSelector
+	ServiceId query.StringFieldSelector
+	Name      query.StringFieldSelector
+	Engine    query.StringFieldSelector
+	Progress  query.Float32FieldSelector
+	Size      query.Uint64FieldSelector
 }
 
 // NewSnapshotFields creates a SnapshotFields.
 func NewSnapshotFields() *SnapshotFields {
 	return &SnapshotFields{
-		Id:       query.StringField("Id"),
-		Name:     query.StringField("Name"),
-		Engine:   query.StringField("Engine"),
-		Progress: query.Float32Field("Progress"),
-		Size:     query.Uint64Field("Size"),
+		Id:        query.StringField("Id"),
+		ServiceId: query.StringField("ServiceId"),
+		Name:      query.StringField("Name"),
+		Engine:    query.StringField("Engine"),
+		Progress:  query.Float32Field("Progress"),
+		Size:      query.Uint64Field("Size"),
 	}
 }

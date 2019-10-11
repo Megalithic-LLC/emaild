@@ -9,6 +9,28 @@ import (
 	"github.com/on-prem-net/emaild/model"
 )
 
+// Perform any work to get things caught up with desired state
+func (self *SnapshotManager) Perform() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	logger.Trace("SnapshotManager.Perform()")
+	snapshots, err := self.snapshotsDAO.FindAll()
+	if err != nil {
+		logger.Errorf("Failed loading snapshots: %v")
+		return
+	}
+	logger.Debugf("Got %d snapshots", len(snapshots))
+
+	// Create snapshots as needed
+	for _, snapshot := range snapshots {
+		self.ensureSnapshotExists(snapshot)
+	}
+
+	// Expunge snapshots as needed
+	self.expungeSnapshotFiles(snapshots)
+}
+
 func (self *SnapshotManager) performSnapshot(snapshot *model.Snapshot, file *os.File) error {
 	logger.Tracef("SnapshotManager.performSnapshot(%s, %s)", snapshot.Id, file.Name())
 

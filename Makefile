@@ -16,7 +16,6 @@ generate:
 	genji -f model/message.go          -s Message
 	genji -f model/message_raw_body.go -s MessageRawBody
 	genji -f model/property.go         -s Property
-	genji -f model/service_instance.go -s ServiceInstance
 	genji -f model/snapshot.go         -s Snapshot
 	go generate ./...
 
