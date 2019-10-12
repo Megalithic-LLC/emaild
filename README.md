@@ -108,6 +108,19 @@ Finally, once the agent is selected, go to the marketplace, find the email servi
 
 ![Email Console :: Launch Service Instance](./docs/launch-service-instance.png)
 
+## Packaging as an RPM
+
+These steps will build an RPM in your current working directory.
+
+```sh
+$ docker build -f rpm.Dockerfile \
+	--build-arg VERSION=0.1.0 \
+	--build-arg ITERATION=0 \
+	-t scratch .
+$ docker run -v `pwd`:/output -it scratch
+'on-prem-emaild-0.1.0-0.x86_64.rpm' -> '/output/on-prem-emaild-0.1.0-0.x86_64.rpm'
+```
+
 ## Design
 
 ### Storage

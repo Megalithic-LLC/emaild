@@ -1,0 +1,16 @@
+[Unit]
+Description=On-Prem Email
+Documentation=https://on-prem.net
+
+[Service]
+Type=simple
+PIDFile=/var/run/on-prem-emaild.pid
+WorkingDirectory=/var/on-prem/emaild
+Environment="API_URL=https://api.email.on-prem.net"
+ExecStart=/usr/bin/on-prem-emaild
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+Alias=emaild
