@@ -16,7 +16,7 @@ func newGenjiEngine() engine.Engine {
 		return nil
 	}
 	var eng engine.Engine
-	filepath := path.Join(dir, "on-prem-emaild.db")
+	filepath := path.Join(dir, "on-prem-megalithic-emaild.db")
 	eng, err = bolt.NewEngine(filepath, 0600, nil)
 	if err != nil {
 		logger.Fatalf("Failed creating DB engine: %v", err)
