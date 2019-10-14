@@ -8,8 +8,8 @@ import (
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-imap/backend"
 	"github.com/emersion/go-imap/server"
-	"github.com/on-prem-net/emaild/dao"
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/dao"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 )
 
 type ImapEndpoint struct {

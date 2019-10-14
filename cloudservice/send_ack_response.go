@@ -1,7 +1,7 @@
 package cloudservice
 
 import (
-	"github.com/on-prem-net/emaild/cloudservice/emailproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/emailproto"
 )
 
 func (self *CloudService) SendAckResponse(requestId uint64) error {

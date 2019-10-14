@@ -7,9 +7,9 @@ import (
 	"github.com/asdine/genji/query"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-smtp"
-	"github.com/on-prem-net/emaild/dao"
-	"github.com/on-prem-net/emaild/model"
-	"github.com/on-prem-net/emaild/smtpendpoint/smtpbackend"
+	"github.com/Megalithic-LLC/on-prem-emaild/dao"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/smtpendpoint/smtpbackend"
 )
 
 type SmtpEndpoint struct {

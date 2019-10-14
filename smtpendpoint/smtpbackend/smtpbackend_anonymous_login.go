@@ -1,7 +1,7 @@
 package smtpbackend
 
 import (
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-smtp"
 )

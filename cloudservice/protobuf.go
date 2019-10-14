@@ -1,8 +1,8 @@
 package cloudservice
 
 import (
-	"github.com/on-prem-net/emaild/cloudservice/emailproto"
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/emailproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 )
 
 func AccountFromProtobuf(pbAccount *emailproto.Account) model.Account {

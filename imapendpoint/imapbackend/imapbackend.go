@@ -1,7 +1,7 @@
 package imapbackend
 
 import (
-	"github.com/on-prem-net/emaild/dao"
+	"github.com/Megalithic-LLC/on-prem-emaild/dao"
 	"github.com/asdine/genji"
 )
 

@@ -3,7 +3,7 @@ package smtpbackend
 import (
 	"github.com/docktermj/go-logger/logger"
 	"github.com/emersion/go-smtp"
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 )
 
 func (self *SmtpBackend) Login(state *smtp.ConnectionState, username, password string) (smtp.Session, error) {

@@ -1,7 +1,7 @@
 package imapbackend
 
 import (
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/table"
 	"github.com/docktermj/go-logger/logger"

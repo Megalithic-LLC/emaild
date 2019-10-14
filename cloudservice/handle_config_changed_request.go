@@ -6,8 +6,8 @@ import (
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/table"
 	"github.com/docktermj/go-logger/logger"
-	"github.com/on-prem-net/emaild/cloudservice/emailproto"
-	"github.com/on-prem-net/emaild/propertykey"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/emailproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/propertykey"
 )
 
 func (self *CloudService) handleConfigChangedRequest(requestId uint64, configChangedReq emailproto.ConfigChangedRequest) {

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/on-prem-net/emaild/dao"
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/dao"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	"github.com/asdine/genji"
 	"github.com/docktermj/go-logger/logger"
 )

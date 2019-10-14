@@ -7,7 +7,7 @@ import (
 	"github.com/docktermj/go-logger/logger"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
-	"github.com/on-prem-net/emaild/cloudservice/emailproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/emailproto"
 )
 
 func (self *CloudService) SendRequest(req emailproto.ClientMessage) (*emailproto.ServerMessage, error) {

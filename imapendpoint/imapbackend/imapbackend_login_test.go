@@ -6,9 +6,9 @@ import (
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/engine"
 	"github.com/franela/goblin"
-	"github.com/on-prem-net/emaild/dao"
-	"github.com/on-prem-net/emaild/imapendpoint/imapbackend"
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/dao"
+	"github.com/Megalithic-LLC/on-prem-emaild/imapendpoint/imapbackend"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 	. "github.com/onsi/gomega"
 )
 

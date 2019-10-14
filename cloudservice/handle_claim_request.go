@@ -2,8 +2,8 @@ package cloudservice
 
 import (
 	"github.com/docktermj/go-logger/logger"
-	"github.com/on-prem-net/emaild/cloudservice/emailproto"
-	"github.com/on-prem-net/emaild/propertykey"
+	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/emailproto"
+	"github.com/Megalithic-LLC/on-prem-emaild/propertykey"
 )
 
 func (self *CloudService) handleClaimRequest(requestId uint64, claimReq emailproto.ClaimRequest) {

@@ -15,7 +15,7 @@ RUN go get -u github.com/golang/protobuf/protoc-gen-go
 RUN echo $GOPATH
 RUN ls -al $GOPATH/bin
 
-WORKDIR /go/src/github.com/on-prem-net/emaild
+WORKDIR /go/src/github.com/Megalithic-LLC/on-prem-emaild
 COPY . .
 RUN make generate && make
 

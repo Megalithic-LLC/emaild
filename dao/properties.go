@@ -5,7 +5,7 @@ import (
 	"github.com/asdine/genji/query"
 	"github.com/asdine/genji/record"
 	"github.com/asdine/genji/table"
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 )
 
 type PropertiesDAO struct {

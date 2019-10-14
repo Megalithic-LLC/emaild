@@ -3,7 +3,7 @@ package dao
 import (
 	"github.com/asdine/genji"
 	"github.com/asdine/genji/table"
-	"github.com/on-prem-net/emaild/model"
+	"github.com/Megalithic-LLC/on-prem-emaild/model"
 )
 
 type AccountsDAO struct {
