@@ -26,7 +26,9 @@ func main() {
 	}
 
 	logger.Info("On-Prem Email Server started")
-	logger.Infof("Node id is %s", nodeid)
+	logger.Infof("======================================")
+	logger.Infof("== Agent ID is %s ==", nodeid)
+	logger.Infof("======================================")
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
