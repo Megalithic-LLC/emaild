@@ -8,10 +8,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/asdine/genji"
-	"github.com/docktermj/go-logger/logger"
-	"github.com/golang/protobuf/proto"
-	"github.com/gorilla/websocket"
 	"github.com/Megalithic-LLC/on-prem-emaild/cloudservice/emailproto"
 	"github.com/Megalithic-LLC/on-prem-emaild/dao"
 	"github.com/Megalithic-LLC/on-prem-emaild/imapendpoint"
@@ -20,6 +16,10 @@ import (
 	"github.com/Megalithic-LLC/on-prem-emaild/smtpendpoint"
 	"github.com/Megalithic-LLC/on-prem-emaild/snapshotmanager"
 	"github.com/Megalithic-LLC/on-prem-emaild/submissionendpoint"
+	"github.com/asdine/genji"
+	"github.com/docktermj/go-logger/logger"
+	"github.com/golang/protobuf/proto"
+	"github.com/gorilla/websocket"
 )
 
 const API_URL = "API_URL"
@@ -208,6 +208,7 @@ func (self *CloudService) reader() {
 		call.Error = err
 		call.Done <- true
 	}
+	self.conn = nil
 	self.mutex.Unlock()
 }
 
