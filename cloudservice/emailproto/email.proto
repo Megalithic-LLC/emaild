@@ -6,16 +6,17 @@ message ClientMessage {
     uint64 id = 1;
     oneof message_type {
         AckResponse                     ack_response                        = 2;
-        NoopRequest                     noop_request                        = 3;
-        StartupRequest                  startup_request                     = 4;
-        ErrorResponse                   error_response                      = 5;
-        GetAccountsRequest              get_accounts_request                = 6;
-        GetSnapshotsRequest             get_snapshots_request               = 7;
-        GetDomainsRequest               get_domains_request                 = 8;
-        UpdateSnapshotRequest           update_snapshot_request             = 9;
-        GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 10;
-        SetSnapshotChunkRequest         set_snapshot_chunk_request          = 11;
-        GetEndpointsRequest             get_endpoints_request               = 12;
+        ErrorResponse                   error_response                      = 3;
+        NoopRequest                     noop_request                        = 4;
+        StartupRequest                  startup_request                     = 5;
+        GetSnapshotsRequest             get_snapshots_request               = 6;
+        UpdateSnapshotRequest           update_snapshot_request             = 7;
+        GetSnapshotChunksMissingRequest get_snapshot_chunks_missing_request = 8;
+        SetSnapshotChunkRequest         set_snapshot_chunk_request          = 9;
+        GetEndpointsRequest             get_endpoints_request               = 10;
+        
+        GetAccountsRequest              get_accounts_request                = 1001;
+        GetDomainsRequest               get_domains_request                 = 1002;
     }
 }
 
@@ -23,28 +24,29 @@ message ServerMessage {
     uint64 id = 1;
     oneof message_type {
         AckResponse                      ack_response                         = 2;
-        NoopRequest                      noop_request                         = 3;
-        ErrorResponse                    error_response                       = 4;
+        ErrorResponse                    error_response                       = 3;
+        NoopRequest                      noop_request                         = 4;
         ClaimRequest                     claim_request                        = 5;
         ConfigChangedRequest             config_changed_request               = 6;
         StartupResponse                  startup_response                     = 7;
-        GetAccountsResponse              get_accounts_response                = 8;
-        GetSnapshotsResponse             get_snapshots_response               = 9;
-        GetDomainsResponse               get_domains_response                 = 10;
-        GetSnapshotChunksMissingResponse get_snapshot_chunks_missing_response = 11;
-        GetEndpointsResponse             get_endpoints_response               = 12;
+        GetSnapshotsResponse             get_snapshots_response               = 8;
+        GetSnapshotChunksMissingResponse get_snapshot_chunks_missing_response = 9;
+        GetEndpointsResponse             get_endpoints_response               = 10;
+        
+        GetAccountsResponse              get_accounts_response                = 1001;
+        GetDomainsResponse               get_domains_response                 = 1002;
     }
 }
 
 message Account {
-    string id                  = 1;
-    string name                = 2;
-    string domain_id           = 3;
-    string email               = 4;
-    string first               = 5;
-    string last                = 6;
-    string display_name        = 7;
-    bytes password             = 8;
+    string id           = 1;
+    string name         = 2;
+    string domain_id    = 3;
+    string email        = 4;
+    string first        = 5;
+    string last         = 6;
+    string display_name = 7;
+    bytes password      = 8;
 }
 
 message AckResponse {
@@ -65,12 +67,12 @@ message Domain {
 }
 
 message Endpoint {
-    string id                  = 1;
-    string protocol            = 2;
-    string type                = 3;
-    uint32 port                = 4;
-    string path                = 5;
-    bool Enabled               = 6;
+    string id       = 1;
+    string protocol = 2;
+    string type     = 3;
+    uint32 port     = 4;
+    string path     = 5;
+    bool Enabled    = 6;
 }
 
 message ErrorResponse {
