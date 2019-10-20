@@ -1,6 +1,6 @@
 # On-Prem Email Server Changelog
 
-## [Unreleased]
+## [0.8.0] - 2019-10-19
 
 ### Added
 
